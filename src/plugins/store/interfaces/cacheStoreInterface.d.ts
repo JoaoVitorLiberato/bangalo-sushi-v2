@@ -1,7 +1,5 @@
 interface cacheStoreInterface {
-  cache: {
-    [key:string]:unknown;
-  };
+  rastreamentoUsuario: Record<string, string|string[]|number|number[]|boolean>
 }
 
 export {

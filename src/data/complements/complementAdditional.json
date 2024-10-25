@@ -1,0 +1,32 @@
+{
+  "tare": {
+    "id": 1,
+    "name": "Molho Tarê",
+    "description": "100 ml",
+    "price": 400
+  },
+  "shoyu" : {
+    "id": 2,
+    "name": "Molho Shoyu",
+    "description": "100 ml",
+    "price": 400
+  },
+  "geleiapimenta" : {
+    "id": 3,
+    "name": "Geleia de pimenta",
+    "description": "100 ml",
+    "price": 400
+  },
+  "pepino": {
+    "id": 4,
+    "name": "Molho de Pepino",
+    "description": "100 ml",
+    "price": 400
+  },
+  "gengibre": {
+    "id": 5,
+    "name": "Molho de Gengibre",
+    "description": "100 ml",
+    "price": 400
+  }
+}

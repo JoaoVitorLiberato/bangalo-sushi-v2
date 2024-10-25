@@ -1,0 +1,42 @@
+[
+  {
+    "id": "promo",
+    "name": "Promoções"
+  },
+  {
+    "id": "entrada",
+    "name": "Entradas"
+  },
+  {
+    "id": "pecas",
+    "name": "Peças"
+  },
+  {
+    "id": "temaki",
+    "name": "Temaki's com arroz"
+  },
+  {
+    "id": "temakisa",
+    "name": "Temaki's sem arroz"
+  },
+  {
+    "id": "supremo",
+    "name": "Temaki's supremo"
+  },
+  {
+    "id": "hot",
+    "name": "Hot's"
+  },
+  {
+    "id": "especial",
+    "name": "Especiais"
+  },
+  {
+    "id": "combinados",
+    "name": "Combinados"
+  },
+  {
+    "id": "doces",
+    "name": "Doces"
+  }
+]

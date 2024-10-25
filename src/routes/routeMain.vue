@@ -2,9 +2,22 @@
   <v-main>
     <v-container
       fluid
+      class="pa-0"
     >
       <router-view
-        name="viewMain"
+        name="viewHero"
+      />
+      <router-view
+        name="viewDishes"
+      />
+      <router-view
+        name="viewDescriptionCook"
+      />
+      <router-view
+        name="viewPartners"
+      />
+      <router-view
+        name="viewEstabelishLocation"
       />
     </v-container>
   </v-main>

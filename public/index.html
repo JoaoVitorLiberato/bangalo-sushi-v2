@@ -6,9 +6,12 @@
 
     <title><%= htmlWebpackPlugin.options.title %></title>
 
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="<%= htmlWebpackPlugin.options.title %>">
     <meta name="description" content="<%= htmlWebpackPlugin.options.description %>">
     <meta name="subject" content="<%= htmlWebpackPlugin.options.subject %>">
+
+    <script type='text/javascript' src="/js/tracking.js"></script>
 
     <base href="/">
     <link rel="home" href="<%= htmlWebpackPlugin.options.url %>">

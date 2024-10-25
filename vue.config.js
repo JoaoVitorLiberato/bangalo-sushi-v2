@@ -21,27 +21,29 @@ module.exports = {
 
   pages: {
     index: {
-      title: "app",
-      description: "default app",
-      subject: "typescript, vue.js, vuex, vuetify, vue-router",
-      color: "#6600cc",
-      entry: "./src/main"
+      title: "Bangalô Sushi Lounge - Qualidade, Sabor e Tradição",
+      description: "Venha conhecer o melhor sushi de Santa Luzia de Paruá. Onde você vai encontrar uma variedades de pratos da comida japonesa, com um sabor que ultrapassa os limites da barreiras continentais. Bangalô Sushi Lounge.",
+      subject: "Comida Japonesa, Colinária Japonesa, Bangalo Sushi, Bangalô Sushi, O melhor sushi, Restaurante, Restaurante de comida Japonesa, lounge",
+      color: "#000",
+      url: "https://bangalosushi.app.br/",
+      image: "/favicon.png",
+      entry: "./src/main",
     }
   },
 
   pwa: {
-    name: "app",
-    themeColor: "#6600cc",
-    msTileColor: "#6600cc",
+    name: "BANGALÔ",
+    themeColor: "#fff",
+    msTileColor: "#fff",
     appleMobileWebAppCapable: "yes",
     appleMobileWebAppTitle: "app",
     appleMobileWebAppStatusBarStyle: "black",
     assetsVersion: process.env.npm_package_version,
     manifestOptions: {
       id: process.env.npm_package_version,
-      short_name: "app",
-      description: "default app",
-      background_color: "#f5f5f5",
+      short_name: "Bangalô Sushi Lounge - Qualidade, Sabor e Tradição",
+      description: "Venha conhecer o melhor sushi de Santa Luzia de Paruá. Onde você vai encontrar uma variedades de pratos da comida japonesa, com um sabor que ultrapassa os limites da barreiras continentais. Bangalô Sushi Lounge.",
+      background_color: "#fff",
       orientation: "portrait",
       start_url: "/",
       protocol_handlers: [

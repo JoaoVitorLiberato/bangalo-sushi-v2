@@ -11,7 +11,8 @@ export default new Vuetify({
     },
     themes: {
       light: {
-        primary: "#6600cc",
+        primary: "#fff",
+        secondary: "#fcb900",
       },
     },
   },

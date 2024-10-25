@@ -1,0 +1,78 @@
+{
+  "web": {
+    "path": "/",
+    "canal": "Bangalô Sushi Lounge - Landing Page Oficial"
+  },
+  "webparceirotaynara": {
+    "path": "?utm_source=taynara&utm_medium=salgados&utm_campaign=parceiro",
+    "canal": "Canal Parceiro Taynara Bolos, Salgados e Petiscos",
+    "params": {
+      "utm_source": "taynara",
+      "utm_medium": "salgados",
+      "utm_campaign": "parceiro"
+    }
+  },
+  "webparceirosol": {
+    "path": "?utm_source=sol&utm_medium=distribuidora&utm_campaign=parceiro",
+    "canal": "Canal Parceiro Sol Distribuidora",
+    "params": {
+      "utm_source": "sol",
+      "utm_medium": "distribuidora",
+      "utm_campaign": "parceiro"
+    }
+  },
+  "webparceirodiamondstore": {
+    "path": "?utm_source=diamond&utm_medium=black&utm_campaign=parceiro",
+    "canal": "Canal Parceiro Diamond Black Store - O rei das jóias e relógios importados",
+    "params": {
+      "utm_source": "diamond",
+      "utm_medium": "black",
+      "utm_campaign": "parceiro"
+    }
+  },
+  "webparceiro360assessoria": {
+    "path": "?utm_source=360&utm_medium=assessoria&utm_campaign=parceiro",
+    "canal": "Canal Parceiro 360 Assessoria de capital",
+    "params": {
+      "utm_source": "360",
+      "utm_medium": "assessoria",
+      "utm_campaign": "parceiro"
+    }
+  },
+  "webparceirorosanaestetica": {
+    "path": "?utm_source=rosana&utm_medium=estetica&utm_campaign=parceiro",
+    "canal": "Canal Parceiro Rosana Andrade Estética",
+    "params": {
+      "utm_source": "rosana",
+      "utm_medium": "estetica",
+      "utm_campaign": "parceiro"
+    }
+  },
+  "webparceiroslponline": {
+    "path": "?utm_source=slp&utm_medium=online&utm_campaign=parceiro",
+    "canal": "Canal Parceiro SLP Online Ativa",
+    "params": {
+      "utm_source": "slp",
+      "utm_medium": "online",
+      "utm_campaign": "parceiro"
+    }
+  },
+  "webparceirocabana": {
+    "path": "?utm_source=cabana&utm_medium=eventos&utm_campaign=parceiro",
+    "canal": "Canal Parceiro SLP Online Ativa",
+    "params": {
+      "utm_source": "cabana",
+      "utm_medium": "eventos",
+      "utm_campaign": "parceiro"
+    }
+  },
+  "webparceirocellshop": {
+    "path": "?utm_source=cell&utm_medium=shop&utm_campaign=parceiro",
+    "canal": "Canal Parceiro Cell Shop",
+    "params": {
+      "utm_source": "cell",
+      "utm_medium": "shop",
+      "utm_campaign": "parceiro"
+    }
+  }
+}

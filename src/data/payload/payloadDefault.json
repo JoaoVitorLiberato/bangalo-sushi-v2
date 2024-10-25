@@ -1,0 +1,39 @@
+{
+  "canal": "web",
+  "segmento": "",
+  "consumidor": {
+    "nome": "",
+    "telefone": {
+      "contato": ""
+    },
+    "endereco": {
+      "cep": "",
+      "logradouro": "",
+      "bairro": "",
+      "cidade": "",
+      "uf": "",
+      "numero": "",
+      "complemento": "",
+      "referencia": ""
+    },
+    "mensagem": ""
+  },
+  "produtos": [],
+  "pagamento": {
+    "valorFrete": 0,
+    "valorProdutos": 0,
+    "statusPagamento": "pendente",
+    "valorTotal": 0,
+		"formaPagamento": "",
+    "desconto": {
+      "porcentagem": 0,
+      "PrecoTotalComDesconto": 0
+    }
+  },
+  "analytics": {
+		"source": "",
+		"medium": "",
+		"campaign": "",
+		"params": {}
+  }
+}
