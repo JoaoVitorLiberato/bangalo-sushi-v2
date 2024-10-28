@@ -4,7 +4,11 @@ import { cacheStoreInterface } from "@/plugins/store/interfaces/cacheStoreInterf
 
 const moduleCache = (): cacheStoreInterface => {
   return {
-    rastreamentoUsuario: {}
+    rastreamentoUsuario: {},
+    frameLoading: {
+      status: false,
+      message: "",
+    }
   }
 }
 
@@ -14,12 +18,18 @@ const getters: GetterTree<cacheStoreInterface, rootStateInterface> = {
   CacheRastreamentoUsuarioPayloadSource: ({ rastreamentoUsuario }) => () => {
     return rastreamentoUsuario.source
   },
+  CacheFrameLoading: ({ frameLoading }) => () => {
+    return frameLoading
+  }
 }
 
 const mutations: MutationTree<cacheStoreInterface> = {
   mutationCacheRastreamentoSource: (state, source) => {
     state.rastreamentoUsuario.source = source
   },
+  mutationCacheFrameLoading: (state, data) => {
+    state.frameLoading = data
+  }
 }
 
 const actions: ActionTree<cacheStoreInterface, rootStateInterface> = {
@@ -27,6 +37,9 @@ const actions: ActionTree<cacheStoreInterface, rootStateInterface> = {
     commit("mutationCacheRastreamentoSource", source)
     sessionStorage.setItem("payload.source", source)
   },
+  actionCacheFrameLoading: ({ commit }, data) => {
+    commit("mutationCacheFrameLoading", data)
+  }
 }
 
 const cacheStoreModule: Module<cacheStoreInterface, rootStateInterface> = {

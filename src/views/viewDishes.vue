@@ -4,6 +4,7 @@
     elevation="0"
   >
     <v-row
+      id="tetse"
       no-gutters
       class="pa-4"
     >
@@ -29,14 +30,15 @@
         cols="12"
       >
         <v-skeleton-loader
+          v-if="getCacheFrameLoading().status"
           min-height="400"
           max-width="1100"
           class="mx-auto"
-          loading-text="carregando"
           type="card, paragraph, sentences"
         />
 
         <v-row
+          v-else
           no-gutters
         >
           <v-col
@@ -50,7 +52,23 @@
             v-else
             cols="12"
           >
-            produtos
+            <v-row
+              no-gutters
+            >
+              <v-col
+                cols="12"
+                md="5"
+              >
+                teste
+              </v-col>
+
+              <v-col
+                cols="12"
+                md="5"
+              >
+                teste
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
       </v-col>
@@ -61,13 +79,12 @@
 <script lang="ts">
   import { Component } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
+  import { namespace } from "vuex-class"
   import { filterDataProduct } from "@/helpers/filterProducts"
   import { IproductData } from "@/types/types-product"
   import { MixinServiceProducts } from "@/mixins/services/mixinServiceProducts"
-  // import { namespace } from "vuex-class"
 
-  // const cacheStore = namespace("cacheStoreModule")
-  // const dialogStore = namespace("dialogStoreModule")
+  const cacheStore = namespace("cacheStoreModule")
 
   @Component({
     components: {}
@@ -76,26 +93,9 @@
   export default class viewDishes extends mixins(
     MixinServiceProducts,
   ) {
-    // @dialogStore.Getter("DialogServiceClient") getDialogServiceClient
-    // @dialogStore.Action("ActionDialogServiceClient") setDialogSeviceClient
-    // @cacheStore.Getter("CacheLoading") getCacheLoading
+    @cacheStore.Getter("CacheFrameLoading") getCacheFrameLoading
 
     filterDataProduct = filterDataProduct
-
-    // get cacheLoading (): {
-    //   status: boolean,
-    //   msg: string
-    // }  {
-    //   return this.getCacheLoading()
-    // }
-
-    // get dialogServiceClient (): boolean {
-    //   return this.getDialogServiceClient()
-    // }
-
-    // set dialogServiceClient (value: boolean) {
-    //   this.setDialogSeviceClient(value)
-    // }
 
     get productDataApperStart (): IproductData[]|string {
       const PRODUCT_FILTER = (filterDataProduct() as IproductData[]).filter((productIndividual) => {
@@ -112,12 +112,12 @@
     created (): void {
       this.getAllProducts()
         .then((responseMixin) => {
-          if (responseMixin) sessionStorage.setItem("products", JSON.stringify(responseMixin))
+          if (responseMixin) {
+            sessionStorage.setItem("products", JSON.stringify(responseMixin))
+          }
         })
+      
+      // console.log("tetste", this.productDataApperStart)
     }
-
-    // getDialogSegmentProducts (): void {
-    //   this.dialogServiceClient = !this.dialogServiceClient
-    // }
   }
 </script>
