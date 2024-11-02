@@ -22,7 +22,7 @@
 
       <v-col
         cols="12"
-        class="py-6"
+        class="py-8"
       />
 
       <v-col
@@ -56,162 +56,153 @@
           >
             <v-row
               no-gutters
-              justify="space-around"
+              justify="center"
             >
               <v-col
                 cols="12"
                 md="5"
-                order="2"
-                order-md="1"
                 class="mt-4 mt-md-0"
               >
                 <v-row
                   no-gutters
                 >
                   <v-col
-                    v-for="(product) in productDataApperStart"
-                    :key="`product-name-${product.id}`"
-                    v-border="`1px solid ${String(productID) === String(product.id) ? 'var(--v-secondary-base)' : '#f2f2f2'}`"
-                    v-border.radius="'5px'"
                     cols="12"
-                    class="my-2"
                   >
-                    <v-card
-                      :color="String(productID) === String(product.id) ? '#f2f2f2' : '#fff'"
-                      elevation="0"
-                      class="pa-4"
-                      @click="productID = product.id, productSelected = product"
-                    >
-                      <v-row
-                        no-gutters
-                        justify="space-between"
-                      >
-                        <v-col
-                          cols="10"
-                        >
-                          <span
-                            class="font-weight-medium text-uppercase"
-                            v-text="product.name"
-                          />
-                        </v-col>
+                    <v-autocomplete
+                      v-model="category"
+                      :items="categories"
+                      outlined
+                      auto-select-first
+                      hide-details
+                      style="color:#000"
+                      color="secondary"
+                      item-text="name"
+                      item-value="id"
+                    />
+                  </v-col>
 
-                        <v-col
-                          cols="1"
-                          class="d-flex align-center justify-end"
-                        >
-                          <v-avatar
-                            :color="String(productID) === String(product.id) ? 'var(--v-secondary-base)' : '#f2f2f2'"
-                            size="14"
-                          />
-                        </v-col>
-                      </v-row>
-                    </v-card>
+                  <v-col
+                    cols="12"
+                    class="py-2"
+                  />
+
+                  <v-col
+                    v-if="productsList.length"
+                    cols="12"
+                  >
+                    <v-autocomplete
+                      :items="productsList"
+                      outlined
+                      auto-select-first
+                      hide-details
+                      style="color:#000"
+                      color="secondary"
+                      item-text="name"
+                      item-value="id"
+                      @change="changeProductDataList"
+                    />
                   </v-col>
                 </v-row>
               </v-col>
 
               <v-col
-                v-border="'1px solid var(--v-secondary-base)'"
-                v-border.radius="'2px'"
                 cols="12"
-                md="5"
-                order="1"
-                order-md="2"
+                md="2"
+                lg="2"
+                class="py-3 my-4"
+              />
+
+              <v-col
+                cols="12"
+                md="3"
               >
-                <v-row
-                  v-if="productSelected"
-                  class="pa-2"
-                  justify="space-between"
+                <v-card
+                  v-border="'1px solid var(--v-secondary-base)'"
+                  v-position.relative
+                  v-border.radius="'15px'"
+                  elevation="0"
+                  max-width="300"
                 >
-                  <v-col
-                    cols="12"
-                    md="6"
-                    class="shrink"
+                  <div
+                    class="secondary px-2 py-1 text-center"
+                    style="width:100%;max-width:150px;position:absolute;top:-27px;right:0"
                   >
-                    <v-row
-                      no-gutters
-                    >
-                      <v-col
-                        cols="12"
-                        :class="$vuetify.breakpoint.smAndDown ? 'text-center' : ''"
-                      >
-                        <span
-                          v-font-size="$vuetify.breakpoint.smAndDown ? 14 : 10"
-                          class="text-uppercase font-weight-bold"
-                          v-text="productSelected.name"
-                        />
-                      </v-col>
-
-                      <v-col
-                        cols="12"
-                        class="py-2"
-                      />
-
-                      <v-col
-                        cols="12"
-                        :class="$vuetify.breakpoint.smAndDown ? 'd-flex' : 'hidden-md-and-up'"
-                      >
-                        <v-img
-                          :src="productSelected.url_image"
-                          :alt="`Conheça nosso ${productSelected.name}`"
-                          :title="`Conheça nosso ${productSelected.name}`"
-                          width="200"
-                          height="205"
-                        />
-                      </v-col>
-
-                      <v-col
-                        cols="12"
-                        :class="$vuetify.breakpoint.smAndDown ? 'py-2' : 'hidden-md-and-up'"
-                      />
-
-                      <v-col
-                        cols="12"
-                        style="line-height:15px"
-                      >
-                        <span
-                          v-font-size="14"
-                          class="font-weight-normal"
-                          v-text="productSelected.description"
-                        />
-                      </v-col>
-
-                      <v-col
-                        cols="12"
-                        class="py-2"
-                      />
-
-                      <v-col
-                        cols="12"
-                      >
-                        <v-btn
-                          color="secondary"
-                          depressed
-                          class="text-none"
-                          :block="$vuetify.breakpoint.smAndDown"
-                        >
-                          <span
-                            class="black--text"
-                          >
-                            Quero Conhecer
-                          </span>
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-
-                  <v-col
-                    class="hidden-sm-and-down shrink"
-                  >
-                    <v-img
-                      :src="productSelected.url_image"
-                      :alt="`Conheça nosso ${productSelected.name}`"
-                      :title="`Conheça nosso ${productSelected.name}`"
-                      width="200"
-                      height="205"
+                    <span
+                      v-font-size="12"
+                      class="text-uppercase font-weight-bold"
+                      v-text="productSelected.category"
                     />
-                  </v-col>
-                </v-row>
+                  </div>
+
+                  <v-img
+                    :src="productSelected.url_image"
+                    :alt="`Conheça nosso ${productSelected.name}`"
+                    :title="`Conheça nosso ${productSelected.name}`"
+                    style="border-radius: 15px 15px 0px 0"
+                    width="100%"
+                    height="190"
+                  />
+
+                  <v-row
+                    v-if="productSelected.id"
+                    no-gutters
+                    justify="space-between"
+                    class="px-2 pt-3 pb-2"
+                  >
+                    <v-col
+                      cols="12"
+                      style="line-height:15px"
+                    >
+                      <span
+                        v-font-size="15"
+                        class="font-weight-medium text-uppercase"
+                        v-text="productSelected.name"
+                      />
+                    </v-col>
+
+                    <v-col
+                      cols="12"
+                      class="py-2"
+                    />
+
+                    <v-col
+                      cols="12"
+                      style="line-height:15px"
+                    >
+                      <span
+                        v-font-size="14"
+                        class="font-weight-normal"
+                        v-text="productSelected.description"
+                      />
+                    </v-col>
+
+                    <v-col
+                      cols="12"
+                      class="py-2"
+                    />
+
+                    <v-col
+                      cols="12"
+                    >
+                      <v-btn
+                        color="secondary"
+                        depressed
+                        class="text-none"
+                        style="border-radius:15px"
+                        block
+                        large
+                      >
+                        <span
+                          v-font-size="16"
+                          class="black--text font-weight-medium"
+                        >
+                          Conhecer produtos
+                        </span>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-card>
               </v-col>
             </v-row>
           </v-col>
@@ -228,6 +219,7 @@
   import { filterDataProduct } from "@/helpers/filterProducts"
   import { IproductData } from "@/types/types-product"
   import { MixinServiceProducts } from "@/mixins/services/mixinServiceProducts"
+  import CATEGORIES_DATA from "@/data/products/category.json"
 
   const cacheStore = namespace("cacheStoreModule")
 
@@ -242,21 +234,22 @@
 
     filterDataProduct = filterDataProduct
 
-    productID = ""
+    category = ""
     productSelected: IproductData = {} as IproductData
 
-    get productDataApperStart (): IproductData[]|string {
-      const PRODUCT_FILTER = (filterDataProduct() as IproductData[]).filter((productIndividual) => {
-        return productIndividual.apper_start === true
-      })
+    get categories (): typeof CATEGORIES_DATA {
+      return CATEGORIES_DATA
+    }
 
-      if (PRODUCT_FILTER.length <= 0) {
-        return (filterDataProduct() as IproductData[]).slice(0, 2)
-      }
+    get productsList (): IproductData[] {
+      if (!this.category || !filterDataProduct(this.category)) return []
+      return filterDataProduct(this.category) as IproductData[]
+    }
 
-      this.productID = String(PRODUCT_FILTER[0].id)
-      this.productSelected = PRODUCT_FILTER[0]
-      return PRODUCT_FILTER
+    changeProductDataList (value: IproductData): void {
+      this.productSelected = this.productsList.find((product) => {
+        if (String(product.id || "") === String(value || "")) return product
+      }) || {} as IproductData
     }
 
     created (): void {
@@ -264,6 +257,8 @@
         .then((responseMixin) => {
           if (responseMixin) {
             sessionStorage.setItem("products", JSON.stringify(responseMixin))
+            this.category = this.categories[0].id
+            this.productSelected = filterDataProduct(this.category)[0] as IproductData
           }
         })
     }

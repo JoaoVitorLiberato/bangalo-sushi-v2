@@ -1,9 +1,5 @@
 [
   {
-    "id": "promo",
-    "name": "Promoções"
-  },
-  {
     "id": "entrada",
     "name": "Entradas"
   },
@@ -38,5 +34,9 @@
   {
     "id": "doces",
     "name": "Doces"
+  },
+  {
+    "id": "promo",
+    "name": "Promoções"
   }
 ]

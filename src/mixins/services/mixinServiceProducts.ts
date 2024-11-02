@@ -30,4 +30,29 @@ export class MixinServiceProducts extends Vue {
         })
     })
   }
+
+  createPorduct (product): Promise<string> {
+    this.setCacheFrameLoading({
+      status: true,
+      message: "Criando novo produto..."
+    })
+
+    return new Promise((resolve, reject) => {
+      MiddlewareServiceAPI.post("/product", product)
+        .then((responseMiddleware) => {
+          if (responseMiddleware.data.message === "Product created") {
+            resolve("product-created")
+          }
+
+          reject(Error("Sem data"))
+        }).catch((error) => {
+          window.log(`error create product`, error)
+        }).finally(() => {
+          this.setCacheFrameLoading({
+            status: false,
+            message: ""
+          })
+        })
+    })
+  }
 }
