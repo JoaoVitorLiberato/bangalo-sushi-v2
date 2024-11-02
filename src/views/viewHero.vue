@@ -75,7 +75,7 @@
                       large
                       width="300"
                       title="Faça seu pedido via delivery"
-                      @click.stop="returnProductRoute('delivery')"
+                      @click.stop="returnProductRoute('delivery'), event('click_button_hero_delivery')"
                     >
                       <span
                         v-font-size="14"
@@ -98,11 +98,14 @@
 <script lang="ts">
   import { Component } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
-  import MixinRedirectLinks from "@/mixins/redirect-links/MixinRedirectLinks"
+  import { MixinRedirectLinks } from "@/mixins/redirect-links/MixinRedirectLinks"
+  import { event } from "@/plugins/firebase"
 
   @Component({})
 
   export default class viewHero extends mixins(
     MixinRedirectLinks,
-  ) {}
+  ) {
+    event = event
+  }
 </script>

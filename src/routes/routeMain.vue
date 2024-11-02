@@ -19,6 +19,15 @@
       <router-view
         name="viewEstabelishLocation"
       />
+
+      <dialog-functions-helper-system>
+        <template
+          #redirectSegment
+        />
+        <template
+          #tryAgain
+        />
+      </dialog-functions-helper-system>
     </v-container>
   </v-main>
 </template>
@@ -27,7 +36,15 @@
   import { Component } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
 
-  @Component({})
+  @Component({
+    components: {
+      DialogFunctionsHelperSystem: () => import(
+        /* webpackChuckName: "dialog-function-helper-system-component" */
+        /* webpackMode: "eager" */
+        "@/components/dialogs/functions/DialogFunctionsHelperSystem.vue"
+      )
+    }
+  })
 
   export default class routeMain extends mixins() {}
 </script>

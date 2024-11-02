@@ -4,10 +4,27 @@ import { namespace } from "vuex-class"
 import { MiddlewareServiceAPI } from "@/middlewares/middlewareServiceAPI"
 
 const cacheStore = namespace("cacheStoreModule")
+const dialogStore = namespace("dialogStoreModule")
 
 @Component({})
 export class MixinServiceProducts extends Vue {
+  @cacheStore.Getter("CacheFrameLoading") getCacheFrameLoading
   @cacheStore.Action("actionCacheFrameLoading") setCacheFrameLoading
+  @dialogStore.Action("setDialogErrorTryAgain") setDialogErrorTryAgain
+
+  get cacheFrameLoading (): { 
+    status: boolean,
+    message: string
+  } {
+    return this.getCacheFrameLoading({
+      status: false,
+      message: "",
+    })
+  }
+
+  set cacheFrameLoading (value) {
+    this.setCacheFrameLoading(value)
+  }
 
   getAllProducts (): Promise<IproductData[]> {
     this.setCacheFrameLoading({
@@ -18,15 +35,18 @@ export class MixinServiceProducts extends Vue {
     return new Promise((resolve) => {
       MiddlewareServiceAPI.get("/products")
         .then((responseMiddleware) => {
-          if (!responseMiddleware.data) throw Error("data-not-found")
+          if (!responseMiddleware.data || responseMiddleware.data.length <= 0) throw Error("data-not-found")
           resolve(responseMiddleware.data)
         }).catch((error) => {
           window.log(`Error MixinServiceProducts - getAllProducts`, error)
+          this.setDialogErrorTryAgain(true)
+
+          this.cacheFrameLoading.message = `
+            Tivemos um erro ao tentar buscar nosso produtos cadastrados.
+            Por favor, Tente novemente.
+          `
         }).finally(() => {
-          this.setCacheFrameLoading({
-            status: false,
-            message: ""
-          })
+          this.cacheFrameLoading.status = false
         })
     })
   }

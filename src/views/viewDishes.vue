@@ -185,6 +185,7 @@
                         style="border-radius:15px"
                         block
                         large
+                        @click="setDialogFunctionHelperSystem(true)"
                       >
                         <span
                           v-font-size="16"
@@ -215,6 +216,7 @@
   import CATEGORIES_DATA from "@/data/products/category.json"
 
   const cacheStore = namespace("cacheStoreModule")
+  const dialogStore = namespace("dialogStoreModule")
 
   @Component({
     components: {}
@@ -223,7 +225,9 @@
   export default class viewDishes extends mixins(
     MixinServiceProducts,
   ) {
-    @cacheStore.Getter("CacheFrameLoading") getCacheFrameLoading
+    @cacheStore.Getter("CacheFrameLoading") declare getCacheFrameLoading
+    @dialogStore.Getter("getDialogFunctionHelperSystem") getDialogFunctionHelperSystem
+    @dialogStore.Action("setDialogFunctionHelperSystem") setDialogFunctionHelperSystem
 
     filterDataProduct = filterDataProduct
 

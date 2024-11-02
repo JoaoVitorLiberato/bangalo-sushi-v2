@@ -2,7 +2,7 @@ import { Component, Vue } from "vue-property-decorator"
 
 @Component({})
 
-export default class MixinRedirectLinks extends Vue {
+export class MixinRedirectLinks extends Vue {
   goToHome (): void {
     location.replace(`/${location.search}`)
   }
