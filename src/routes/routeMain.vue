@@ -4,6 +4,8 @@
       fluid
       class="pa-0"
     >
+      <toolbar-component />
+    
       <router-view
         name="viewHero"
       />
@@ -38,11 +40,16 @@
 
   @Component({
     components: {
+      ToolbarComponent: () => import(
+        /* webpackChuckName: "layout-toolbar-component" */
+        /* webpackMode: "eager" */
+        "@/components/layout/ToolbarComponent.vue"
+      ),
       DialogFunctionsHelperSystem: () => import(
         /* webpackChuckName: "dialog-function-helper-system-component" */
         /* webpackMode: "eager" */
         "@/components/dialogs/functions/DialogFunctionsHelperSystem.vue"
-      )
+      ),
     }
   })
 
