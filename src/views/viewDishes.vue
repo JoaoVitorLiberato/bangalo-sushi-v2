@@ -5,7 +5,7 @@
   >
     <v-row
       no-gutters
-      class="pa-4"
+      class="px-4 py-8"
     >
       <v-col
         cols="12"
@@ -22,7 +22,7 @@
 
       <v-col
         cols="12"
-        class="py-8"
+        class="py-4 py-md-8"
       />
 
       <v-col
@@ -44,14 +44,6 @@
           no-gutters
         >
           <v-col
-            v-if="/error/i.test(String(filterDataProduct()))"
-            cols="12"
-          >
-            Error
-          </v-col>
-
-          <v-col
-            v-else
             cols="12"
           >
             <v-row
@@ -116,6 +108,7 @@
               <v-col
                 cols="12"
                 md="3"
+                class="d-flex justify-center"
               >
                 <v-card
                   v-border="'1px solid var(--v-secondary-base)'"
