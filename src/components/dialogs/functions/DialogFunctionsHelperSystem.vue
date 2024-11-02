@@ -9,6 +9,7 @@
       >
         <v-dialog
           v-model="dialogFunctionHelperSystem"
+          width="350"
         >
           <v-card>
             <v-row
@@ -90,11 +91,12 @@
                     <v-btn
                       color="secondary"
                       depressed
+                      class="text-none"
                       block
                       @click="returnProductRoute(segmentSelected)"
                     >
                       <span
-                        class="font-weight-medium"
+                        class="font-weight-bold"
                         style="color:var(--v-primary-text)"
                       >
                         Proseguir
