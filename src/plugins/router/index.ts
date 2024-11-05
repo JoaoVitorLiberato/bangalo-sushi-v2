@@ -4,10 +4,12 @@ import { titleUpdate } from "@/plugins/router/functions/titleUpdate"
 
 import "@/plugins/router/routerRegisterHooks"
 import mainRouter from "@/plugins/router/mainRouter"
+import productsRouter from "@/plugins/router/productsRouter"
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [].concat(
+  productsRouter as never[],
   mainRouter as never[],
 )
 
