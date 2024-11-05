@@ -24,8 +24,12 @@
             class="mr-5"
           >
             <div>
-              <!-- <card-product /> -->
-              teste
+              <card-product
+                :image="item.url_image"
+                :name="item.name"
+                :description="item.description"
+                :differences="item.differences"
+              />
             </div>
           </v-slide-item>
         </v-slide-group>
@@ -44,8 +48,11 @@
             v-for="(item, index) in filterDataProduct(category)"
             :key="`caroucel-card-dishes-selected-${index}`"
           >
-            <!-- <card-product /> -->
-            teste
+            <card-product
+              :name="item.name"
+              :description="item.description"
+              :differences="item.differences"
+            />
           </v-carousel-item>
         </v-carousel>
       </v-col>

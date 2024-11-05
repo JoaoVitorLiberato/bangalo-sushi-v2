@@ -16,6 +16,7 @@
           cols="12"
         >
           <span
+            v-font-size="24"
             class="font-weight-bold text-uppercase"
           >
             {{ name }}
