@@ -106,6 +106,7 @@
               />
 
               <v-col
+                v-if="productSelected"
                 cols="12"
                 md="3"
                 class="d-flex justify-center"
@@ -252,8 +253,7 @@
     created (): void {
       this.getAllProducts()
         .then((responseMixin) => {
-          if (responseMixin) {
-            sessionStorage.setItem("products", JSON.stringify(responseMixin))
+          if (responseMixin && filterDataProduct()) {
             this.category = this.categories[0].id
             this.productSelected = filterDataProduct(this.category)[0] as IproductData
           }

@@ -77,32 +77,8 @@
         cols="12"
         class="my-2"
       >
-        <!-- <div
-          v-for="type in differences"
-          :key="`checkbox-${type}`"
-          v-show="/actived/i.test(String(differences[type].input))"
-        >
-          <v-checkbox
-            v-if="differences[type]"
-            v-model="differences[type].active"
-            :readonly="differences[type].readonly"
-            color="secondary"
-            hide-details
-            class="pa-0 ma-0"
-          >
-            <template v-slot:label>
-              <span
-                v-font-size="16"
-                class="gray--text font-weight-normal"
-              >
-                {{ differences.flambed.active ? 'O produto será flambado' : 'Desejo flambar o produto' }}
-              </span>
-            </template>
-          </v-checkbox>
-        </div> -->
-
         <v-checkbox
-          v-if="differences.flambed"
+          v-if="differences.flambed && /actived/i.test(String(differences.flambed.input))"
           v-model="differences.flambed.active"
           :readonly="differences.flambed.readonly"
           color="secondary"
@@ -112,7 +88,7 @@
           <template v-slot:label>
             <span
               v-font-size="16"
-              class="gray--text font-weight-normal"
+              class="black--text font-weight-normal"
             >
               {{ differences.flambed.active ? 'O produto será flambado' : 'Desejo flambar o produto' }}
             </span>
@@ -130,7 +106,7 @@
           <template v-slot:label>
             <span
               v-font-size="16"
-              class="gray--text font-weight-normal"
+              class="black--text font-weight-normal"
             >
               {{ differences.breaded.active ? 'O produto será empanado' : 'Desejo empanar o produto' }}
             </span>
@@ -148,7 +124,7 @@
           <template v-slot:label>
             <span
               v-font-size="16"
-              class="gray--text font-weight-normal"
+              class="black--text font-weight-normal"
             >
               {{ differences.especial.active ? 'O produto será especial' : 'Desejo o produto especial' }}
             </span>
@@ -164,7 +140,7 @@
 
           <span
             v-font-size="16"
-            class="gray--text font-weight-normal"
+            class="black--text font-weight-normal"
           >
             Produto totalmente narutal
           </span>
@@ -223,9 +199,5 @@
     @Prop({ default: "" }) name!: string
     @Prop({ default: "" }) description!: string
     @Prop({}) differences?: IDifferences
-
-    created (): void {
-      console.log("created", this.differences)
-    }
   }
 </script>

@@ -1,13 +1,12 @@
-// import PRODUCTS_DATA from "@/data/products/productDefinitive.json"
+import store from "@/plugins/store"
 import { IproductData } from "@/types/types-product"
 
 export function filterDataProduct (category?:string): Array<IproductData>|string {
-  const STORAGE_PRODUCT_DATA = sessionStorage.getItem("products")
+  const STORAGE_PRODUCT_DATA = store.getters["cacheStoreModule/CacheProducts"]()
 
-  if (!STORAGE_PRODUCT_DATA) return "error"
-  if (!category) return JSON.parse(STORAGE_PRODUCT_DATA) as IproductData[]
+  if (!category) return STORAGE_PRODUCT_DATA as IproductData[]
 
-  const PRODUCT_DATA_FILTERED = (JSON.parse(STORAGE_PRODUCT_DATA)).filter((product) => {
+  const PRODUCT_DATA_FILTERED = STORAGE_PRODUCT_DATA.filter((product) => {
     if (String(product.category || "") === String(category || "")) return product
   })
 

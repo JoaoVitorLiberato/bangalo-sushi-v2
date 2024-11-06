@@ -41,7 +41,9 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from "vue-property-decorator"
+  import { Component } from "vue-property-decorator"
+  import { mixins } from "vue-class-component"
+  import { MixinServiceProducts } from "@/mixins/services/mixinServiceProducts"
   import { filterDataProduct } from "@/helpers/filterProducts"
   import DATA_CATEGORIES_PRODUCTS from "@/data/products/category.json"
 
@@ -55,11 +57,17 @@
     }
   })
 
-  export default class viewProducts extends Vue {
+  export default class viewProducts extends mixins(
+    MixinServiceProducts,
+  ) {
     filterDataProduct = filterDataProduct
 
     get categories (): typeof DATA_CATEGORIES_PRODUCTS {
       return DATA_CATEGORIES_PRODUCTS
+    }
+
+    created (): void {
+      this.getAllProducts()
     }
   }
 </script>

@@ -8,6 +8,7 @@ const dialogStore = namespace("dialogStoreModule")
 
 @Component({})
 export class MixinServiceProducts extends Vue {
+  @cacheStore.Action("actionCacheProducts") setCacheProducts
   @cacheStore.Getter("CacheFrameLoading") getCacheFrameLoading
   @cacheStore.Action("actionCacheFrameLoading") setCacheFrameLoading
   @dialogStore.Action("setDialogErrorTryAgain") setDialogErrorTryAgain
@@ -36,6 +37,7 @@ export class MixinServiceProducts extends Vue {
       MiddlewareServiceAPI.get("/products")
         .then((responseMiddleware) => {
           if (!responseMiddleware.data || responseMiddleware.data.length <= 0) throw Error("data-not-found")
+          this.setCacheProducts(responseMiddleware.data)
           resolve(responseMiddleware.data)
         }).catch((error) => {
           window.log(`Error MixinServiceProducts - getAllProducts`, error)
