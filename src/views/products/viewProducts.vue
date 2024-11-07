@@ -10,7 +10,7 @@
         v-show="filterDataProduct(id).length > 0"
         :key="`content-category-${name}`"
         no-gutters
-        class="pa-4"
+        class="pa-md-4 pa-2"
       >
         <v-col
           cols="12"

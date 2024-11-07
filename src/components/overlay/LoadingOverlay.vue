@@ -6,6 +6,7 @@
       <v-card
         color="primary"
         style="border-radius:50%"
+        class="pa-1"
       >
         <v-progress-circular
           indeterminate
@@ -17,7 +18,7 @@
             src="/favicon.png"
             alt="Bangalô Sushi Lounge - Seu sushi com qualidade, sabor e tradição"
             width="200"
-            height="140"
+            height="180"
             contain
           />
         </v-progress-circular>

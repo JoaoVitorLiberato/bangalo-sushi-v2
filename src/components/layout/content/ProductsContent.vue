@@ -8,6 +8,7 @@
     >
       <v-col
         cols="12"
+        class="hidden-sm-and-down"
       >
         <v-slide-group
           show-arrows
@@ -34,6 +35,40 @@
             </div>
           </v-slide-item>
         </v-slide-group>
+      </v-col>
+
+      <v-col
+        cols="12"
+        class="hidden-md-and-up"
+      >
+        <div
+          style="width:100%;max-width:304px;"
+          class="mx-auto"
+        >
+          <v-carousel
+            hide-delimiters
+            class="fix-caroucel-cards"
+            bottom
+          >
+            <v-carousel-item
+              v-for="(item, index) in filterDataProduct(category)"
+              :key="`caroucel-card-dishes-selected-${index}`"
+            >
+              <div
+                class="mt-9"
+              >
+                <card-product
+                  :image="item.url_image"
+                  :name="item.name"
+                  :description="item.description"
+                  :differences="item.differences"
+                  :product="item"
+                  @onClick="go()"
+                />
+              </div>
+            </v-carousel-item>
+          </v-carousel>
+        </div>
       </v-col>
     </v-row>
   </v-container>
