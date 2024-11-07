@@ -1,9 +1,11 @@
 <template>
   <div>
     <v-app-bar
-      elevation="0"
+      elevation="1"
       height="65"
       class="fix-toolbar-app-bar"
+      color="primary"
+      app
     >
       <v-row
         no-gutters
