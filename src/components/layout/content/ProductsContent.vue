@@ -8,7 +8,6 @@
     >
       <v-col
         cols="12"
-        class="hidden-sm-and-down"
       >
         <v-slide-group
           show-arrows
@@ -29,32 +28,12 @@
                 :name="item.name"
                 :description="item.description"
                 :differences="item.differences"
+                :product="item"
+                @onClick="go()"
               />
             </div>
           </v-slide-item>
         </v-slide-group>
-      </v-col>
-
-      <v-col
-        cols="12"
-        class="hidden-md-and-up"
-      >
-        <v-carousel
-          hide-delimiters
-          class="fix-caroucel-cards"
-          bottom
-        >
-          <v-carousel-item
-            v-for="(item, index) in filterDataProduct(category)"
-            :key="`caroucel-card-dishes-selected-${index}`"
-          >
-            <card-product
-              :name="item.name"
-              :description="item.description"
-              :differences="item.differences"
-            />
-          </v-carousel-item>
-        </v-carousel>
       </v-col>
     </v-row>
   </v-container>
@@ -78,5 +57,9 @@
     @Prop({ default: "" }) category?: string
 
     filterDataProduct = filterDataProduct
+
+    go (): void {
+      console.log("ProductsContent - console")
+    }
   }
 </script>

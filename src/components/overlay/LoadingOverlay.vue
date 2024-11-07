@@ -10,7 +10,7 @@
         <v-progress-circular
           indeterminate
           color="amber"
-          width="4"
+          width="5"
           size="220"
         >
           <v-img

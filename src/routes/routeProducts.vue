@@ -17,6 +17,7 @@
       </dialog-functions-helper-system>
 
       <loading-overlay-component />
+      <button-cart-products />
     </v-container>
   </v-main>
 </template>
@@ -41,6 +42,11 @@
         /* webpackChuckName: "loading-overlay-component" */
         /* webpackMode: "eager" */
         "@/components/overlay/LoadingOverlay.vue"
+      ),
+      ButtonCartProducts: () => import(
+        /* webpackChuckName: "button-cart-products-component" */
+        /* webpackMode: "eager" */
+        "@/components/buttons/ButtonCartProducts.vue"
       ),
     }
   })

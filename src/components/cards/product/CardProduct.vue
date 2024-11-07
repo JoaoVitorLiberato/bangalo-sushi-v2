@@ -12,9 +12,9 @@
       style="width:100%;max-width:150px;position:absolute;top:-27px;right:0;"
     >
       <span
-        v-font-size="12"
+        v-font-size="14"
         class="text-uppercase font-weight-bold"
-        v-text="'teste'"
+        v-text="setTypeDifferences(differences)"
       />
     </div>
 
@@ -50,7 +50,7 @@
 
       <v-col
         cols="12"
-        style="line-height:15px;min-height:50px"
+        style="line-height:15px;min-height:50px;max-height:70px;overflowY:scroll;"
       >
         <span
           v-font-size="14"
@@ -157,6 +157,104 @@
 
       <v-col
         cols="12"
+        class="py-1"
+      />
+
+      <v-col
+        cols="12"
+      >
+        <v-row
+          no-gutters
+          justify="space-between"
+          align="center"
+        >
+          <v-col
+            cols="5"
+          >
+            <v-row
+              no-gutters
+              style="line-height:1"
+            >
+              <v-col
+                cols="12"
+              >
+                <span
+                  v-font-size="12"
+                  class="font-weight-medium text-uppercase"
+                >
+                  Por apenas
+                </span>
+              </v-col>
+
+              <v-col
+                cols="12"
+                class="d-flex"
+              >
+                <span
+                  v-font-size="24"
+                  class="font-weight-medium pr-1"
+                >
+                  R$
+                </span>
+
+                <span
+                  v-font-size="24"
+                  class="font-weight-medium"
+                >
+                  {{ setPriceProductCard(product, productAmount) }}
+                </span>
+              </v-col>
+            </v-row>
+          </v-col>
+
+          <v-col
+            cols="6"
+            class="d-flex align-center justify-space-between"
+          >
+            <v-btn
+              color="secondary"
+              depressed
+              small
+              style="width:30px;height:30px;border-radius:15px"
+              class="pa-0 ma-0"
+              :disabled="productAmount <= 1"
+              @click="productAmount -= 1"
+            >
+              <v-icon
+                color="#000"
+                size="16"
+              >
+                remove
+              </v-icon>
+            </v-btn>
+
+            <span
+              class="font-weight-bold mx-2"
+            >
+              {{ productAmount }}
+            </span>
+
+            <v-btn
+              color="secondary"
+              depressed
+              small
+              style="width:30px;height:30px;border-radius:15px"
+              class="pa-0 ma-0"
+              @click="productAmount += 1"
+            >
+              <v-icon
+                color="#000"
+                size="16"
+              >
+                add
+              </v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-col>
+
+      <v-col
+        cols="12"
         class="py-2"
       />
 
@@ -170,6 +268,7 @@
           style="border-radius:15px"
           block
           large
+          @click="$emit('onClick')"
         >
           <span
             v-font-size="16"
@@ -190,14 +289,23 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue, Prop } from "vue-property-decorator"
-  import { IDifferences } from "@/types/types-product"
+  import { Component, Prop, Emit } from "vue-property-decorator"
+  import { mixins } from "vue-class-component"
+  import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
+  import { IDifferences, IproductData } from "@/types/types-product"
 
   @Component({})
-  export default class CardProduct extends Vue {
+  export default class CardProduct extends mixins(
+    MixinFunctionsSystem,
+  ) {
+    @Emit()
+      onClick (): void {}
     @Prop({ default: "" }) image!: string
     @Prop({ default: "" }) name!: string
     @Prop({ default: "" }) description!: string
-    @Prop({}) differences?: IDifferences
+    @Prop({}) differences!: IDifferences
+    @Prop({}) product!: IproductData
+
+    productAmount = 1
   }
 </script>
