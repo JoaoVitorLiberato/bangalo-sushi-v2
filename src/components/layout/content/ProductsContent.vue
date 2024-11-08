@@ -63,7 +63,6 @@
                   :description="item.description"
                   :differences="item.differences"
                   :product="item"
-                  @onClick="go()"
                 />
               </div>
             </v-carousel-item>
@@ -92,9 +91,5 @@
     @Prop({ default: "" }) category?: string
 
     filterDataProduct = filterDataProduct
-
-    go (): void {
-      console.log("ProductsContent - console")
-    }
   }
 </script>

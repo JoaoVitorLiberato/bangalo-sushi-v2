@@ -1,7 +1,11 @@
 import { IproductData } from "@/types/types-product"
 
 interface cacheStoreInterface {
-  rastreamentoUsuario: Record<string, string|string[]|number|number[]|boolean>
+  rastreamentoUsuario: {
+    source: string;
+    cart: IproductData[]
+    productSelected: IproductData | null
+  };
   products: IproductData[]
   frameLoading: {
     status: boolean,

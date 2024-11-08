@@ -201,7 +201,7 @@
                   v-font-size="24"
                   class="font-weight-medium"
                 >
-                  {{ setPriceProductCard(product, productAmount) }}
+                  {{ setPriceProductCard(product, productAmount).priceFormated }}
                 </span>
               </v-col>
             </v-row>
@@ -268,7 +268,7 @@
           style="border-radius:15px"
           block
           large
-          @click="$emit('onClick')"
+          @click="changeProductWithAmount(product)"
         >
           <span
             v-font-size="16"
@@ -283,29 +283,60 @@
             shopping_cart
           </v-icon>
         </v-btn>
+
+        <dialog-complements
+          :open="dialogComplements"
+        />
       </v-col>
     </v-row>
   </v-card>
 </template>
 
 <script lang="ts">
-  import { Component, Prop, Emit } from "vue-property-decorator"
+  import { Component, Prop } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
+  import { namespace } from "vuex-class"
   import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
   import { IDifferences, IproductData } from "@/types/types-product"
 
-  @Component({})
+  const cacheStore = namespace("cacheStoreModule")
+
+  @Component({
+    components: {
+      DialogComplements: () => import(
+        /* webpackChuckName: "dialog-complements-component" */
+        /* webpackMode: "eager" */
+        "@/components/dialogs/functions/DialogComplements.vue"
+      )
+    }
+  })
+
   export default class CardProduct extends mixins(
     MixinFunctionsSystem,
   ) {
-    @Emit()
-      onClick (): void {}
     @Prop({ default: "" }) image!: string
     @Prop({ default: "" }) name!: string
     @Prop({ default: "" }) description!: string
     @Prop({}) differences!: IDifferences
     @Prop({}) product!: IproductData
 
+    @cacheStore.Action("actionRastreamentoUsuarioProductSelected") setRastreamentoUsuarioProductSelected
+
     productAmount = 1
+    dialogComplements = false
+
+    changeProductWithAmount (product:IproductData): void {
+      const PRODUCT_DATA = {
+        ...product,
+        price: {
+          ...product.price,
+          qtd_product: this.productAmount,
+          total: Number(this.setPriceProductCard(this.product, this.productAmount).priceCalculed)
+        }
+      }
+
+      this.setRastreamentoUsuarioProductSelected(PRODUCT_DATA)
+      this.dialogComplements = true
+    }
   }
 </script>

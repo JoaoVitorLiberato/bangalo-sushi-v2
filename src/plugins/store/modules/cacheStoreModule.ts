@@ -4,7 +4,11 @@ import { cacheStoreInterface } from "@/plugins/store/interfaces/cacheStoreInterf
 
 const moduleCache = (): cacheStoreInterface => {
   return {
-    rastreamentoUsuario: {},
+    rastreamentoUsuario: {
+      source: "",
+      cart: [],
+      productSelected: null
+    },
     products: [],
     frameLoading: {
       status: false,
@@ -18,6 +22,12 @@ const state: cacheStoreInterface = moduleCache()
 const getters: GetterTree<cacheStoreInterface, rootStateInterface> = {
   CacheRastreamentoUsuarioPayloadSource: ({ rastreamentoUsuario }) => () => {
     return rastreamentoUsuario.source
+  },
+  CacheRastreamentoUsuarioProductsCart: ({ rastreamentoUsuario }) => () => {
+    return rastreamentoUsuario.cart
+  },
+  CacheRastreamentoUsuarioProductSelected: ({ rastreamentoUsuario }) => () => {
+    return rastreamentoUsuario.productSelected
   },
   CacheProducts: ({ products }) => () => {
     return products
@@ -37,6 +47,12 @@ const mutations: MutationTree<cacheStoreInterface> = {
   mutationCacheFrameLoading: (state, data) => {
     state.frameLoading = data
   },
+  mutationRastreamentoUsuarioProductCart: (state, data) => {
+    state.rastreamentoUsuario.cart.push(data)
+  },
+  mutationRastreamentoUsuarioProductSelected: (state, data) => {
+    state.rastreamentoUsuario.productSelected = data
+  },
 }
 
 const actions: ActionTree<cacheStoreInterface, rootStateInterface> = {
@@ -49,6 +65,12 @@ const actions: ActionTree<cacheStoreInterface, rootStateInterface> = {
   },
   actionCacheFrameLoading: ({ commit }, data) => {
     commit("mutationCacheFrameLoading", data)
+  },
+  actionRastreamentoUsuarioProductCart: ({ commit }, data) => {
+    commit("mutationRastreamentoUsuarioProductCart", data)
+  },
+  actionRastreamentoUsuarioProductSelected: ({ commit }, data) => {
+    commit("mutationRastreamentoUsuarioProductSelected", data)
   },
 }
 
