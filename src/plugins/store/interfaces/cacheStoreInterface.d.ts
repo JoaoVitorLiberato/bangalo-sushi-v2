@@ -1,15 +1,16 @@
-import { IproductData } from "@/types/types-product"
+import { IproductData, IComplements } from "@/types/types-product"
 
 interface cacheStoreInterface {
   rastreamentoUsuario: {
     source: string;
-    cart: IproductData[]
-    productSelected: IproductData | null
+    cart: IproductData[];
+    productSelected: IproductData | null;
   };
-  products: IproductData[]
+  products: IproductData[];
+  complements: IComplements[];
   frameLoading: {
-    status: boolean,
-    message: string,
+    status: boolean;
+    message: string;
   };
 }
 

@@ -13,7 +13,7 @@ export class MixinServiceProducts extends Vue {
   @cacheStore.Action("actionCacheFrameLoading") setCacheFrameLoading
   @dialogStore.Action("setDialogErrorTryAgain") setDialogErrorTryAgain
 
-  get cacheFrameLoading (): { 
+  get cacheFrameLoading (): {
     status: boolean,
     message: string
   } {
@@ -44,7 +44,7 @@ export class MixinServiceProducts extends Vue {
           this.setDialogErrorTryAgain(true)
 
           this.cacheFrameLoading.message = `
-            Tivemos um erro ao tentar buscar nosso produtos cadastrados.
+            Tivemos um erro ao tentar carregar nossos produtos cadastrados.
             Por favor, Tente novemente.
           `
         }).finally(() => {

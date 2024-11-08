@@ -298,6 +298,7 @@
   import { namespace } from "vuex-class"
   import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
   import { IDifferences, IproductData } from "@/types/types-product"
+  import { MixinServiceComplements } from "@/mixins/services/mixinServiceComplements"
 
   const cacheStore = namespace("cacheStoreModule")
 
@@ -313,6 +314,7 @@
 
   export default class CardProduct extends mixins(
     MixinFunctionsSystem,
+    MixinServiceComplements,
   ) {
     @Prop({ default: "" }) image!: string
     @Prop({ default: "" }) name!: string
@@ -321,6 +323,7 @@
     @Prop({}) product!: IproductData
 
     @cacheStore.Action("actionRastreamentoUsuarioProductSelected") setRastreamentoUsuarioProductSelected
+    @cacheStore.Action("actionCacheComplements") setCacheComplements
 
     productAmount = 1
     dialogComplements = false
@@ -336,7 +339,12 @@
       }
 
       this.setRastreamentoUsuarioProductSelected(PRODUCT_DATA)
-      this.dialogComplements = true
+
+      this.getAllComplements()
+        .then((responseMixin) => {
+          this.setCacheComplements(responseMixin)
+          this.dialogComplements = true
+        })
     }
   }
 </script>

@@ -10,6 +10,7 @@ const moduleCache = (): cacheStoreInterface => {
       productSelected: null
     },
     products: [],
+    complements: [],
     frameLoading: {
       status: false,
       message: "",
@@ -34,7 +35,10 @@ const getters: GetterTree<cacheStoreInterface, rootStateInterface> = {
   },
   CacheFrameLoading: ({ frameLoading }) => () => {
     return frameLoading
-  }
+  },
+  CacheComplements: ({ complements }) => () => {
+    return complements
+  },
 }
 
 const mutations: MutationTree<cacheStoreInterface> = {
@@ -52,6 +56,9 @@ const mutations: MutationTree<cacheStoreInterface> = {
   },
   mutationRastreamentoUsuarioProductSelected: (state, data) => {
     state.rastreamentoUsuario.productSelected = data
+  },
+  mutationCacheComplements: (state, data) => {
+    state.complements = data
   },
 }
 
@@ -71,6 +78,9 @@ const actions: ActionTree<cacheStoreInterface, rootStateInterface> = {
   },
   actionRastreamentoUsuarioProductSelected: ({ commit }, data) => {
     commit("mutationRastreamentoUsuarioProductSelected", data)
+  },
+  actionCacheComplements: ({ commit }, data) => {
+    commit("mutationCacheComplements", data)
   },
 }
 

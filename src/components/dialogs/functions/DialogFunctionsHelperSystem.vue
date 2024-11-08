@@ -21,6 +21,7 @@
               >
                 <v-btn
                   icon
+                  large
                   @click="dialogFunctionHelperSystem = !dialogFunctionHelperSystem"
                 >
                   <v-icon>
@@ -68,6 +69,7 @@
                                   #label
                                 >
                                   <span
+                                    v-font-size="18"
                                     class="font-weight-regular"
                                     style="color: var(--v-primary-text);"
                                     v-text="/delivery/i.test(String(servico)) ? 'Delivery (Entrega)' : 'Estabelecimento (Local)'"
@@ -93,6 +95,7 @@
                       depressed
                       class="text-none"
                       block
+                      rounded
                       @click="returnProductRoute(segmentSelected)"
                     >
                       <span
