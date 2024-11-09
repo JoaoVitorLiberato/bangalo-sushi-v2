@@ -5,7 +5,7 @@
       height="65"
       class="fix-toolbar-app-bar"
       color="primary"
-      app
+      :app="!disableButton"
     >
       <v-row
         no-gutters
@@ -26,6 +26,7 @@
         </v-col>
 
         <v-col
+          v-if="!disableButton"
           cols="2"
           class="text-sm-end"
         >
@@ -91,7 +92,7 @@
 </template>
 
 <script lang="ts">
-  import { Component } from "vue-property-decorator"
+  import { Component, Prop } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
   import { MixinRedirectLinks } from "@/mixins/redirect-links/MixinRedirectLinks"
   import "@/styles/components/layout/toolbarComponent.styl"
@@ -100,6 +101,8 @@
   export default class ToolbarComponent extends mixins(
     MixinRedirectLinks,
   ) {
+    @Prop({ default: false }) disableButton?: boolean
+
     navDrawer = false
 
     get routesDrawer (): Array<{

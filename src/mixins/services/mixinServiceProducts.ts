@@ -2,6 +2,7 @@ import { Component, Vue } from "vue-property-decorator"
 import { IproductData } from "@/types/types-product"
 import { namespace } from "vuex-class"
 import { MiddlewareServiceAPI } from "@/middlewares/middlewareServiceAPI"
+import { event } from "@/plugins/firebase"
 
 const cacheStore = namespace("cacheStoreModule")
 const dialogStore = namespace("dialogStoreModule")
@@ -41,19 +42,19 @@ export class MixinServiceProducts extends Vue {
           resolve(responseMiddleware.data)
         }).catch((error) => {
           window.log(`Error MixinServiceProducts - getAllProducts`, error)
-          this.setDialogErrorTryAgain(true)
-
           this.cacheFrameLoading.message = `
             Tivemos um erro ao tentar carregar nossos produtos cadastrados.
             Por favor, Tente novemente.
           `
+          this.setDialogErrorTryAgain(true)
+          event("error-get-all-porduct")
         }).finally(() => {
           this.cacheFrameLoading.status = false
         })
     })
   }
 
-  createPorduct (product): Promise<string> {
+  createPorduct (product:IproductData): Promise<string> {
     this.setCacheFrameLoading({
       status: true,
       message: "Criando novo produto..."

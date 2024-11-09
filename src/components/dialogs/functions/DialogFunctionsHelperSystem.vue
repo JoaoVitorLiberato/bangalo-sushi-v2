@@ -96,7 +96,10 @@
                       class="text-none"
                       block
                       rounded
-                      @click="returnProductRoute(segmentSelected)"
+                      @click="() => (
+                        event(`click_button_popup_redirect_${segmentSelected}`),
+                        returnProductRoute(segmentSelected)
+                      )"
                     >
                       <span
                         class="font-weight-bold"
@@ -184,6 +187,7 @@
   import { mixins } from "vue-class-component"
   import { namespace } from "vuex-class"
   import { MixinRedirectLinks } from "@/mixins/redirect-links/MixinRedirectLinks"
+  import { event } from "@/plugins/firebase"
 
   const dialogStore = namespace("dialogStoreModule")
   const cacheStore = namespace("cacheStoreModule")
@@ -197,6 +201,8 @@
     @dialogStore.Getter("getDialogErrorTryAgain") getDialogErrorTryAgain
     @dialogStore.Action("setDialogErrorTryAgain") setDialogErrorTryAgain
     @cacheStore.Getter("CacheFrameLoading") getCacheFrameLoading
+
+    event = event
 
     segmentSelected = "delivery"
 

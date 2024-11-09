@@ -75,7 +75,7 @@
                       large
                       width="300"
                       title="Faça seu pedido via delivery"
-                      @click.stop="returnProductRoute('delivery'), event('click_button_hero_delivery')"
+                      @click.stop=" event('click_button_hero_delivery'), returnProductRoute('delivery')"
                     >
                       <span
                         v-font-size="14"

@@ -299,6 +299,7 @@
   import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
   import { IDifferences, IproductData } from "@/types/types-product"
   import { MixinServiceComplements } from "@/mixins/services/mixinServiceComplements"
+  import { event } from "@/plugins/firebase"
 
   const cacheStore = namespace("cacheStoreModule")
 
@@ -329,6 +330,8 @@
     dialogComplements = false
 
     changeProductWithAmount (product:IproductData): void {
+      event("click_button_card_product")
+
       const PRODUCT_DATA = {
         ...product,
         price: {
