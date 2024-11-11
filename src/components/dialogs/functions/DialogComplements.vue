@@ -32,7 +32,7 @@
               md="5"
             >
               <v-card
-                :max-width="$vuetify.breakpoint.smAndDown ? 310 : 360"
+                :width="$vuetify.breakpoint.smAndDown ? 310 : 360"
                 class="ma-2"
                 style="border:2px solid var(--v-secondary-base);border-radius:20px"
               >
@@ -44,11 +44,19 @@
                 >
                   <v-col
                     cols="12"
+                    class="d-flex align-center justify-space-between"
                   >
                     <span
                       class="font-weight-medium"
                     >
                       {{ item.name }}
+                    </span>
+
+                    <span
+                      v-font-size="14"
+                      class="font-weight-bold text-uppercase green--text"
+                    >
+                      {{ getReadingValue(item.price) }}
                     </span>
                   </v-col>
 
@@ -80,7 +88,7 @@
                     <span
                       class="font-weight-medium text-uppercase"
                     >
-                      {{ getReadingValue(item.price) }}
+                      {{ Number(item.qtd) !== 0 ? getReadingValue(Number(item.price) * Number(item.qtd)) :  getReadingValue(0)}}
                     </span>
                   </v-col>
 
@@ -96,7 +104,11 @@
                       style="width:30px;height:30px;border-radius:15px"
                       class="pa-0 ma-0"
                       :disabled="item.qtd === 0"
-                      @click="item.qtd -= 1"
+                      @click="() => (
+                        item.qtd -= 1,
+                        item.priceTotal = Number(item.price) * Number(item.qtd),
+                        setCartComplement(item)
+                      )"
                     >
                       <v-icon
                         color="#000"
@@ -118,7 +130,11 @@
                       small
                       style="width:30px;height:30px;border-radius:15px"
                       class="pa-0 ma-0"
-                      @click="item.qtd += 1"
+                      @click="() => (
+                        item.qtd += 1,
+                        item.priceTotal = Number(item.price) * Number(item.qtd),
+                        setCartComplement(item)
+                      )"
                     >
                       <v-icon
                         color="#000"
@@ -137,7 +153,6 @@
         <v-col
           cols="12"
           md="4"
-          class="hidden-sm-and-down"
         >
           <v-card
             class="pa-4"
@@ -152,10 +167,35 @@
                 cols="12"
               >
                 <span
-                  class="font-weight-bold text-uppercase"
+                  v-font-size="18"
+                  class="font-weight-medium text-uppercase"
                 >
                   Complementos
                 </span>
+              </v-col>
+
+              <v-col
+                cols="12"
+                class="py-2"
+              />
+
+              <v-col
+                cols="12"
+              >
+                <v-row
+                  no-gutters
+                >
+                  <v-col
+                    v-for="complement in cartComplements"
+                  :key="`card-complement-${complement.id}`"
+                    cols="12"
+                    class="my-1"
+                  >
+                    <v-card>
+                      {{ complement.name }}
+                    </v-card>
+                  </v-col>
+                </v-row>
               </v-col>
             </v-row>
           </v-card>
@@ -170,6 +210,7 @@
   import { mixins } from "vue-class-component"
   import { namespace } from "vuex-class"
   import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
+  import { IComplements } from "@/types/types-product"
   // import { event } from "@/plugins/firebase"
 
   const cacheStore = namespace("cacheStoreModule")
@@ -190,5 +231,43 @@
     @Prop({ default: false }) open!: boolean
 
     @cacheStore.Getter("CacheComplements") getCacheComplements
+
+    cartComplements: Array<IComplements> = []
+
+    setCartComplement (complement: IComplements): void {
+      console.log("setCartComplement", complement)
+      if (Number(complement.qtd) === 0) {
+        console.log("Apagar complemento")
+        this.removeComplementCart(String(complement.id))
+        return
+      }
+
+      const FILTER_CART_COMPLEMENT = this.cartComplements.filter((item) => {
+        if (String(item.id || "") === String(complement.id || "")) {
+          return item
+        }
+      })
+
+      if (FILTER_CART_COMPLEMENT.length === 0) {
+        this.cartComplements.push(complement)
+      } else {
+        const COMLEMENT_CART_UPDATE = this.cartComplements.filter((item) => {
+          if (String(item.id || "") !== String(complement.id || "")) {
+            return item
+          }
+        })
+
+        this.cartComplements = COMLEMENT_CART_UPDATE
+        this.cartComplements.push(complement)
+      }
+    }
+
+    removeComplementCart (id:string): void {
+      const COMPLEMENT_CART_DELETED = this.cartComplements.filter((item) => {
+        if (String(item.id || "") !== String(id || "")) return item
+      })
+
+      this.cartComplements = COMPLEMENT_CART_DELETED
+    }
   }
 </script>
