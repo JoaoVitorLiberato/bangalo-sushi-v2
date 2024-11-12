@@ -9,7 +9,7 @@
     />
 
     <v-card
-      style="border-radius:0" 
+      style="border-radius:0"
     >
       <v-row
         no-gutters
@@ -155,7 +155,7 @@
           md="4"
         >
           <v-card
-            class="pa-4"
+            class="hidden-sm-and-down pa-4"
             elevation="0"
             style="border-radius:0;height:100vh"
             color="#f2f2f2"
@@ -191,8 +191,54 @@
                     cols="12"
                     class="my-1"
                   >
-                    <v-card>
-                      {{ complement.name }}
+                    <v-card
+                      color="secondary"
+                      class="pa-2"
+                      elevation="0"
+                    >
+                      <v-row
+                        no-gutters
+                      >
+                        <v-col
+                          cols="12"
+                          class="d-flex align-center justify-space-between"
+                        >
+                          <span
+                            class="font-weight-medium"
+                            v-text="complement.name"
+                          />
+
+                          <div>
+                            <v-btn
+                              icon
+                              color="error"
+                              @click.stop="removeComplementCart(String(complement.id))"
+                            >
+                              <v-icon>
+                                delete
+                              </v-icon>
+                            </v-btn>
+                          </div>
+                        </v-col>
+
+                        <v-col
+                          cols="12"
+                          class="py-1"
+                        />
+
+                        <v-col
+                          cols="12"
+                          class="d-flex justify-space-between align-center"
+                        >
+                          <span
+                            v-text="getReadingValue(complement.priceTotal)"
+                          />
+
+                          <span
+                            v-text="`Quantidade: ${complement.qtd}`"
+                          />
+                        </v-col>
+                      </v-row>
                     </v-card>
                   </v-col>
                 </v-row>
@@ -235,9 +281,7 @@
     cartComplements: Array<IComplements> = []
 
     setCartComplement (complement: IComplements): void {
-      console.log("setCartComplement", complement)
       if (Number(complement.qtd) === 0) {
-        console.log("Apagar complemento")
         this.removeComplementCart(String(complement.id))
         return
       }
@@ -257,8 +301,10 @@
           }
         })
 
-        this.cartComplements = COMLEMENT_CART_UPDATE
-        this.cartComplements.push(complement)
+        this.cartComplements = [
+          ...COMLEMENT_CART_UPDATE,
+          complement
+        ]
       }
     }
 
