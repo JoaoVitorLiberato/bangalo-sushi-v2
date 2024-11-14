@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-model="open"
+    v-model="setDialog"
     fullscreen
     persistent
   >
@@ -152,6 +152,11 @@
 
         <v-col
           cols="12"
+          class="hidden-md-and-up py-6"
+        />
+
+        <v-col
+          cols="12"
           md="4"
         >
           <v-card
@@ -176,18 +181,15 @@
 
               <v-col
                 cols="12"
-                class="py-2"
-              />
-
-              <v-col
-                cols="12"
               >
                 <v-row
+
                   no-gutters
                 >
                   <v-col
                     v-for="complement in cartComplements"
-                  :key="`card-complement-${complement.id}`"
+                    v-show="cartComplements.length"
+                    :key="`card-complement-${complement.id}`"
                     cols="12"
                     class="my-1"
                   >
@@ -241,10 +243,182 @@
                       </v-row>
                     </v-card>
                   </v-col>
+
+                  <v-col
+                    v-if="cartComplements.length === 0"
+                    cols="12"
+                  >
+                    <span>
+                      Sem complementos adicionado no momento.
+                    </span>
+                  </v-col>
+
+                  <v-col
+                    cols="12"
+                    style="position:relative"
+                  >
+                    <v-btn
+                      :style="`position:fixed;bottom:0;right:0`"
+                      depressed
+                      large
+                      color="secondary"
+                      block
+                      @click.stop="setCacheCartProduct()"
+                    >
+                      <span
+                        v-font-size="16"
+                        class="black--text font-weight-medium"
+                      >
+                        Adicionar ao carrinho
+                      </span>
+                    </v-btn>
+                  </v-col>
                 </v-row>
               </v-col>
             </v-row>
           </v-card>
+
+          <v-footer
+            :class="`hidden-md-and-up px-1 ${activePainel ? 'fix-active-painel-complements' : 'fix-desatived-painel-complements'}`"
+            color="secondary"
+            app
+          >
+            <v-row
+              v-position.relative
+              no-gutters
+              style="width:100%"
+            >
+              <v-col
+                cols="12"
+              >
+                <v-btn
+                  block
+                  text
+                  max-width="100%"
+                  class="d-flex align-center justify-space-between px-1"
+                  @click="activePainel = !activePainel"
+                >
+                  <span
+                    v-font-size="16"
+                    class="font-weight-medium"
+                  >
+                    Ver complementos
+                  </span>
+
+                  <v-icon
+                    size="30"
+                    :style="activePainel ? 'transform: rotate(0deg);' : 'transform: rotate(-180deg);'"
+                  >
+                    keyboard_arrow_down
+                  </v-icon>
+                </v-btn>
+              </v-col>
+
+              <v-col
+                cols="12"
+                class="py-2"
+              />
+
+              <v-col
+                cols="12"
+                class="px-2"
+              >
+                <v-row
+                  v-if="cartComplements.length"
+                  no-gutters
+                >
+                  <v-col
+                    v-for="complement in cartComplements"
+                    :key="`card-complement-${complement.id}`"
+                    cols="12"
+                    class="my-1"
+                  >
+                    <v-card
+                      color="primary"
+                      class="pa-2"
+                      elevation="0"
+                      max-width="450"
+                    >
+                      <v-row
+                        no-gutters
+                      >
+                        <v-col
+                          cols="12"
+                          class="d-flex align-center justify-space-between"
+                        >
+                          <span
+                            class="font-weight-medium"
+                            v-text="complement.name"
+                          />
+
+                          <div>
+                            <v-btn
+                              icon
+                              color="error"
+                              @click.stop="removeComplementCart(String(complement.id))"
+                            >
+                              <v-icon>
+                                delete
+                              </v-icon>
+                            </v-btn>
+                          </div>
+                        </v-col>
+
+                        <v-col
+                          cols="12"
+                          class="py-1"
+                        />
+
+                        <v-col
+                          cols="12"
+                          class="d-flex justify-space-between align-center"
+                        >
+                          <span
+                            v-text="getReadingValue(complement.priceTotal)"
+                          />
+
+                          <span
+                            v-text="`Quantidade: ${complement.qtd}`"
+                          />
+                        </v-col>
+                      </v-row>
+                    </v-card>
+                  </v-col>
+                </v-row>
+
+                <span
+                  v-else
+                >
+                  Sem complementos adicionado no momento.
+                </span>
+              </v-col>
+
+              <v-col
+                cols="12"
+                class="py-2"
+              />
+
+              <v-col
+                cols="12"
+                style="position:relative"
+              >
+                <v-btn
+                  :style="`position:${activePainel ? 'fixed': 'relative'};bottom:0;left:0;right:0`"
+                  depressed
+                  large
+                  block
+                  @click.stop="setCacheCartProduct()"
+                >
+                  <span
+                    v-font-size="16"
+                    class="font-weight-medium"
+                  >
+                    Adicionar ao carrinho
+                  </span>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-footer>
         </v-col>
       </v-row>
     </v-card>
@@ -252,12 +426,13 @@
 </template>
 
 <script lang="ts">
-  import { Component, Prop } from "vue-property-decorator"
+  import { Component, ModelSync } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
   import { namespace } from "vuex-class"
   import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
   import { IComplements } from "@/types/types-product"
-  // import { event } from "@/plugins/firebase"
+  import { event } from "@/plugins/firebase"
+  import "@/styles/components/dialogs/functions/dialogComplements.styl"
 
   const cacheStore = namespace("cacheStoreModule")
 
@@ -274,10 +449,14 @@
   export default class DialogComplements extends mixins(
     MixinFunctionsSystem,
   ) {
-    @Prop({ default: false }) open!: boolean
+    @ModelSync("open", "closeDialog", { type: Boolean })
+      setDialog!: boolean
 
     @cacheStore.Getter("CacheComplements") getCacheComplements
+    @cacheStore.Getter("CacheRastreamentoUsuarioProductSelected") getCacheRastreamentoUsuarioProductSelected
+    @cacheStore.Action("actionRastreamentoUsuarioProductCart") setRastreamentoUsuarioProductCart
 
+    activePainel = false
     cartComplements: Array<IComplements> = []
 
     setCartComplement (complement: IComplements): void {
@@ -314,6 +493,42 @@
       })
 
       this.cartComplements = COMPLEMENT_CART_DELETED
+    }
+
+    totalAmountComplements (complements: IComplements[]): number {
+      let totalAmount = 0
+      
+      complements.forEach((item) => {
+        if ("priceTotal" in item) totalAmount += item.priceTotal as number
+      })
+
+      return totalAmount
+    }
+
+    setCacheCartProduct (): void {
+      this.totalAmountComplements(this.cartComplements)
+      const PRODUCT_CACHE = {
+        ...this.getCacheRastreamentoUsuarioProductSelected(),
+        complements: this.cartComplements,
+        price: {
+          ...this.getCacheRastreamentoUsuarioProductSelected().price,
+          total_price_complements: this.totalAmountComplements(this.cartComplements),
+          total: Number(this.getCacheRastreamentoUsuarioProductSelected().price.total) + Number(this.totalAmountComplements(this.cartComplements))
+        }
+      }
+
+      try {
+        event("set-product-cart", {
+          ...PRODUCT_CACHE
+        })
+
+        this.setRastreamentoUsuarioProductCart(PRODUCT_CACHE)
+        this.cartComplements = []
+        this.setDialog = false
+
+      } catch {
+        event("error-product-cart")
+      }
     }
   }
 </script>

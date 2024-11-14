@@ -286,6 +286,7 @@
 
         <dialog-complements
           :open="dialogComplements"
+          @closeDialog="v=>dialogComplements=v"
         />
       </v-col>
     </v-row>
@@ -293,11 +294,12 @@
 </template>
 
 <script lang="ts">
-  import { Component, Prop } from "vue-property-decorator"
+  import { Component, Prop, Watch } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
   import { namespace } from "vuex-class"
   import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
   import { IDifferences, IproductData } from "@/types/types-product"
+  import { MixinServiceProducts } from "@/mixins/services/mixinServiceProducts"
   import { MixinServiceComplements } from "@/mixins/services/mixinServiceComplements"
   import { event } from "@/plugins/firebase"
 
@@ -316,6 +318,7 @@
   export default class CardProduct extends mixins(
     MixinFunctionsSystem,
     MixinServiceComplements,
+    MixinServiceProducts,
   ) {
     @Prop({ default: "" }) image!: string
     @Prop({ default: "" }) name!: string
@@ -328,6 +331,13 @@
 
     productAmount = 1
     dialogComplements = false
+
+    @Watch("dialogComplements")
+      changeStatusDialog (value:boolean): void {
+        if (value === false) {
+          this.getAllProducts()
+        }
+      }
 
     changeProductWithAmount (product:IproductData): void {
       event("click_button_card_product")

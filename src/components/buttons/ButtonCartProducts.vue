@@ -11,7 +11,7 @@
     >
       <v-badge
         color="error"
-        :content="0"
+        :content="getCacheRastreamentoUsuarioProductsCart().length || 0"
       >
         <v-icon
           color="#000"
@@ -26,7 +26,12 @@
 <script lang="ts">
   import { Component } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
+  import { namespace } from "vuex-class"
+
+  const cacheStore = namespace("cacheStoreModule")
 
   @Component({})
-  export default class ButtonCartProduct extends mixins() {}
+  export default class ButtonCartProduct extends mixins() {
+    @cacheStore.Getter("CacheRastreamentoUsuarioProductsCart") getCacheRastreamentoUsuarioProductsCart
+  }
 </script>
