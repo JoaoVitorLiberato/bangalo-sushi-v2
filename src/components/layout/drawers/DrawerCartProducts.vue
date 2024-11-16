@@ -90,13 +90,12 @@
         />
 
         <v-col
-          v-position.relative
           cols="12"
         >
           <v-row
             v-position.fixed
             no-gutters
-            style="bottom:0;right:0;left:0;"
+            :style="`position:${drawerCartProducts ? 'fixed':'relative'};bottom:0;right:0;left:0;`"
             class="primary"
           >
             <v-col
