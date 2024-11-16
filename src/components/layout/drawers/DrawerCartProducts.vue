@@ -96,7 +96,7 @@
             v-position.fixed
             no-gutters
             align="center"
-            :style="`position:${drawerCartProducts ? 'fixed':'relative'};bottom:50px;right:0;left:0;`"
+            :style="`position:${drawerCartProducts ? 'absolute':'relative'};bottom:8px;right:0;left:0;`"
             class="primary"
           >
             <v-col
