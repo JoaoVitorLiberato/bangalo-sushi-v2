@@ -61,42 +61,38 @@
             </span>
           </div>
 
-          <v-row
+          <div
             v-else
-            no-gutters
-            style="height: 100%;"
+            :style="`height:${$vuetify.breakpoint.smAndDown ? 430 : 580}px;overflow-y:scroll`"
           >
-            <v-col
-              v-for="(item, index) in getCacheRastreamentoUsuarioProductsCart()"
-              :key="`cart-product-${item.name}-${index}`"
-              cols="12"
+            <v-row
+              no-gutters
             >
-              <card-cart
-                :name="item.name"
-                :qtd_product="item.price.qtd_product"
-                :product="item"
-                :price_total="item.price.total"
-                :complements="item.complements"
-                :differences="item.differences"
-              />
-            </v-col>
-          </v-row>
+              <v-col
+                v-for="(item, index) in getCacheRastreamentoUsuarioProductsCart()"
+                :key="`cart-product-${item.name}-${index}`"
+                cols="12"
+              >
+                <card-cart
+                  :name="item.name"
+                  :qtd_product="item.price.qtd_product"
+                  :product="item"
+                  :price_total="item.price.total"
+                  :complements="item.complements"
+                  :differences="item.differences"
+                />
+              </v-col>
+            </v-row>
+          </div>
         </v-col>
-
-
-        <v-col
-          cols="12"
-          :style="$vuetify.breakpoint.smAndDown ? 'height:64vh;' : 'height:70vh;'"
-        />
 
         <v-col
           cols="12"
         >
           <v-row
-            v-position.fixed
             no-gutters
             align="center"
-            :style="`position:${drawerCartProducts ? 'absolute':'relative'};bottom:8px;right:0;left:0;`"
+            :style="`position:${drawerCartProducts ? 'fixed':'relative'};bottom:5px;right:0;left:0;`"
             class="primary"
           >
             <v-col
@@ -151,6 +147,24 @@
                   {{ getCacheFrameLoading().status ? 'Aguarde...' : 'Concluir' }}
                 </span>
               </v-btn>
+            </v-col>
+
+            <v-col
+              cols="12"
+              class="py-2"
+            />
+
+            <v-col
+              cols="12"
+              class="d-flex"
+            >
+              <v-img
+                src="/favicon.png"
+                alt="Bangalô Sushi Lounge - Seu sushi com qualidade, sabor e tradição"
+                width="200"
+                height="110"
+                contain
+              />
             </v-col>
           </v-row>
         </v-col>
