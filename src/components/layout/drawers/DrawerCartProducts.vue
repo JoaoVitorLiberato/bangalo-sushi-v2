@@ -96,7 +96,7 @@
             v-position.fixed
             no-gutters
             align="center"
-            :style="`position:${drawerCartProducts ? 'fixed':'relative'};bottom:10px;right:0;left:0;`"
+            :style="`position:${drawerCartProducts ? 'fixed':'relative'};bottom:50px;right:0;left:0;`"
             class="primary"
           >
             <v-col
@@ -133,7 +133,8 @@
             </v-col>
 
             <v-col
-              cols="4"
+              cols="6"
+              class="px-3"
             >
               <v-btn
                 block
