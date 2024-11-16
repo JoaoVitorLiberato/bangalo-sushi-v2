@@ -303,7 +303,7 @@
                     v-font-size="16"
                     class="font-weight-medium"
                   >
-                    Ver complementos
+                    {{ activePainel ? "Fechar complementos" : "Ver complementos" }}
                   </span>
 
                   <v-icon
