@@ -531,6 +531,7 @@
           function: "add"
         })
         this.cartComplements = []
+        this.activePainel = false
         this.setDialog = false
 
       } catch {
