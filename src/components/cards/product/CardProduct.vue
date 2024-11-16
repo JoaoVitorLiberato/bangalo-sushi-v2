@@ -6,6 +6,8 @@
     v-z-index="2"
     elevation="0"
     max-width="300"
+    :alt="`Card com nosso ${name}: ${description} - Valor do produto: R$ ${setPriceProductCard(product, productAmount).priceFormated}`"
+    :title="`Card com nosso ${name}: ${description} - Valor do produto: R$ ${setPriceProductCard(product, productAmount).priceFormated}`"
   >
     <div
       class="secondary px-2 py-1 text-center"
@@ -20,8 +22,8 @@
 
     <v-img
       :src="image"
-      :alt="`Conheça nosso`"
-      :title="`Conheça nosso`"
+      :alt="`Conheça nosso ${name} e maravilhesse com o sabor da culinária japonesa.`"
+      :title="`Conheça nosso ${name} e maravilhesse com o sabor da culinária japonesa.`"
       style="border-radius: 15px 15px 0px 0"
       width="100%"
       height="190"

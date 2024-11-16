@@ -36,6 +36,8 @@
           />
         </v-col>
       </v-row>
+
+      <drawer-cart-products />
     </v-col>
   </v-row>
 </template>
@@ -53,7 +55,12 @@
         /* webpackChuckName: "content-products-layout-component" */
         /* webpackMode: "eager" */
         "@/components/layout/content/ProductsContent.vue"
-      )
+      ),
+      DrawerCartProducts: () => import(
+        /* webpackChuckName: "drawer-cart-products-layout-component" */
+        /* webpackMode: "eager" */
+        "@/components/layout/drawers/DrawerCartProducts.vue"
+      ),
     }
   })
 
@@ -67,6 +74,7 @@
     }
 
     created (): void {
+      sessionStorage.removeItem("order")
       this.getAllProducts()
     }
   }

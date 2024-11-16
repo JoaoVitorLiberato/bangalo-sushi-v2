@@ -70,4 +70,14 @@ export class MixinFunctionsSystem extends Vue {
       priceCalculed: PRODUCT_PRICE
     }
   }
+
+  setTotalAmountProductsCart (cart: IproductData[]): string|number {
+    let totalAmountProductCart = 0
+
+    cart.forEach((item) => {
+      if (item.price && "total" in item.price) totalAmountProductCart += item.price.total as number
+    })
+
+    return this.getReadingValue(totalAmountProductCart) as string
+  }
 }

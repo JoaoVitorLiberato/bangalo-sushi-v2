@@ -8,6 +8,7 @@ interface cacheStoreInterface {
   };
   products: IproductData[];
   complements: IComplements[];
+  drawerCartProducts: boolean;
   frameLoading: {
     status: boolean;
     message: string;

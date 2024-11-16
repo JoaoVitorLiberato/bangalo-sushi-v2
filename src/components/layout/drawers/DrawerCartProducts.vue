@@ -1,0 +1,211 @@
+<template>
+  <v-navigation-drawer
+    v-model="drawerCartProducts"
+    right
+    temporary
+    app
+    :width="$vuetify.breakpoint.smAndDown ? '90%' : '500'"
+    color="primary"
+  >
+    <v-card
+      color="primary"
+      style="color:var(--v-primary-text)"
+    >
+      <v-row
+        no-gutters
+      >
+        <v-col
+          cols="12"
+          class="pa-4"
+        >
+          <span
+            class="font-weight-bold text-uppercase"
+          >
+            Seus Produtos:
+          </span>
+        </v-col>
+
+        <v-col
+          v-if="getCacheRastreamentoUsuarioProductsCart().length > 0"
+          cols="12"
+          class="px-4"
+          style="line-height: 1;"
+        >
+          <span
+            v-font-size="13"
+            class="font-weight-regular error--text"
+          >
+            <strong class="font-weight-bold text-uppercase">Atenção:</strong> Todos produtos que estão no carrinho de compras,
+            pode remover caso tenha adicionado o produto por engano. Role para baixo para
+            concluir seu pedido.
+          </span>
+        </v-col>
+
+        <v-col
+          cols="12"
+          class="py-2"
+        />
+
+        <v-col
+          cols="12"
+          class="px-4"
+        >
+          <div
+            v-if="getCacheRastreamentoUsuarioProductsCart().length <= 0"
+            class="py-3 text-center"
+          >
+            <span
+              class="grey--text font-weight-regular font-italic"
+            >
+              O carrinho está sem produtos
+            </span>
+          </div>
+
+          <v-row
+            v-else
+            no-gutters
+            style="height: 100%;"
+          >
+            <v-col
+              v-for="(item, index) in getCacheRastreamentoUsuarioProductsCart()"
+              :key="`cart-product-${item.name}-${index}`"
+              cols="12"
+            >
+              <card-cart
+                :name="item.name"
+                :qtd_product="item.price.qtd_product"
+                :product="item"
+                :price_total="item.price.total"
+                :complements="item.complements"
+                :differences="item.differences"
+              />
+            </v-col>
+          </v-row>
+        </v-col>
+
+
+        <v-col
+          cols="12"
+          :style="$vuetify.breakpoint.smAndDown ? 'height:64vh;' : 'height:70vh;'"
+        />
+
+        <v-col
+          v-position.relative
+          cols="12"
+        >
+          <v-row
+            v-position.fixed
+            no-gutters
+            style="bottom:0;right:0;left:0;"
+            class="primary"
+          >
+            <v-col
+              cols="12"
+            >
+              <v-divider
+                color="white"
+                class="mx-1"
+              />
+            </v-col>
+
+            <v-col
+              cols="12"
+              class="py-1"
+            />
+
+            <v-col
+              cols="12"
+              class="px-4"
+            >
+              <span
+                v-font-size="14"
+                class="font-weight-medium text-uppercase"
+              >
+                preço total:
+              </span>
+            </v-col>
+
+            <v-col
+              cols="12"
+              class="px-4"
+            >
+              <span
+                v-font-size="26"
+                class="font-weight-medium"
+                v-text="setTotalAmountProductsCart(getCacheRastreamentoUsuarioProductsCart())"
+              />
+            </v-col>
+
+            <v-col
+              cols="12"
+              class="py-2"
+            />
+
+            <v-col
+              cols="12"
+              class="pa-2"
+            >
+              <v-btn
+                block
+                :color="getCacheFrameLoading().status ? 'grey lighten-1' : 'secondary'"
+                large
+                depressed
+                rounded
+                @click.stop="signupProductCart()"
+              >
+                <span
+                  v-font-size="14"
+                  class="font-weight-bold black--text"
+                >
+                  {{ getCacheFrameLoading().status ? 'Aguarde...' : 'Concluir pedido' }}
+                </span>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-card>
+  </v-navigation-drawer>
+</template>
+
+<script lang="ts">
+  import { Component } from "vue-property-decorator"
+  import { mixins } from "vue-class-component"
+  import { namespace } from "vuex-class"
+  import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
+  import { event } from "@/plugins/firebase"
+
+  const cacheStore = namespace("cacheStoreModule")
+
+  @Component({
+    components: {
+      CardCart: () => import(
+        /* webpackChuckName: "card-cart-component" */
+        /* webpackMode: "eager" */
+        "@/components/cards/cart/CardCart.vue"
+      )
+    }
+  })
+
+  export default class drawerCartProducts extends mixins(
+    MixinFunctionsSystem,
+  ) {
+    @cacheStore.Getter("CacheRastreamentoUsuarioProductsCart") getCacheRastreamentoUsuarioProductsCart
+    @cacheStore.Getter("CacheFrameLoading") getCacheFrameLoading
+    @cacheStore.Getter("CacheDrawerCartProducts") getDrawerCartProducts
+    @cacheStore.Action("ActionCacheDrawerCartProducts") setDrawerCartProducts
+
+    get drawerCartProducts (): boolean {
+      return this.getDrawerCartProducts()
+    }
+
+    set drawerCartProducts (value: boolean) {
+      this.setDrawerCartProducts(value)
+    }
+
+    signupProductCart (): void {
+      sessionStorage.setItem("order", JSON.stringify(this.getCacheRastreamentoUsuarioProductsCart()))
+      event("add_to_cart", this.getCacheRastreamentoUsuarioProductsCart())
+    }
+  }
+</script>

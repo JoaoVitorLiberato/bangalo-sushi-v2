@@ -183,7 +183,6 @@
                 cols="12"
               >
                 <v-row
-
                   no-gutters
                 >
                   <v-col
@@ -197,6 +196,7 @@
                       color="secondary"
                       class="pa-2"
                       elevation="0"
+                      style="border-radius:15px"
                     >
                       <v-row
                         no-gutters
@@ -294,6 +294,7 @@
                 <v-btn
                   block
                   text
+                  x-large
                   max-width="100%"
                   class="d-flex align-center justify-space-between px-1"
                   @click="activePainel = !activePainel"
@@ -338,6 +339,7 @@
                       class="pa-2"
                       elevation="0"
                       max-width="450"
+                      style="border-radius:15px"
                     >
                       <v-row
                         no-gutters
@@ -405,7 +407,7 @@
                 <v-btn
                   :style="`position:${activePainel ? 'fixed': 'relative'};bottom:0;left:0;right:0`"
                   depressed
-                  large
+                  x-large
                   block
                   @click.stop="setCacheCartProduct()"
                 >
@@ -431,6 +433,7 @@
   import { namespace } from "vuex-class"
   import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
   import { IComplements } from "@/types/types-product"
+  import { v4 as uuidv4 } from "uuid"
   import { event } from "@/plugins/firebase"
   import "@/styles/components/dialogs/functions/dialogComplements.styl"
 
@@ -509,6 +512,7 @@
       this.totalAmountComplements(this.cartComplements)
       const PRODUCT_CACHE = {
         ...this.getCacheRastreamentoUsuarioProductSelected(),
+        cart_id: uuidv4(),
         complements: this.cartComplements,
         price: {
           ...this.getCacheRastreamentoUsuarioProductSelected().price,
@@ -522,7 +526,10 @@
           ...PRODUCT_CACHE
         })
 
-        this.setRastreamentoUsuarioProductCart(PRODUCT_CACHE)
+        this.setRastreamentoUsuarioProductCart({
+          product: PRODUCT_CACHE,
+          function: "add"
+        })
         this.cartComplements = []
         this.setDialog = false
 

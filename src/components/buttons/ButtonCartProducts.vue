@@ -7,7 +7,8 @@
       fixed
       right
       bottom
-      title="Botão Cart - Abrir o carrinho"
+      title="Botão para abrir o carrinho de produtos"
+      @click="drawerCartProducts = !drawerCartProducts"
     >
       <v-badge
         color="error"
@@ -33,5 +34,15 @@
   @Component({})
   export default class ButtonCartProduct extends mixins() {
     @cacheStore.Getter("CacheRastreamentoUsuarioProductsCart") getCacheRastreamentoUsuarioProductsCart
+    @cacheStore.Getter("CacheDrawerCartProducts") getDrawerCartProducts
+    @cacheStore.Action("ActionCacheDrawerCartProducts") setDrawerCartProducts
+
+    get drawerCartProducts (): boolean {
+      return this.getDrawerCartProducts()
+    }
+
+    set drawerCartProducts (value: boolean) {
+      this.setDrawerCartProducts(value)
+    }
   }
 </script>
