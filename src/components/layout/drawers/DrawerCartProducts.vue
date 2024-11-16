@@ -4,7 +4,7 @@
     right
     temporary
     app
-    :width="$vuetify.breakpoint.smAndDown ? '90%' : '500'"
+    :width="$vuetify.breakpoint.smAndDown ? '90%' : '450'"
     color="primary"
   >
     <v-card
@@ -95,7 +95,8 @@
           <v-row
             v-position.fixed
             no-gutters
-            :style="`position:${drawerCartProducts ? 'fixed':'relative'};bottom:0;right:0;left:0;`"
+            align="center"
+            :style="`position:${drawerCartProducts ? 'fixed':'relative'};bottom:10px;right:0;left:0;`"
             class="primary"
           >
             <v-col
@@ -113,36 +114,26 @@
             />
 
             <v-col
-              cols="12"
-              class="px-4"
+              cols="6"
+              class="px-2"
+              style="line-height:24px"
             >
               <span
                 v-font-size="14"
-                class="font-weight-medium text-uppercase"
+                class="font-weight-bold text-uppercase d-block"
               >
-                preço total:
+                total:
               </span>
-            </v-col>
 
-            <v-col
-              cols="12"
-              class="px-4"
-            >
               <span
-                v-font-size="26"
+                v-font-size="24"
                 class="font-weight-medium"
                 v-text="setTotalAmountProductsCart(getCacheRastreamentoUsuarioProductsCart())"
               />
             </v-col>
 
             <v-col
-              cols="12"
-              class="py-2"
-            />
-
-            <v-col
-              cols="12"
-              class="pa-2"
+              cols="4"
             >
               <v-btn
                 block
@@ -156,7 +147,7 @@
                   v-font-size="14"
                   class="font-weight-bold black--text"
                 >
-                  {{ getCacheFrameLoading().status ? 'Aguarde...' : 'Concluir pedido' }}
+                  {{ getCacheFrameLoading().status ? 'Aguarde...' : 'Concluir' }}
                 </span>
               </v-btn>
             </v-col>

@@ -166,7 +166,7 @@
                 <div>
                   <span
                     v-font-size="12"
-                    class="font-weight-medium mr-1 text-uppercase"
+                    class="font-weight-medium text-uppercase"
                     :style="'color:var(--v-primary-text)'"
                   >
                     {{ name }}
