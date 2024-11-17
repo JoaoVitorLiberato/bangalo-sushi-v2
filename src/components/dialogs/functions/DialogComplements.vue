@@ -530,10 +530,10 @@
           product: PRODUCT_CACHE,
           function: "add"
         })
+
         this.cartComplements = []
         this.activePainel = false
         this.setDialog = false
-
       } catch {
         event("error-product-cart")
       }

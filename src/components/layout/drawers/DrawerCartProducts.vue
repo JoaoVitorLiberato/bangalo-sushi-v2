@@ -134,10 +134,11 @@
             >
               <v-btn
                 block
-                :color="getCacheFrameLoading().status ? 'grey lighten-1' : 'secondary'"
+                :color="getCacheFrameLoading().status || getCacheRastreamentoUsuarioProductsCart().length === 0 ? 'grey lighten-1' : 'secondary'"
                 large
                 depressed
                 rounded
+                :disabled="getCacheRastreamentoUsuarioProductsCart().length === 0"
                 @click.stop="signupProductCart()"
               >
                 <span
@@ -168,6 +169,10 @@
             </v-col>
           </v-row>
         </v-col>
+        <overlay-message-off-system
+          :open="messageOffSystem"
+          @closeOverlay="() => (messageOffSystem = !messageOffSystem)"
+        />
       </v-row>
     </v-card>
   </v-navigation-drawer>
@@ -178,6 +183,8 @@
   import { mixins } from "vue-class-component"
   import { namespace } from "vuex-class"
   import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
+  import { MixinServiceSystem } from "@/mixins/services/mixinServiceSystem"
+  import { MixinRedirectLinks } from "@/mixins/redirect-links/MixinRedirectLinks"
   import { event } from "@/plugins/firebase"
 
   const cacheStore = namespace("cacheStoreModule")
@@ -188,17 +195,26 @@
         /* webpackChuckName: "card-cart-component" */
         /* webpackMode: "eager" */
         "@/components/cards/cart/CardCart.vue"
+      ),
+      OverlayMessageOffSystem: () => import(
+        /* webpackChuckName: "message-launch-system-overlay-component" */
+        /* webpackMode: "eager" */
+        "@/components/overlay/MessageOffSystem.vue"
       )
     }
   })
 
   export default class drawerCartProducts extends mixins(
     MixinFunctionsSystem,
+    MixinServiceSystem,
+    MixinRedirectLinks,
   ) {
     @cacheStore.Getter("CacheRastreamentoUsuarioProductsCart") getCacheRastreamentoUsuarioProductsCart
-    @cacheStore.Getter("CacheFrameLoading") getCacheFrameLoading
+    @cacheStore.Getter("CacheFrameLoading") declare getCacheFrameLoading
     @cacheStore.Getter("CacheDrawerCartProducts") getDrawerCartProducts
     @cacheStore.Action("ActionCacheDrawerCartProducts") setDrawerCartProducts
+
+    messageOffSystem = false
 
     get drawerCartProducts (): boolean {
       return this.getDrawerCartProducts()
@@ -209,8 +225,19 @@
     }
 
     signupProductCart (): void {
-      sessionStorage.setItem("order", JSON.stringify(this.getCacheRastreamentoUsuarioProductsCart()))
-      event("add_to_cart", this.getCacheRastreamentoUsuarioProductsCart())
+      this.getStoreTurnOn()
+        .then((responseMixin) => {
+          if (!responseMixin) throw Error("System Off")
+
+          sessionStorage.setItem("order", JSON.stringify(this.getCacheRastreamentoUsuarioProductsCart()))
+          event("add_to_cart", this.getCacheRastreamentoUsuarioProductsCart())
+          this.goToDatailOrder()
+        }).catch((error) => {
+          window.log("signupProductCart", error)
+          this.drawerCartProducts = false
+          this.cacheFrameLoading.status = false
+          this.messageOffSystem = true
+        }) 
     }
   }
 </script>
