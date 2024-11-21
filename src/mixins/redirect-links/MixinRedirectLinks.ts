@@ -20,6 +20,6 @@ export class MixinRedirectLinks extends Vue {
   }
 
   goToDatailOrder (): void {
-    location.replace(`/detalhes/pedido${location.search}`)
+    this.$router.replace(`/detalhes/pedido${location.search}`)
   }
 }

@@ -63,7 +63,7 @@
 
           <div
             v-else
-            :style="`height:${$vuetify.breakpoint.smAndDown ? 430 : 580}px;overflow-y:scroll`"
+            :style="`height:${$vuetify.breakpoint.smAndDown ? 430 : 617}px;overflow-y:scroll`"
           >
             <v-row
               no-gutters
@@ -72,6 +72,7 @@
                 v-for="(item, index) in getCacheRastreamentoUsuarioProductsCart()"
                 :key="`cart-product-${item.name}-${index}`"
                 cols="12"
+                :style="String(getCacheRastreamentoUsuarioProductsCart()[getCacheRastreamentoUsuarioProductsCart().length - 1].id) === String(item.id )? 'margin-bottom:200px' : ''"
               >
                 <card-cart
                   :name="item.name"
@@ -124,7 +125,7 @@
               <span
                 v-font-size="24"
                 class="font-weight-medium"
-                v-text="setTotalAmountProductsCart(getCacheRastreamentoUsuarioProductsCart())"
+                v-text="setTotalAmountProductsCart(getCacheRastreamentoUsuarioProductsCart()).total"
               />
             </v-col>
 
@@ -237,7 +238,7 @@
           this.drawerCartProducts = false
           this.cacheFrameLoading.status = false
           this.messageOffSystem = true
-        }) 
+        })
     }
   }
 </script>

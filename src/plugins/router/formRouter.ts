@@ -13,7 +13,7 @@ export default [
     children: [
       {
         path: "pedido",
-        name: "view-form",
+        name: "form-view",
         components: {
           viewForm: (): Promise<typeof import("*.vue")> => import(
             /* webpackChunkName: "form-route-view" */

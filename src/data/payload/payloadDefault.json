@@ -26,6 +26,7 @@
     "valorTotal": 0,
 		"formaPagamento": "",
     "desconto": {
+      "ativado": false,
       "porcentagem": 0,
       "PrecoTotalComDesconto": 0
     }

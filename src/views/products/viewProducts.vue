@@ -43,11 +43,15 @@
 </template>
 
 <script lang="ts">
-  import { Component } from "vue-property-decorator"
+  import { Component, Vue } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
+  import { namespace } from "vuex-class"
   import { MixinServiceProducts } from "@/mixins/services/mixinServiceProducts"
   import { filterDataProduct } from "@/helpers/filterProducts"
   import DATA_CATEGORIES_PRODUCTS from "@/data/products/category.json"
+  import PAYLOAD_DATA from "@/data/payload/payloadDefault.json"
+
+  const cacheStore = namespace("cacheStoreModule")
 
   @Component({
     components: {
@@ -67,6 +71,9 @@
   export default class viewProducts extends mixins(
     MixinServiceProducts,
   ) {
+    @cacheStore.Getter("CacheRastreamentoUsuarioProductsCart") getCacheRastreamentoUsuarioProductsCart
+    @cacheStore.Action("actionRastreamentoUsuarioProductCart") setRastreamentoUsuarioProductCart
+
     filterDataProduct = filterDataProduct
 
     get categories (): typeof DATA_CATEGORIES_PRODUCTS {
@@ -74,7 +81,17 @@
     }
 
     created (): void {
-      sessionStorage.removeItem("order")
+      if ("type" in this.$route.params) {
+        Vue.set(PAYLOAD_DATA, "segmento", this.$route.params.type as string)
+      }
+
+      const CACHE_CART_PRODUCT = sessionStorage.getItem("order")
+      if (this.getCacheRastreamentoUsuarioProductsCart().length === 0) {
+        if (CACHE_CART_PRODUCT) {
+          this.setRastreamentoUsuarioProductCart(JSON.parse(CACHE_CART_PRODUCT))
+        }
+      }
+
       this.getAllProducts()
     }
   }

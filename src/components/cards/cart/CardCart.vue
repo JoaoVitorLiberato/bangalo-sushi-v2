@@ -1,5 +1,6 @@
 <template>
   <v-card
+    v-border.radius="'10px'"
     elevation="0"
     :color="'primary'"
     class="my-2"
@@ -58,8 +59,9 @@
       >
         <v-row
           no-gutters
+          justify="end"
         >
-          <v-col
+          <!-- <v-col
             cols="8"
             class="d-flex align-center"
           >
@@ -98,17 +100,17 @@
                 add
               </v-icon>
             </v-btn>
-          </v-col>
+          </v-col> -->
           <v-col
-            v-if="!routeForm(['form-view', 'order-view', 'admin-view'])"
+            v-if="!routeForm(['order-view', 'admin-view'])"
             cols="4"
             class="text-end"
-            @click="removeProductCart(product.cart_id)"
           >
             <v-btn
               text
               color="error"
               :title="`Remover nosso produto ${name} do carrinho`"
+              @click="removeProductCart(product.cart_id)"
             >
               <v-icon>
                 delete
@@ -252,6 +254,11 @@
         .filter((product) => {
           if (String(product.cart_id || "") !== String(id || "")) return product
         })
+
+      const CACHE_PRODUCTS = sessionStorage.getItem("order")
+      if (CACHE_PRODUCTS) {
+        sessionStorage.setItem("order", JSON.stringify(PRODUCTS_NOT_REMOVED))
+      }
 
       this.setRastreamentoUsuarioRemoveProductCart(PRODUCTS_NOT_REMOVED)
     }

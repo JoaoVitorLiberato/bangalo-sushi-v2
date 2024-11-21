@@ -1,8 +1,14 @@
 import { Component, Vue } from "vue-property-decorator"
+import { namespace } from "vuex-class"
 import { IDifferences, IproductData } from "@/types/types-product"
+import PAYLOAD_DATA from "@/data/payload/payloadDefault.json"
+
+const payloadStore = namespace("payloadStoreModule")
 
 @Component({})
-export class MixinFunctionsSystem extends Vue {  
+export class MixinFunctionsSystem extends Vue {
+  @payloadStore.Getter("PayloadOrder") declare getPayloadOrder
+
   setTypeDifferences (differences: IDifferences): string {
     let textReturn = ""
     Object.keys(differences).forEach((type) => {
@@ -38,7 +44,7 @@ export class MixinFunctionsSystem extends Vue {
         valorFinal = `${p.substring(0, p.length - 2).replace(/\W/g, "")},${p.substring(p.length - 2).replace(/\W/g, "")}`
       }
     }
-  
+
     if (type) {
       if (/float|dot/.test(type)) {
         return valorFinal.replace(/\.|,/, ".")
@@ -71,13 +77,24 @@ export class MixinFunctionsSystem extends Vue {
     }
   }
 
-  setTotalAmountProductsCart (cart: IproductData[]): string|number {
+  setTotalAmountProductsCart (cart: IproductData[]) {
+    const DISCOUNT_PAYMENT = this.getPayloadOrder("pagamento").desconto
     let totalAmountProductCart = 0
+    let dicountTotalAmount = 0
 
     cart.forEach((item) => {
       if (item.price && "total" in item.price) totalAmountProductCart += item.price.total as number
     })
 
-    return this.getReadingValue(totalAmountProductCart) as string
+    if (DISCOUNT_PAYMENT.ativado) {
+      dicountTotalAmount = Number(totalAmountProductCart) - Number((DISCOUNT_PAYMENT.porcentagem / 100) * totalAmountProductCart)
+      Vue.set(PAYLOAD_DATA.pagamento.desconto, "PrecoTotalComDesconto", Number(dicountTotalAmount))
+    }
+
+    return {
+      dicountTotalAmount: this.getReadingValue(totalAmountProductCart - dicountTotalAmount),
+      total: this.getReadingValue(totalAmountProductCart) || 0,
+      totalWithDicount:  this.getReadingValue(DISCOUNT_PAYMENT.PrecoTotalComDesconto) || 0
+    }
   }
 }
