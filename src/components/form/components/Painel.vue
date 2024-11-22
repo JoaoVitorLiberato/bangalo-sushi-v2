@@ -96,10 +96,22 @@
                 cols="12"
                 class="py-2"
               />
-
               <v-col
                 cols="12"
               >
+                <span
+                  v-font-size="$vuetify.breakpoint.smAndDown ? 14 : 18"
+                  class="font-weight-bold text-uppercase d-block"
+                >
+                  Produtos:  {{ setTotalAmountProductsCart(getCacheRastreamentoUsuarioProductsCart()).totalCart }}
+                </span>
+                <span
+                  v-font-size="$vuetify.breakpoint.smAndDown ? 14 : 18"
+                  class="font-weight-bold text-uppercase d-block"
+                >
+                  frete:  {{ setTotalAmountProductsCart(getCacheRastreamentoUsuarioProductsCart()).freight }}
+                </span>
+
                 <v-row
                   no-gutters
                 >
@@ -108,7 +120,7 @@
                     cols="12"
                   >
                     <span
-                      v-font-size="$vuetify.breakpoint.smAndDown ? 20 : 24"
+                      v-font-size="$vuetify.breakpoint.smAndDown ? 18 : 22"
                       class="font-weight-bold text-uppercase"
                     >
                       Valor final =>
@@ -127,7 +139,7 @@
                     cols="12"
                   >
                     <span
-                      v-font-size="$vuetify.breakpoint.smAndDown ? 20 : 24"
+                      v-font-size="$vuetify.breakpoint.smAndDown ? 18 : 22"
                       class="font-weight-bold text-uppercase"
                     >
                       Valor final => {{ setTotalAmountProductsCart(getCacheRastreamentoUsuarioProductsCart()).total }}

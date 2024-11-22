@@ -1,5 +1,6 @@
 <template>
   <div
+    id="inicio-form"
     style="height:100vh"
   >
     <v-row
@@ -129,33 +130,6 @@
 
                 <v-col
                   cols="12"
-                  md="6"
-                  class="mb-3"
-                >
-                  <v-text-field
-                    v-model="itemsFirstFields.frete.value"
-                    :rules="[required]"
-                    tabindex="0"
-                    flat
-                    label="Frete"
-                    color="secondary"
-                    class="fix-fieldset-inputs mx-1"
-                    outlined
-                    readonly
-                    hide-details="auto"
-                  >
-                    <template
-                      v-slot:message="props"
-                    >
-                      <span
-                        v-text="props.message"
-                      />
-                    </template>
-                  </v-text-field>
-                </v-col>
-
-                <v-col
-                  cols="12"
                   class="px-1"
                 >
                   <v-textarea
@@ -165,7 +139,7 @@
                     auto-grow
                     color="secondary"
                     counter
-                    maxlength="150"
+                    maxlength="180"
                     outlined
                     placeholder="Caso você tenha alguma observação, por favor, escreva nesse campo. Ex. Retire as cebolas."
                     rows="4"
@@ -213,11 +187,13 @@
                       :class="$vuetify.breakpoint.smAndDown ? 'd-flex flex-column-reverse' : ''"
                     >
                       <v-btn
-                        color="grey lighten-1"
+                        color="grey lighten-2"
                         large
+                        rounded
                         depressed
                         :width="$vuetify.breakpoint.smAndDown ? '100%' : 250"
                         class="mr-md-4"
+                        @click="$router.replace({ name: 'products-view', params: { type: getPayloadOrder('segmento') } })"
                       >
                         <span
                           class="font-weight-bold"
@@ -227,14 +203,16 @@
                       </v-btn>
 
                       <v-btn
-                        color="secondary"
+                        :color="!validateForm ? 'grey lighten-2' : 'secondary'"
                         large
+                        rounded
                         depressed
                         class="mb-5 mb-md-0"
                         :width="$vuetify.breakpoint.smAndDown ? '100%' : 250"
+                        @click="!validateForm ? validateCart() : signupOrderCart()"
                       >
                         <span
-                          class="font-weight-bold primary--text"
+                          class="font-weight-bold"
                         >
                           Finalizar compra
                         </span>
@@ -364,69 +342,18 @@
         </v-row>
       </v-card>
     </v-dialog>
-
-    <v-dialog
-      ref="dialogErrorOrder"
-      hide-overlay
-      persistent
-      max-width="450"
-      height="200"
-    >
-      <v-card
-        color="primary"
-        elevation="0"
-      >
-        <v-row
-          no-gutters
-          style="border:1px solid var(--v-secondary-base)"
-          class="pa-4"
-        >
-          <v-col
-            cols="12"
-            style="line-height: 1;"
-          >
-            <span
-              v-font-size="16"
-              class="font-weight-medium white--text"
-            >
-              Prezado cliente, Houve um erro ao tentar efetuar seu pedido. Por favor,
-              Tente novamente.
-            </span>
-          </v-col>
-
-          <v-col
-            cols="12"
-            class="py-3"
-          />
-
-          <v-col
-            cols="12"
-          >
-            <v-btn
-              block
-              color="secondary"
-              @click.stop="$refs.dialogErrorOrder.save()"
-            >
-              <span>
-                Tentar Novamente
-              </span>
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from "vue-property-decorator"
+  import { Component, Vue, Watch } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
   import { namespace } from "vuex-class"
   import { MixinServiceVouchers } from "@/mixins/services/mixinServiceVouchers"
   import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
   import PAYLOAD_DATA from "@/data/payload/payloadDefault.json"
   import { $refs } from "@/implements/types"
-  import { required } from "@/helpers/rules"
+  import { required, nome, telefone } from "@/helpers/rules"
   import "@/styles/views/form/viewForm.styl"
 
   const cacheStore = namespace("cacheStoreModule")
@@ -468,6 +395,15 @@
 
             Vue.set(PAYLOAD_DATA, "produtos", JSON.parse(CACHE_CART_PRODUCT))
             vm.setRastreamentoUsuarioProductCart(JSON.parse(CACHE_CART_PRODUCT))
+          }
+
+          if (/local/i.test(String(vm.getPayloadOrder("segmento")))) {
+            Object.keys(vm.itemsFirstFields)
+              .forEach((input) => {
+                if (/^(cep|enderecoLogradouro|enderecoNumero|enderecoComplemento|enderecoReferencia|enderecoBairro|enderecoCidade|enderecoUf)$/i.test(input as string)) {
+                  Vue.delete(vm.itemsFirstFields, input)
+                }
+              })
           }
         } catch {
           location.replace(`/${location.search}`)
@@ -571,18 +507,30 @@
         value: "",
         valid: "",
       },
-      frete: {
-        label: "Frete",
-        value: "",
-        valid: true,
-        readonly: true
-      },
       messagem: {
         optional: true,
         label: "Mensagem (opcional)",
         value: "",
         valid: "",
       },
+    }
+
+    get validateForm (): boolean {
+      return [
+        this.formDadosCadastrais
+      ].every(o => !!o)
+    }
+
+    validateCart (): void {
+      if (this.$refs.formDadosCadastrais.validate) {
+        this.$refs.formDadosCadastrais.validate()
+      }
+    }
+
+    created (): void {
+      setTimeout(() => {
+        this.$vuetify.goTo("#inicio-form")
+      }, 700)
     }
 
     validateVoucher (): void {
@@ -611,6 +559,38 @@
             }, 4000)
           }
         })
+    }
+
+    @Watch("itemsFirstFields.nomeCompleto.value")
+      changeInputName (value): void {
+        this.itemsFirstFields.nomeCompleto.valid = nome(value)
+      }
+
+    @Watch("itemsFirstFields.numeroDeContato.value")
+      changeInputNumberPhone (value): void {
+        this.itemsFirstFields.numeroDeContato.valid = telefone((value).replace(/\D/g, ""))
+      }
+
+    signupOrderCart (): void {
+      Object.keys(this.itemsFirstFields)
+        .forEach((input) => {
+          if (/^(nomeCompleto)$/i.test(String(input || ""))) {
+            Vue.set(PAYLOAD_DATA.consumidor, "nome", this.itemsFirstFields[input].value)
+          }
+
+          if (/^(numeroDeContato)$/i.test(String(input || ""))) {
+            Vue.set(PAYLOAD_DATA.consumidor.telefone, "contato", String(this.itemsFirstFields[input].value).replace(/\D/g, ""))
+          }
+
+          if (/^(messagem)$/i.test(String(input || ""))) {
+            Vue.set(PAYLOAD_DATA.consumidor, "mensagem", this.itemsFirstFields[input].value)
+          }
+
+          if (/^(formaPagamento)$/i.test(String(input || ""))) {
+            Vue.set(PAYLOAD_DATA.pagamento, "formaPagamento", this.itemsFirstFields[input].value)
+          }
+        })
+      console.log("signupOrderCart")
     }
   }
 </script>

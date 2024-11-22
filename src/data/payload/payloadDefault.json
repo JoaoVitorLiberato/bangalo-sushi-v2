@@ -7,14 +7,14 @@
       "contato": ""
     },
     "endereco": {
-      "cep": "",
-      "logradouro": "",
-      "bairro": "",
-      "cidade": "",
-      "uf": "",
-      "numero": "",
-      "complemento": "",
-      "referencia": ""
+      "cep": "00000000",
+      "logradouro": "s/n",
+      "bairro": "s/n",
+      "cidade": "s/n",
+      "uf": "s/n",
+      "numero": "s/n",
+      "complemento": "s/n",
+      "referencia": "s/n"
     },
     "mensagem": ""
   },

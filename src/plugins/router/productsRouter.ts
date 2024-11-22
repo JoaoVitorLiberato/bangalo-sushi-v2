@@ -13,7 +13,7 @@ export default [
     children: [
       {
         path: ":type/vamoscomecar",
-        name: "view-products",
+        name: "products-view",
         components: {
           viewProducts: (): Promise<typeof import("*.vue")> => import(
             /* webpackChunkName: "products-route-view" */
