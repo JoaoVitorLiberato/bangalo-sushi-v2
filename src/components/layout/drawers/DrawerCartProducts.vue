@@ -125,7 +125,7 @@
               <span
                 v-font-size="24"
                 class="font-weight-medium"
-                v-text="setTotalAmountProductsCart(getCacheRastreamentoUsuarioProductsCart()).total"
+                v-text="setTotalAmountProductsCart(getCacheRastreamentoUsuarioProductsCart()).totalCart"
               />
             </v-col>
 

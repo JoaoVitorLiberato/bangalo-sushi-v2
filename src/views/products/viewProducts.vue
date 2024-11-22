@@ -82,6 +82,12 @@
 
     created (): void {
       if ("type" in this.$route.params) {
+        if (!/local|delivery/i.test(this.$route.params.type as string)) {
+          location.replace("/")
+          return
+        }
+
+        sessionStorage.setItem("segment", this.$route.params.type as string)
         Vue.set(PAYLOAD_DATA, "segmento", this.$route.params.type as string)
       }
 

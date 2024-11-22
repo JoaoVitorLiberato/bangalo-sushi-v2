@@ -79,6 +79,7 @@ export class MixinFunctionsSystem extends Vue {
 
   setTotalAmountProductsCart (cart: IproductData[]) {
     const DISCOUNT_PAYMENT = this.getPayloadOrder("pagamento").desconto
+    const FREIGHT = /delivery/i.test(String(this.getPayloadOrder("segmento"))) ? 500 : 0
     let totalAmountProductCart = 0
     let dicountTotalAmount = 0
 
@@ -88,12 +89,18 @@ export class MixinFunctionsSystem extends Vue {
 
     if (DISCOUNT_PAYMENT.ativado) {
       dicountTotalAmount = Number(totalAmountProductCart) - Number((DISCOUNT_PAYMENT.porcentagem / 100) * totalAmountProductCart)
-      Vue.set(PAYLOAD_DATA.pagamento.desconto, "PrecoTotalComDesconto", Number(dicountTotalAmount))
+      Vue.set(PAYLOAD_DATA.pagamento.desconto, "PrecoTotalComDesconto", Number(dicountTotalAmount) + Number(FREIGHT))
     }
 
+    Vue.set(PAYLOAD_DATA.pagamento, "valorFrete", FREIGHT)
+    Vue.set(PAYLOAD_DATA.pagamento, "valorProdutos", totalAmountProductCart)
+    Vue.set(PAYLOAD_DATA.pagamento, "valorTotal", totalAmountProductCart + Number(FREIGHT))
+
     return {
+      freight: this.getReadingValue(FREIGHT),
       dicountTotalAmount: this.getReadingValue(totalAmountProductCart - dicountTotalAmount),
-      total: this.getReadingValue(totalAmountProductCart) || 0,
+      totalCart: this.getReadingValue(totalAmountProductCart) || 0,
+      total: this.getReadingValue(totalAmountProductCart + FREIGHT) || 0,
       totalWithDicount:  this.getReadingValue(DISCOUNT_PAYMENT.PrecoTotalComDesconto) || 0
     }
   }

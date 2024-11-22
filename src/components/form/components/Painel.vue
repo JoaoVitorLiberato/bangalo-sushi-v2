@@ -168,13 +168,7 @@
     @cacheStore.Getter("CacheRastreamentoUsuarioProductsCart") getCacheRastreamentoUsuarioProductsCart
     @payloadStore.Getter("PayloadOrder") declare getPayloadOrder
 
-    expand = false
-
-    mounted (): void {
-      if (this.$vuetify.breakpoint.mdAndUp) {
-        this.expand = true
-      }
-    }
+    expand = true
 
     getActiveDiscount (): boolean {
       return this.getPayloadOrder("pagamento").desconto.ativado

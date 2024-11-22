@@ -351,7 +351,8 @@
               large
               depressed
               rounded
-              @click="cupom.length < 8 ? $refs.inputCupomDiscount.validate() : ''"
+              :disabled="disableCupom"
+              @click="cupom.length < 8 ? $refs.inputCupomDiscount.validate() : validateVoucher()"
             >
               <span
                 class="font-weight-bold black--text"
@@ -418,15 +419,18 @@
 </template>
 
 <script lang="ts">
-  import { Component } from "vue-property-decorator"
+  import { Component, Vue } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
   import { namespace } from "vuex-class"
   import { MixinServiceVouchers } from "@/mixins/services/mixinServiceVouchers"
+  import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
+  import PAYLOAD_DATA from "@/data/payload/payloadDefault.json"
   import { $refs } from "@/implements/types"
   import { required } from "@/helpers/rules"
   import "@/styles/views/form/viewForm.styl"
 
   const cacheStore = namespace("cacheStoreModule")
+  const payloadStore = namespace("payloadStoreModule")
 
   @Component({
     components: {
@@ -440,6 +444,7 @@
 
   export default class viewForm extends mixins(
     MixinServiceVouchers,
+    MixinFunctionsSystem,
   ) implements $refs {
     beforeRouteEnter(
       to: {
@@ -453,10 +458,15 @@
     ) {
       next((vm) => {
         try {
+          if (vm.getPayloadOrder("segmento")) {
+            Vue.set(PAYLOAD_DATA, "segmento", sessionStorage.getItem("segment"))
+          }
+
           const CACHE_CART_PRODUCT = sessionStorage.getItem("order")
           if (vm.getCacheRastreamentoUsuarioProductsCart().length === 0) {
             if (!CACHE_CART_PRODUCT) throw Error()
 
+            Vue.set(PAYLOAD_DATA, "produtos", JSON.parse(CACHE_CART_PRODUCT))
             vm.setRastreamentoUsuarioProductCart(JSON.parse(CACHE_CART_PRODUCT))
           }
         } catch {
@@ -469,6 +479,7 @@
 
     @cacheStore.Getter("CacheRastreamentoUsuarioProductsCart") getCacheRastreamentoUsuarioProductsCart
     @cacheStore.Action("actionRastreamentoUsuarioProductCart") setRastreamentoUsuarioProductCart
+    @payloadStore.Getter("PayloadOrder") declare getPayloadOrder
 
     required = required
 
@@ -478,6 +489,7 @@
     formDadosCadastrais = false
 
     cupom = ""
+    disableCupom = false
     cupomValidate = {
       status: false,
       color: "",
@@ -571,6 +583,34 @@
         value: "",
         valid: "",
       },
+    }
+
+    validateVoucher (): void {
+      this.loadingService = true
+
+      this.getVoucherActived(this.cupom as string)
+        .then((responseMixin) => {
+          if (/not-found/i.test(String(responseMixin || ""))) {
+            this.cupomValidate.status = true
+            this.cupomValidate.color = "error--text"
+            this.cupomValidate.message = "Este cupom é inválido, por favor, Digite um cupom válido."
+            this.loadingService = false
+          } else {
+            Vue.set(PAYLOAD_DATA.pagamento.desconto, "porcentagem", Number(String(this.cupom).replace(/\D/g, "")))
+            Vue.set(PAYLOAD_DATA.pagamento.desconto, "ativado", true)
+
+            this.cupomValidate.status = true
+            this.cupomValidate.color = "success--text"
+            this.cupomValidate.message = "Cupom aplicado com sucesso."
+            this.setTotalAmountProductsCart(this.getCacheRastreamentoUsuarioProductsCart())
+
+            setTimeout(() => {
+              this.$refs.dialogDiscount.save()
+              this.disableCupom = true
+              this.loadingService = false
+            }, 4000)
+          }
+        })
     }
   }
 </script>
