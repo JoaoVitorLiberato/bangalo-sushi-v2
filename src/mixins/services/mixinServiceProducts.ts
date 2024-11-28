@@ -37,10 +37,11 @@ export class MixinServiceProducts extends Vue {
     return new Promise((resolve) => {
       MiddlewareServiceAPI.get("/products")
         .then((responseMiddleware) => {
-          if (!responseMiddleware.data || responseMiddleware.data.length <= 0) throw Error("data-not-found")
+          if (!("data" in responseMiddleware) || responseMiddleware.data.length <= 0) throw Error("data-not-found")
           this.setCacheProducts(responseMiddleware.data)
           resolve(responseMiddleware.data)
-        }).catch((error) => {
+        })
+        .catch((error) => {
           window.log(`Error MixinServiceProducts - getAllProducts`, error)
           this.cacheFrameLoading.message = `
             Tivemos um erro ao tentar carregar nossos produtos cadastrados.
@@ -48,7 +49,8 @@ export class MixinServiceProducts extends Vue {
           `
           this.setDialogErrorTryAgain(true)
           event("error-get-all-porduct")
-        }).finally(() => {
+        })
+        .finally(() => {
           this.cacheFrameLoading.status = false
         })
     })
@@ -61,16 +63,19 @@ export class MixinServiceProducts extends Vue {
     })
 
     return new Promise((resolve, reject) => {
-      MiddlewareServiceAPI.post("/product", product)
+      MiddlewareServiceAPI
+        .post("/product", product)
         .then((responseMiddleware) => {
           if (responseMiddleware.data.message === "Product created") {
             resolve("product-created")
           }
 
           reject(Error("Sem data"))
-        }).catch((error) => {
+        })
+        .catch((error) => {
           window.log(`error create product`, error)
-        }).finally(() => {
+        })
+        .finally(() => {
           this.setCacheFrameLoading({
             status: false,
             message: ""

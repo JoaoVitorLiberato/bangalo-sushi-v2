@@ -30,7 +30,8 @@ export class MixinServiceSystem extends Vue {
     this.cacheFrameLoading.status = true
 
     return new Promise((resolve, reject) => {
-      MiddlewareServiceAPI.get("/open")
+      MiddlewareServiceAPI
+        .get("/open")
         .then((responseMiddleware) => {
           if (!("data" in responseMiddleware)) {
             reject(Error("not-data"))
@@ -39,7 +40,8 @@ export class MixinServiceSystem extends Vue {
           event(`store-open-${responseMiddleware.data.store}`)
           this.cacheFrameLoading.status = /view-product/i.test(this.$route.name as string)
           resolve(responseMiddleware.data.store)
-        }).catch((error) => {
+        })
+        .catch((error) => {
           window.log(`ERROR getTurnOnSystem - ${error}`)
           this.cacheFrameLoading.message = `
             Houve um erro ao tentar saber se a loja está recebendo pedidos. Por favor,

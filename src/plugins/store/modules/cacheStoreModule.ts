@@ -7,6 +7,7 @@ const moduleCache = (): cacheStoreInterface => {
     rastreamentoUsuario: {
       source: "",
       cart: [],
+      orders: [],
       productSelected: null
     },
     products: [],
@@ -30,6 +31,9 @@ const getters: GetterTree<cacheStoreInterface, rootStateInterface> = {
   },
   CacheRastreamentoUsuarioProductSelected: ({ rastreamentoUsuario }) => () => {
     return rastreamentoUsuario.productSelected
+  },
+  CacheRastreamentoUsuarioOrders: ({ rastreamentoUsuario }) => () => {
+    return rastreamentoUsuario.orders
   },
   CacheProducts: ({ products }) => () => {
     return products
@@ -65,6 +69,9 @@ const mutations: MutationTree<cacheStoreInterface> = {
   mutationRastreamentoUsuarioProductSelected: (state, data) => {
     state.rastreamentoUsuario.productSelected = data
   },
+  mutationRastreamentoUsuarioOrders: (state, data) => {
+    state.rastreamentoUsuario.orders = data
+  },
   mutationCacheComplements: (state, data) => {
     state.complements = data
   },
@@ -89,6 +96,9 @@ const actions: ActionTree<cacheStoreInterface, rootStateInterface> = {
   },
   actionRastreamentoUsuarioRemoveProductCart: ({ commit }, data) => {
     commit("mutationRastreamentoUsuarioProductCart", data)
+  },
+  actionRastreamentoUsuarioOrders: ({ commit }, data) => {
+    commit("mutationRastreamentoUsuarioOrders", data)
   },
   actionRastreamentoUsuarioProductSelected: ({ commit }, data) => {
     commit("mutationRastreamentoUsuarioProductSelected", data)

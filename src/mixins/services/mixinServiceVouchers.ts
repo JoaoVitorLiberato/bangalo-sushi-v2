@@ -30,16 +30,14 @@ export class MixinServiceVouchers extends Vue {
   getVoucherActived (cupom: string): Promise<IVouchers[]|string|boolean|void> {
     this.cacheFrameLoading.status = true
 
-    async function productApi () {
-      return await MiddlewareServiceAPI.get(`voucher/${String(cupom).toUpperCase()}`)
-    }
-
     return new Promise((resolve, reject) => {
-      productApi()
+      MiddlewareServiceAPI
+        .get(`voucher/${String(cupom).toUpperCase()}`)
         .then(responseMiddleware => {
-          if (!responseMiddleware.data) reject(Error("error"))
+          if (!("data" in responseMiddleware)) reject(Error("error"))
           resolve(true)
-        }).catch(err => {
+        })
+        .catch(err => {
           window.log("ERROR getAllVouchers", err)
           if (err.response.data.message === "Voucher não encontrado") {
             resolve("not-found")

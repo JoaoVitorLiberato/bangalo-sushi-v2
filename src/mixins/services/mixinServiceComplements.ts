@@ -34,20 +34,23 @@ export class MixinServiceComplements extends Vue {
     }
 
     return new Promise((resolve, reject) => {
-      MiddlewareServiceAPI.get("/complements")
+      MiddlewareServiceAPI
+        .get("/complements")
         .then((responseMiddleware) => {
-          if (!responseMiddleware.data || responseMiddleware.data.length === 0) {
+          if (!("data" in responseMiddleware) || responseMiddleware.data.length === 0) {
             reject(Error("error-compoments"))
           }
 
           resolve(responseMiddleware.data)
-        }).catch((error) => {
+        })
+        .catch((error) => {
           window.log(`ERROR getAllComplements`, error)
           this.cacheFrameLoading.message = `
             Tivemos um erro no sistema ao carregar os complementos. Por favor, Tente novamente!
           `
           this.setDialogErrorTryAgain(true)
-        }).finally(() => {
+        })
+        .finally(() => {
           this.cacheFrameLoading.status = false
         })
     })

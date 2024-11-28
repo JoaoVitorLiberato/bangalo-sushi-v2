@@ -1,5 +1,6 @@
 import { Component, Vue } from "vue-property-decorator"
 import { namespace } from "vuex-class"
+import { IOrderData } from "@/types/type-order"
 import { MiddlewareServiceAPI } from "@/middlewares/middlewareServiceAPI"
 
 const payloadStore = namespace("payloadStoreModule")
@@ -33,9 +34,9 @@ export class MixinServiceOrder extends Vue {
     return new Promise((resolve, reject) => {
       return MiddlewareServiceAPI
         .post(`/order`,this.getPayloadOrder())
-        .then((responseApi) => {
-          if (!responseApi.data) reject(Error("error_not_data"))
-          if (responseApi.data && responseApi.data.id) resolve(responseApi.data.id)
+        .then((responseMiddleware) => {
+          if (!("data" in responseMiddleware)) reject(Error("error_not_data"))
+          if (responseMiddleware.data && responseMiddleware.data.id) resolve(responseMiddleware.data.id)
         })
         .catch((error) => {
           window.log(`ERROR GETORDERCOSTUMER MIXIN`, error)
@@ -45,21 +46,22 @@ export class MixinServiceOrder extends Vue {
           `
 
           this.setDialogErrorTryAgain(true)
-        }).finally(() => {
+        })
+        .finally(() => {
           this.cacheFrameLoading.status = false
         })
     })
   }
 
-  getCostumerOrder (numberOrder: string|number): Promise<string> {
+  getCostumerOrder (numberOrder: string|number): Promise<IOrderData[]> {
     this.cacheFrameLoading.status = true
 
     return new Promise((resolve, reject) => {
       return MiddlewareServiceAPI
         .get(`/order/${numberOrder}`)
-        .then((responseApi) => {
-          if (!responseApi.data) reject(Error("error_not_data"))
-          if (responseApi.data && responseApi.data.id) resolve(responseApi.data.id)
+        .then((responseMiddleware) => {
+          if (!("data" in responseMiddleware)) reject(Error("error_not_data"))
+          resolve(responseMiddleware.data)
         })
         .catch((error) => {
           window.log(`ERROR GETORDERCOSTUMER MIXIN`, error)
@@ -69,7 +71,8 @@ export class MixinServiceOrder extends Vue {
           `
 
           this.setDialogErrorTryAgain(true)
-        }).finally(() => {
+        })
+        .finally(() => {
           this.cacheFrameLoading.status = false
         })
     })
