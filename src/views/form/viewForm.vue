@@ -167,58 +167,41 @@
                 <v-col
                   cols="12"
                 >
-                  <v-row
-                    no-gutters
-                    class="px-1"
+                  <div
+                    :class="$vuetify.breakpoint.smAndDown ? 'd-flex flex-column-reverse' : ''"
                   >
-                    <v-col
-                      v-if="loadingService"
-                      cols="12"
+                    <v-btn
+                      color="grey lighten-2"
+                      large
+                      rounded
+                      depressed
+                      :width="$vuetify.breakpoint.smAndDown ? '100%' : 250"
+                      class="mr-md-4"
+                      @click="$router.replace({ name: 'products-view', params: { type: getPayloadOrder('segmento') } })"
                     >
-                      <v-progress-linear
-                        indeterminate
-                        color="secondary"
-                      />
-                    </v-col>
+                      <span
+                        class="font-weight-bold"
+                      >
+                        Voltar
+                      </span>
+                    </v-btn>
 
-                    <v-col
-                      v-else
-                      cols="12"
-                      :class="$vuetify.breakpoint.smAndDown ? 'd-flex flex-column-reverse' : ''"
+                    <v-btn
+                      :color="!validateForm ? 'grey lighten-2' : 'secondary'"
+                      large
+                      rounded
+                      depressed
+                      class="mb-5 mb-md-0"
+                      :width="$vuetify.breakpoint.smAndDown ? '100%' : 250"
+                      @click="!validateForm ? validateCart() : signupOrderCart()"
                     >
-                      <v-btn
-                        color="grey lighten-2"
-                        large
-                        rounded
-                        depressed
-                        :width="$vuetify.breakpoint.smAndDown ? '100%' : 250"
-                        class="mr-md-4"
-                        @click="$router.replace({ name: 'products-view', params: { type: getPayloadOrder('segmento') } })"
+                      <span
+                        class="font-weight-bold black--text"
                       >
-                        <span
-                          class="font-weight-bold"
-                        >
-                          Voltar
-                        </span>
-                      </v-btn>
-
-                      <v-btn
-                        :color="!validateForm ? 'grey lighten-2' : 'secondary'"
-                        large
-                        rounded
-                        depressed
-                        class="mb-5 mb-md-0"
-                        :width="$vuetify.breakpoint.smAndDown ? '100%' : 250"
-                        @click="!validateForm ? validateCart() : signupOrderCart()"
-                      >
-                        <span
-                          class="font-weight-bold"
-                        >
-                          Finalizar compra
-                        </span>
-                      </v-btn>
-                    </v-col>
-                  </v-row>
+                        {{ cacheFrameLoading.status ? "Aguarde..." : "Finalizar compra" }}
+                      </span>
+                    </v-btn>
+                  </div>
                 </v-col>
               </v-row>
             </v-form>
@@ -316,15 +299,8 @@
           <v-col
             cols="12"
           >
-            <v-progress-linear
-              v-if="loadingService"
-              color="secondary"
-              indeterminate
-            />
-
             <v-btn
-              v-else
-              :color="cupom.length >= 8 ? 'secondary' : 'grey lighten-1'"
+              :color="cacheFrameLoading.status ? 'grey lighten-1' : 'secondary'"
               block
               large
               depressed
@@ -335,7 +311,7 @@
               <span
                 class="font-weight-bold black--text"
               >
-                Aplicar cupom
+                {{ cacheFrameLoading.status ? "Aplicando..." : "Aplicar cupom" }}
               </span>
             </v-btn>
           </v-col>
@@ -349,12 +325,24 @@
   import { Component, Vue, Watch } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
   import { namespace } from "vuex-class"
+  import { event } from "@/plugins/firebase"
+  import { middlewareSearchCEP } from "@/middlewares/middlewareSearchCEP"
   import { MixinServiceVouchers } from "@/mixins/services/mixinServiceVouchers"
   import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
+  import { MixinServiceOrder } from "@/mixins/services/mixinServiceOrder"
   import PAYLOAD_DATA from "@/data/payload/payloadDefault.json"
   import { $refs } from "@/implements/types"
-  import { required, nome, telefone } from "@/helpers/rules"
   import "@/styles/views/form/viewForm.styl"
+  import { 
+    required,
+    nome,
+    telefone,
+    cep,
+    rua,
+    numero,
+    cidade,
+    estado
+  } from "@/helpers/rules"
 
   const cacheStore = namespace("cacheStoreModule")
   const payloadStore = namespace("payloadStoreModule")
@@ -370,8 +358,9 @@
   })
 
   export default class viewForm extends mixins(
-    MixinServiceVouchers,
     MixinFunctionsSystem,
+    MixinServiceVouchers,
+    MixinServiceOrder,
   ) implements $refs {
     beforeRouteEnter(
       to: {
@@ -420,7 +409,6 @@
     required = required
 
     formValidate = false
-    loadingService = false
     popupNumberOrder  = false
     formDadosCadastrais = false
 
@@ -527,22 +515,109 @@
       }
     }
 
-    created (): void {
-      setTimeout(() => {
-        this.$vuetify.goTo("#inicio-form")
-      }, 700)
-    }
+    @Watch("itemsFirstFields.nomeCompleto.value")
+      changeInputName (value): void {
+        this.itemsFirstFields.nomeCompleto.valid = nome(value)
+      }
+
+    @Watch("itemsFirstFields.numeroDeContato.value")
+      changeInputNumberPhone (value): void {
+        this.itemsFirstFields.numeroDeContato.valid = telefone((value).replace(/\D/g, ""))
+      }
+
+    @Watch("itemsFirstFields.formaPagamento.value")
+      changeInputPaymentForm (value): void {
+        this.itemsFirstFields.formaPagamento.valid = !!value
+      }
+
+    @Watch("itemsFirstFields.cep.value")
+      changeInputCep (value): void {
+        const VALUE_INPUT = String(value).replace(/\D/g, "")
+        const CEP_DELIVERY_VALID: string[] = [
+          "65272000",
+          "65272-000"
+        ]
+
+        this.itemsFirstFields.cep.valid = cep(VALUE_INPUT)
+        if (cep(VALUE_INPUT) !== true) return
+        if (!CEP_DELIVERY_VALID.includes(VALUE_INPUT)) {
+          this.itemsFirstFields.cep.valid = `
+            Infelizmente não entregamos para fora de Santa Luzia de Paruá,
+            Caso queira experimentar nossos produtos estaremos ansiosos por sua
+            visita em nosso estabelecimento.
+          `
+          return
+        }
+
+        middlewareSearchCEP(VALUE_INPUT)
+          .then((responseMiddleware) => {
+            if (/error_api/i.test(String(responseMiddleware.erro || ""))) throw Error("VIA-CEP-SIGNOUT")
+            if (/cep-invalid/i.test(String(responseMiddleware.erro))) {
+              this.itemsFirstFields.cep.valid = "CEP inválido, Por favor informe um CEP correto."
+              return
+            }
+
+            Object.keys(this.itemsFirstFields).forEach((input) => {
+              if (/^(enderecoCidade|enderecoUf)$/i.test(String(input || ""))) {
+                if (responseMiddleware.localidade === "" || responseMiddleware.uf === "") {
+                  this.itemsFirstFields[input].readonly = false
+                  return
+                }
+
+                if (/^(enderecoCidade)$/i.test(String(input || ""))) {
+                  this.itemsFirstFields[input].value = responseMiddleware.localidade
+                }
+
+                if (/^(enderecoUf)$/i.test(String(input || ""))) {
+                  this.itemsFirstFields[input].value = responseMiddleware.uf
+                }
+
+                this.itemsFirstFields[input].valid = !!responseMiddleware
+              }
+            })
+          })
+          .catch((error) => {
+            window.log(`ERROR WATCH INPUT CEP`, error)
+          })
+      }
+
+    @Watch("itemsFirstFields.enderecoLogradouro.value")
+      changeInputRoad (value): void {
+        this.itemsFirstFields.enderecoLogradouro.valid = rua(value)
+      }
+
+    @Watch("itemsFirstFields.enderecoNumero.value")
+      changeInputNumberHouse (value): void {
+        this.itemsFirstFields.enderecoNumero.valid = numero(value)
+      }
+
+    @Watch("itemsFirstFields.enderecoReferencia.value")
+      changeInputRefference (value): void {
+        this.itemsFirstFields.enderecoReferencia.valid = !!value
+      }
+
+    @Watch("itemsFirstFields.enderecoBairro.value")
+      changeInputNeighborhood (value): void {
+        this.itemsFirstFields.enderecoBairro.valid = !!value
+      }
+
+    @Watch("itemsFirstFields.enderecoCidade.value")
+      changeInputCity (value): void {
+        this.itemsFirstFields.enderecoCidade.valid = cidade(value)
+      }
+
+    @Watch("itemsFirstFields.enderecoUf.value")
+      changeInputUF (value): void {
+        this.itemsFirstFields.enderecoUf.valid = estado(value)
+      }
 
     validateVoucher (): void {
-      this.loadingService = true
-
       this.getVoucherActived(this.cupom as string)
         .then((responseMixin) => {
           if (/not-found/i.test(String(responseMixin || ""))) {
             this.cupomValidate.status = true
             this.cupomValidate.color = "error--text"
             this.cupomValidate.message = "Este cupom é inválido, por favor, Digite um cupom válido."
-            this.loadingService = false
           } else {
             Vue.set(PAYLOAD_DATA.pagamento.desconto, "porcentagem", Number(String(this.cupom).replace(/\D/g, "")))
             Vue.set(PAYLOAD_DATA.pagamento.desconto, "ativado", true)
@@ -555,42 +630,84 @@
             setTimeout(() => {
               this.$refs.dialogDiscount.save()
               this.disableCupom = true
-              this.loadingService = false
-            }, 4000)
+            }, 3000)
+
+            setTimeout(() => {
+              this.cacheFrameLoading.status = false
+            }, 6000)
           }
         })
     }
 
-    @Watch("itemsFirstFields.nomeCompleto.value")
-      changeInputName (value): void {
-        this.itemsFirstFields.nomeCompleto.valid = nome(value)
-      }
+    async signupOrderCart (): Promise<void> {
+      try {
+        Object.keys(this.itemsFirstFields)
+          .forEach((input) => {
+            if (/^(nomeCompleto)$/i.test(String(input || ""))) {
+              Vue.set(PAYLOAD_DATA.consumidor, "nome", this.itemsFirstFields[input].value)
+            }
+  
+            if (/^(numeroDeContato)$/i.test(String(input || ""))) {
+              Vue.set(PAYLOAD_DATA.consumidor.telefone, "contato", String(this.itemsFirstFields[input].value).replace(/\D/g, ""))
+            }
+  
+            if (/^(messagem)$/i.test(String(input || ""))) {
+              Vue.set(PAYLOAD_DATA.consumidor, "mensagem", this.itemsFirstFields[input].value)
+            }
+  
+            if (/^(formaPagamento)$/i.test(String(input || ""))) {
+              Vue.set(PAYLOAD_DATA.pagamento, "formaPagamento", this.itemsFirstFields[input].value)
+            }
+  
+            if (/^(delivery)$/i.test(this.getPayloadOrder("segmento"))) {
+              if (/^(cep)$/i.test(String(input || ""))) {
+                const CEP = String(this.itemsFirstFields[input].value).replace(/\D/g, "")
+                Vue.set(PAYLOAD_DATA.consumidor.endereco, "cep", CEP)
+              }
+  
+              if (/^(enderecoLogradouro)$/i.test(String(input || ""))) {
+                Vue.set(PAYLOAD_DATA.consumidor.endereco, "logradouro", this.itemsFirstFields[input].value)
+              }
+  
+              if (/^(enderecoNumero)$/i.test(String(input || ""))) {
+                Vue.set(PAYLOAD_DATA.consumidor.endereco, "numero", this.itemsFirstFields[input].value)
+              }
+  
+              if (/^(enderecoComplemento)$/i.test(String(input || ""))) {
+                Vue.set(PAYLOAD_DATA.consumidor.endereco, "complemento", this.itemsFirstFields[input].value)
+              }
+  
+              if (/^(enderecoReferencia)$/i.test(String(input || ""))) {
+                Vue.set(PAYLOAD_DATA.consumidor.endereco, "referencia", this.itemsFirstFields[input].value)
+              }
+  
+              if (/^(enderecoBairro)$/i.test(String(input || ""))) {
+                Vue.set(PAYLOAD_DATA.consumidor.endereco, "bairro", this.itemsFirstFields[input].value)
+              }
+  
+              if (/^(enderecoCidade)$/i.test(String(input || ""))) {
+                Vue.set(PAYLOAD_DATA.consumidor.endereco, "cidade", this.itemsFirstFields[input].value)
+              }
+  
+              if (/^(enderecoUf)$/i.test(String(input || ""))) {
+                Vue.set(PAYLOAD_DATA.consumidor.endereco, "uf", this.itemsFirstFields[input].value)
+              }
+            }
+          })
 
-    @Watch("itemsFirstFields.numeroDeContato.value")
-      changeInputNumberPhone (value): void {
-        this.itemsFirstFields.numeroDeContato.valid = telefone((value).replace(/\D/g, ""))
-      }
+        const RESPONSE_MIXIN = await this.createOrder()
 
-    signupOrderCart (): void {
-      Object.keys(this.itemsFirstFields)
-        .forEach((input) => {
-          if (/^(nomeCompleto)$/i.test(String(input || ""))) {
-            Vue.set(PAYLOAD_DATA.consumidor, "nome", this.itemsFirstFields[input].value)
-          }
+        if (!RESPONSE_MIXIN) throw Error()
 
-          if (/^(numeroDeContato)$/i.test(String(input || ""))) {
-            Vue.set(PAYLOAD_DATA.consumidor.telefone, "contato", String(this.itemsFirstFields[input].value).replace(/\D/g, ""))
-          }
-
-          if (/^(messagem)$/i.test(String(input || ""))) {
-            Vue.set(PAYLOAD_DATA.consumidor, "mensagem", this.itemsFirstFields[input].value)
-          }
-
-          if (/^(formaPagamento)$/i.test(String(input || ""))) {
-            Vue.set(PAYLOAD_DATA.pagamento, "formaPagamento", this.itemsFirstFields[input].value)
-          }
+        event("purchase", {
+          ...this.getPayloadOrder(),
+          order_id: RESPONSE_MIXIN
         })
-      console.log("signupOrderCart")
+
+        location.replace("/detalhes/pedido")
+      } catch {
+        window.log(`ERROR SIGNUP-ORDER-CART`)
+      }
     }
   }
 </script>
