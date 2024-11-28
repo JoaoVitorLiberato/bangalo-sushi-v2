@@ -5,11 +5,15 @@
       class="pa-0"
     >
       <toolbar-component
-        :disableButton="true"
+        :disableButton="/^(form-view)$/i.test(String($route.name))"
       />
-    
+
       <router-view
         name="viewForm"
+      />
+
+      <router-view
+        name="viewOrder"
       />
 
       <dialog-functions-helper-system>

@@ -333,7 +333,7 @@
   import PAYLOAD_DATA from "@/data/payload/payloadDefault.json"
   import { $refs } from "@/implements/types"
   import "@/styles/views/form/viewForm.styl"
-  import { 
+  import {
     required,
     nome,
     telefone,
@@ -509,6 +509,12 @@
       ].every(o => !!o)
     }
 
+    created (): void {
+      setTimeout(() => {
+        this.$vuetify.goTo("#inicio-form")
+      }, 600)
+    }
+
     validateCart (): void {
       if (this.$refs.formDadosCadastrais.validate) {
         this.$refs.formDadosCadastrais.validate()
@@ -532,6 +538,7 @@
 
     @Watch("itemsFirstFields.cep.value")
       changeInputCep (value): void {
+        if (/^(local)$/i.test(this.getPayloadOrder("segmento"))) return
         const VALUE_INPUT = String(value).replace(/\D/g, "")
         const CEP_DELIVERY_VALID: string[] = [
           "65272000",
@@ -583,31 +590,37 @@
 
     @Watch("itemsFirstFields.enderecoLogradouro.value")
       changeInputRoad (value): void {
+        if (/^(local)$/i.test(this.getPayloadOrder("segmento"))) return
         this.itemsFirstFields.enderecoLogradouro.valid = rua(value)
       }
 
     @Watch("itemsFirstFields.enderecoNumero.value")
       changeInputNumberHouse (value): void {
+        if (/^(local)$/i.test(this.getPayloadOrder("segmento"))) return
         this.itemsFirstFields.enderecoNumero.valid = numero(value)
       }
 
     @Watch("itemsFirstFields.enderecoReferencia.value")
       changeInputRefference (value): void {
+        if (/^(local)$/i.test(this.getPayloadOrder("segmento"))) return
         this.itemsFirstFields.enderecoReferencia.valid = !!value
       }
 
     @Watch("itemsFirstFields.enderecoBairro.value")
       changeInputNeighborhood (value): void {
+        if (/^(local)$/i.test(this.getPayloadOrder("segmento"))) return
         this.itemsFirstFields.enderecoBairro.valid = !!value
       }
 
     @Watch("itemsFirstFields.enderecoCidade.value")
       changeInputCity (value): void {
+        if (/^(local)$/i.test(this.getPayloadOrder("segmento"))) return
         this.itemsFirstFields.enderecoCidade.valid = cidade(value)
       }
 
     @Watch("itemsFirstFields.enderecoUf.value")
       changeInputUF (value): void {
+        if (/^(local)$/i.test(this.getPayloadOrder("segmento"))) return
         this.itemsFirstFields.enderecoUf.valid = estado(value)
       }
 
@@ -646,49 +659,49 @@
             if (/^(nomeCompleto)$/i.test(String(input || ""))) {
               Vue.set(PAYLOAD_DATA.consumidor, "nome", this.itemsFirstFields[input].value)
             }
-  
+
             if (/^(numeroDeContato)$/i.test(String(input || ""))) {
               Vue.set(PAYLOAD_DATA.consumidor.telefone, "contato", String(this.itemsFirstFields[input].value).replace(/\D/g, ""))
             }
-  
+
             if (/^(messagem)$/i.test(String(input || ""))) {
               Vue.set(PAYLOAD_DATA.consumidor, "mensagem", this.itemsFirstFields[input].value)
             }
-  
+
             if (/^(formaPagamento)$/i.test(String(input || ""))) {
               Vue.set(PAYLOAD_DATA.pagamento, "formaPagamento", this.itemsFirstFields[input].value)
             }
-  
+
             if (/^(delivery)$/i.test(this.getPayloadOrder("segmento"))) {
               if (/^(cep)$/i.test(String(input || ""))) {
                 const CEP = String(this.itemsFirstFields[input].value).replace(/\D/g, "")
                 Vue.set(PAYLOAD_DATA.consumidor.endereco, "cep", CEP)
               }
-  
+
               if (/^(enderecoLogradouro)$/i.test(String(input || ""))) {
                 Vue.set(PAYLOAD_DATA.consumidor.endereco, "logradouro", this.itemsFirstFields[input].value)
               }
-  
+
               if (/^(enderecoNumero)$/i.test(String(input || ""))) {
                 Vue.set(PAYLOAD_DATA.consumidor.endereco, "numero", this.itemsFirstFields[input].value)
               }
-  
+
               if (/^(enderecoComplemento)$/i.test(String(input || ""))) {
                 Vue.set(PAYLOAD_DATA.consumidor.endereco, "complemento", this.itemsFirstFields[input].value)
               }
-  
+
               if (/^(enderecoReferencia)$/i.test(String(input || ""))) {
                 Vue.set(PAYLOAD_DATA.consumidor.endereco, "referencia", this.itemsFirstFields[input].value)
               }
-  
+
               if (/^(enderecoBairro)$/i.test(String(input || ""))) {
                 Vue.set(PAYLOAD_DATA.consumidor.endereco, "bairro", this.itemsFirstFields[input].value)
               }
-  
+
               if (/^(enderecoCidade)$/i.test(String(input || ""))) {
                 Vue.set(PAYLOAD_DATA.consumidor.endereco, "cidade", this.itemsFirstFields[input].value)
               }
-  
+
               if (/^(enderecoUf)$/i.test(String(input || ""))) {
                 Vue.set(PAYLOAD_DATA.consumidor.endereco, "uf", this.itemsFirstFields[input].value)
               }

@@ -120,6 +120,11 @@
           name: "Pedido Local",
           icon: "room_service",
           path:"local"
+        },
+        {
+          name: "Meus Pedidos",
+          icon: "list_alt",
+          path:"/detalhes/pedido"
         }
       ]
     }

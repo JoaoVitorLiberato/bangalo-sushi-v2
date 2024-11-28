@@ -81,6 +81,8 @@
     }
 
     created (): void {
+      if (!/^(products-view)$/i.test(String(this.$route.name || ""))) return
+
       if ("type" in this.$route.params) {
         if (!/local|delivery/i.test(this.$route.params.type as string)) {
           location.replace("/")

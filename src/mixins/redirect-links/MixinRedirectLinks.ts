@@ -22,4 +22,7 @@ export class MixinRedirectLinks extends Vue {
   goToDatailOrder (): void {
     this.$router.replace(`/detalhes/pedido${location.search}`)
   }
+  goToDatailOrderForm (): void {
+    this.$router.replace(`/detalhes/finalizar-compra${location.search}`)
+  }
 }

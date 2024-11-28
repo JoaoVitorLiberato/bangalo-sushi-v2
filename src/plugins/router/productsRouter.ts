@@ -7,7 +7,7 @@ export default [
       "@/routes/routeProducts.vue"
     ),
     meta: {
-      title: "Bangalô Sushi Lounge - Conheçã nossos produtos",
+      title: "Bangalô Sushi Lounge - Conheça nossos produtos",
       description: "Experimente a Autêntica Culinária Japonesa no Bangalô Sushi Lounge"
     },
     children: [

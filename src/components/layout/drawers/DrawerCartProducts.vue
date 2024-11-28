@@ -232,7 +232,7 @@
 
           sessionStorage.setItem("order", JSON.stringify(this.getCacheRastreamentoUsuarioProductsCart()))
           event("add_to_cart", this.getCacheRastreamentoUsuarioProductsCart())
-          this.goToDatailOrder()
+          this.goToDatailOrderForm()
         }).catch((error) => {
           window.log("signupProductCart", error)
           this.drawerCartProducts = false
