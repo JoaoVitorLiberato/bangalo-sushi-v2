@@ -104,6 +104,7 @@
         <v-card>
           <v-row
             no-gutters
+            class="pa-2"
           >
             <v-col
               cols="12"
@@ -122,14 +123,95 @@
 
             <v-col
               cols="12"
-              class="py-2"
+            >
+              <v-img
+                src="/favicon.png"
+                alt="Bangalô Sushi Lounge - Qualidade, Sabor e Tradição"
+                contain
+                height="150"
+              />
+            </v-col>
+
+            <v-col
+              cols="12"
+              class="text-center pa-1"
+              style="line-height:1"
+            >
+              <span
+                v-font-size="$vuetify.breakpoint.smAndDown ? 13 : 16"
+                class="font-weight-regular error--text"
+              >
+                Prezado cliente, Caso você possua mais de um pedido, arrasto os cards para lado para
+                visualiza-los.
+              </span>
+            </v-col>
+
+            <v-col
+              cols="12"
+              class="py-1"
             />
 
             <v-col
               cols="12"
-              class="pa-4"
             >
+              <v-row
+                no-gutters
+              >
+                <v-col
+                  cols="12"
+                  class="hidden-sm-and-down"
+                >
+                  <v-slide-group
+                    show-arrows
+                    prev-icon="arrow_back"
+                    next-icon="arrow_forward"
+                    :class="`d-flex fix--v-slide-group flex-wrap`"
+                    center-active
+                    mandatory
+                  >
+                    <v-slide-item
+                      v-for="(item, index) in orders"
+                      :key="`slide-card-dishes-selected-${index}`"
+                      class="mr-5"
+                    >
+                      <div>
+                        <CardOrderToday
+                          :order="item"
+                        />
+                      </div>
+                    </v-slide-item>
+                  </v-slide-group>
+                </v-col>
 
+                <v-col
+                  cols="12"
+                  class="hidden-md-and-up"
+                >
+                  <div
+                    style="width:100%;max-width:304px;"
+                    class="mx-auto"
+                  >
+                    <v-carousel
+                      hide-delimiters
+                      class="fix-caroucel-cards"
+                      bottom
+                    >
+                      <v-carousel-item
+                        v-for="(item, index) in orders"
+                        :key="`caroucel-card-dishes-selected-${index}`"
+                      >
+                        <div
+                          class="mt-5 mb-3 mx-1"
+                        >
+                          <CardOrderToday
+                            :order="item"
+                          />
+                        </div>
+                      </v-carousel-item>
+                    </v-carousel>
+                  </div>
+                </v-col>
+              </v-row>
             </v-col>
           </v-row>
         </v-card>
@@ -146,10 +228,20 @@
   import { $refs } from "@/implements/types"
   import { IOrderData } from "@/types/type-order"
   import { required, telefone } from "@/helpers/rules"
+  import "@/styles/views/orders/viewOrder.styl"
 
   const cacheStore = namespace("cacheStoreModule")
 
-  @Component({})
+  @Component({
+    components: {
+      CardOrderToday: () => import(
+        /* webpackChuckName: "card-order-today-component" */
+        /* webpackMode: "eager" */
+        "@/components/cards/order/CardOrderToday.vue"
+      ),
+    }
+  })
+
   export default class viewOrder extends mixins(
     MixinServiceOrder,
   ) implements $refs {
@@ -206,12 +298,13 @@
           // }
 
           this.searchOrder()
-        }, 5000)
+        }, 30000)
       }
 
     closeDialogGetOrders (): void {
       window.clearInterval(this.updateOrder)
       this.verifyUpdate = false
+      this.orders = []
       this.$refs.dialogGetOrders.save()
     }
 
@@ -220,7 +313,7 @@
       this.getCostumerOrder(PHONE_FORMATED)
         .then((responseService) => {
           if (!responseService) {
-            this.numberPhone.valid = "Pedido não encontrado."
+            this.numberPhone.valid = "Pedido(s) não encontrado(s)."
             return
           }
 
