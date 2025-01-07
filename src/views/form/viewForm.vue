@@ -374,6 +374,8 @@
     ) {
       next((vm) => {
         try {
+          Vue.set(PAYLOAD_DATA, "produtos", vm.getCacheRastreamentoUsuarioProductsCart())
+
           if (vm.getPayloadOrder("segmento")) {
             Vue.set(PAYLOAD_DATA, "segmento", sessionStorage.getItem("segment"))
           }

@@ -67,8 +67,8 @@
         style="line-height:1"
       >
         <span
-          v-font-size="13"
-          class="font-weight-bold text-uppercase d-block"
+          v-font-size="14"
+          class="font-weight-medium text-uppercase d-block"
         >
           Nome:
         </span>
@@ -91,8 +91,8 @@
         style="line-height:1"
       >
         <span
-          v-font-size="13"
-          class="font-weight-bold text-uppercase d-block"
+          v-font-size="14"
+          class="font-weight-medium text-uppercase d-block"
         >
           Telefone:
         </span>
@@ -115,8 +115,8 @@
         style="line-height:1"
       >
         <span
-          v-font-size="13"
-          class="font-weight-bold text-uppercase d-block"
+          v-font-size="14"
+          class="font-weight-medium text-uppercase d-block"
         >
           Segmento:
         </span>
@@ -139,21 +139,21 @@
         cols="12"
       >
         <span
-          v-font-size="13"
-          class="font-weight-bold text-uppercase d-block"
+          v-font-size="14"
+          class="font-weight-medium text-uppercase d-block"
         >
           Produtos:
         </span>
 
         <v-row
           no-gutters
+          style="max-height:154px;overflow-y:scroll"
         >
           <v-col
             v-for="(item, index) in order.produtos"
             :key="`card-product-order-${item.name}-${index}`"
             cols="12"
             class="my-2"
-            :style="String(getCacheRastreamentoUsuarioProductsCart()[getCacheRastreamentoUsuarioProductsCart().length - 1].id) === String(item.id )? 'margin-bottom:200px' : ''"
           >
             <card-cart
               :name="item.name"
@@ -174,12 +174,17 @@
   import { Component, Vue, Prop } from "vue-property-decorator"
   import { IOrderData } from "@/types/type-order"
 
-  @Component({})
+  @Component({
+    components: {
+      CardCart: () => import(
+        /* webpackChuckName: "card-cart-component" */
+        /* webpackMode: "eager" */
+        "@/components/cards/cart/CardCart.vue"
+      )
+    }
+  })
+
   export default class CardOrderToday extends Vue {
     @Prop({}) order!: IOrderData
-
-    created (): void {
-      console.log("orders", this.order)
-    }
   }
 </script>
