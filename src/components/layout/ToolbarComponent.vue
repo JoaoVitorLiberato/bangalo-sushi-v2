@@ -109,24 +109,45 @@
       icon:string,
       name:string,
       path:string
+      routeName: string
     }> {
       return [
         {
+          name: "Página Principal",
+          icon: "home",
+          path:"/",
+          routeName: "home"
+        },
+        {
           name: "Pedido Delivery",
           icon: "shopping_bag",
-          path:"delivary"
+          path:"delivery",
+          routeName: "products-view"
         },
         {
           name: "Pedido Local",
           icon: "room_service",
-          path:"local"
+          path:"local",
+          routeName: "products-view"
         },
         {
           name: "Meus Pedidos",
           icon: "list_alt",
-          path:"/detalhes/pedido"
+          path:"/detalhes/pedido",
+          routeName: "order-view"
+        },
+        {
+          name: "Loja",
+          icon: "storefront",
+          path:"/admin",
+          routeName: "admin-view"
         }
-      ]
+      ].filter((item) => {
+        if (/products-view/i.test(String(this.$route.name))) {
+          const NAME_SPLITED = String(item.name).split(" ")
+          if (String(NAME_SPLITED[1]).toLowerCase() !== String(this.$route.params.type)) return item
+        } else if (String(item.routeName) !== String(this.$route.name)) return item
+      })
     }
   }
 </script>
