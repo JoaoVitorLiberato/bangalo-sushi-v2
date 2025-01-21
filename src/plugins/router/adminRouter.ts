@@ -15,10 +15,10 @@ export default [
         path: "",
         name: "admin-login-view",
         components: {
-          viewOrder: (): Promise<typeof import("*.vue")> => import(
+          viewAuthLogin: (): Promise<typeof import("*.vue")> => import(
             /* webpackChunkName: "order-route-view" */
             /* webpackPrefetch: 1 */
-            "@/views/order/viewOrder.vue"
+            "@/views/admin/viewLogin.vue"
           )
         },
       },

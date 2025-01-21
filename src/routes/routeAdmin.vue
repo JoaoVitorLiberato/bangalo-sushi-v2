@@ -4,9 +4,9 @@
       fluid
       class="pa-0"
     >
-      <toolbar-component
+      <!-- <toolbar-component
         :disableButton="/^(form-view)$/i.test(String($route.name))"
-      />
+      /> -->
 
       <router-view
         name="viewAuthLogin"

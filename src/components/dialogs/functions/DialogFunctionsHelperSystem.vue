@@ -132,47 +132,74 @@
           <v-card>
             <v-row
               no-gutters
-              class="pa-4"
             >
               <v-col
                 cols="12"
-              >
-                <span
-                  v-font-size="20"
-                  class="font-weight-medium d-block"
-                >
-                  Opss...
-                </span>
-
-                <span
-                  class="font-weight-regular pt-2"
-                >
-                  {{ getCacheFrameLoading().message }}
-                </span>
-              </v-col>
-
-              <v-col
-                cols="12"
-                class="py-2"
-              />
-
-              <v-col
-                cols="12"
+                class="text-end"
               >
                 <v-btn
-                  color="secondary"
-                  depressed
-                  block
-                  rounded
-                  class="text-none"
-                  @click.stop="goToHome()"
+                  icon
+                  @click="dialogErrorTryAgain = false"
                 >
-                  <span
-                    class="black--text font-weight-medium"
-                  >
-                    Tentar novamente
-                  </span>
+                  <v-icon>
+                    close
+                  </v-icon>
                 </v-btn>
+              </v-col>
+
+              <!-- <v-col
+                cols="12"
+                class="py-2"
+              /> -->
+
+              <v-col
+                cols="12"
+              >
+                <v-row
+                  no-gutters
+                  class="px-4 pb-4"
+                >
+                  <v-col
+                    cols="12"
+                  >
+                    <span
+                      v-font-size="20"
+                      class="font-weight-medium d-block"
+                    >
+                      Opss...
+                    </span>
+
+                    <span
+                      class="font-weight-regular pt-2"
+                    >
+                      {{ getCacheFrameLoading().message }}
+                    </span>
+                  </v-col>
+
+                  <v-col
+                    cols="12"
+                    class="py-2"
+                  />
+
+                  <v-col
+                    cols="12"
+                  >
+                    <v-btn
+                      color="secondary"
+                      depressed
+                      block
+                      rounded
+                      class="text-none"
+                      @click.stop="goToHome()"
+                    >
+                      <span
+                        class="black--text font-weight-medium"
+                      >
+                        Tentar novamente
+                      </span>
+                    </v-btn>
+                  </v-col>
+                </v-row>
               </v-col>
             </v-row>
           </v-card>

@@ -629,7 +629,9 @@
     validateVoucher (): void {
       this.getVoucherActived(this.cupom as string)
         .then((responseMixin) => {
+          console.log("Mxin", responseMixin)
           if (/not-found/i.test(String(responseMixin || ""))) {
+            this.cacheFrameLoading.status = false
             this.cupomValidate.status = true
             this.cupomValidate.color = "error--text"
             this.cupomValidate.message = "Este cupom é inválido, por favor, Digite um cupom válido."

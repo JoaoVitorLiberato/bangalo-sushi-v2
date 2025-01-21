@@ -16,7 +16,7 @@ export class MixinRedirectLinks extends Vue {
   }
 
   goToAdminLogin(): void {
-    location.replace(`/admin/login${location.search}`)
+    this.$router.push(`/admin/login${location.search}`)
   }
 
   goToDatailOrder (): void {
