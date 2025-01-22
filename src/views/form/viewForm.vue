@@ -629,7 +629,6 @@
     validateVoucher (): void {
       this.getVoucherActived(this.cupom as string)
         .then((responseMixin) => {
-          console.log("Mxin", responseMixin)
           if (/not-found/i.test(String(responseMixin || ""))) {
             this.cacheFrameLoading.status = false
             this.cupomValidate.status = true

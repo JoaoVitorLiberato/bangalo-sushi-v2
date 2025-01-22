@@ -4,7 +4,9 @@
   >
     <v-row
       no-gutters
-      style="max-width:414px;margin:0 auto."
+      align="center"
+      justify="center"
+      style="max-width:414px;margin:0 auto"
     >
       <v-col
         cols="12"
@@ -12,6 +14,8 @@
         <v-img
           src="/favicon.png"
           alt="Bangalô Sushi Lounge - O melhor sushi de Santa Luzia de Paruá"
+          width="100%"
+          height="300"
           contain
         />
       </v-col>
@@ -59,7 +63,6 @@
                 depressed
                 color="secondary"
                 x-large
-                rounded
               >
                 <span
                   class="black--text font-weight-bold"
