@@ -28,8 +28,8 @@
 </template>
 
 <script lang="ts">
-  import { Component } from "vue-property-decorator"
-  import { mixins } from "vue-class-component"
+  import { Component, Vue } from "vue-property-decorator"
+  import { propertysCacheDetele } from "@/helpers/propertysCacheDetele"
 
   @Component({
     components: {
@@ -51,5 +51,9 @@
     }
   })
 
-  export default class routeForm extends mixins() {}
+  export default class routeForm extends Vue {
+    created (): void {
+      propertysCacheDetele()
+    }
+  }
 </script>

@@ -2,7 +2,7 @@ export default [
   {
     path: "/admin",
     component: (): Promise<typeof import("*.vue")> => import(
-      /* webpackChunkName: "order-route" */
+      /* webpackChunkName: "admin-route" */
       /* webpackPrefetch: 0 */
       "@/routes/routeAdmin.vue"
     ),
@@ -12,11 +12,22 @@ export default [
     },
     children: [
       {
+        path: "detalhes/:permision/:session",
+        name: "admin-details-view",
+        components: {
+          viewAuthLogin: (): Promise<typeof import("*.vue")> => import(
+            /* webpackChunkName: "admin-details-route-view" */
+            /* webpackPrefetch: 1 */
+            "@/views/admin/viewDetails.vue"
+          )
+        },
+      },
+      {
         path: "",
         name: "admin-login-view",
         components: {
           viewAuthLogin: (): Promise<typeof import("*.vue")> => import(
-            /* webpackChunkName: "order-route-view" */
+            /* webpackChunkName: "admin-login-route-view" */
             /* webpackPrefetch: 1 */
             "@/views/admin/viewLogin.vue"
           )

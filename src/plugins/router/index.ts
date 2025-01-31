@@ -25,6 +25,13 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   try {
+    if (/^(admin-details-view)$/i.test(String(to.name))) {
+      const PERMISION_USER =  sessionStorage.getItem("permision-user")
+
+      if (PERMISION_USER && to.params.session === undefined) to.params.permision = PERMISION_USER
+      if (to.params.session === undefined) to.params.session = "pedidos"
+    }
+
     titleUpdate(to)
   } catch {/* EMPTY */}
   next()

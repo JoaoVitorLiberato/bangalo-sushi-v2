@@ -5,7 +5,7 @@
       class="pa-0"
     >
       <toolbar-component
-        :disableButton="/^(form-view)$/i.test(String($route.name))"
+        :disableButton="/^(admin-details-view)$/i.test(String($route.name))"
       />
 
       <router-view
@@ -24,8 +24,8 @@
 </template>
 
 <script lang="ts">
-  import { Component } from "vue-property-decorator"
-  import { mixins } from "vue-class-component"
+  import { Component, Vue } from "vue-property-decorator"
+  import { propertysCacheDetele } from "@/helpers/propertysCacheDetele"
 
   @Component({
     components: {
@@ -47,5 +47,14 @@
     }
   })
 
-  export default class routeAdmin extends mixins() {}
+  export default class routeAdmin extends Vue {
+    created (): void {
+      const TOKEN_USER = sessionStorage.getItem("token-user")
+      const PERMISION_USER =  sessionStorage.getItem("permision-user")
+
+      if (TOKEN_USER || PERMISION_USER) {
+        propertysCacheDetele()
+      }
+    }
+  }
 </script>

@@ -51,13 +51,18 @@
     >
       <v-list-item>
         <v-list-item-content>
-          <v-img
+          <!-- <v-img
             src="/favicon.png"
             alt="Bangalô Sushi Lounge - Seu sushi com qualidade, sabor e tradição"
             width="150"
             height="115"
             contain
-          />
+          /> -->
+          <span
+            class="font-weight-bold text-uppercase"
+          >
+            Menu
+          </span>
         </v-list-item-content>
       </v-list-item>
 

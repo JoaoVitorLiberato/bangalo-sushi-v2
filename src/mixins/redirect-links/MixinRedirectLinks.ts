@@ -16,13 +16,18 @@ export class MixinRedirectLinks extends Vue {
   }
 
   goToAdminLogin(): void {
-    this.$router.push(`/admin/login${location.search}`)
+    this.$router.push(`/admin${location.search}`)
   }
 
   goToDatailOrder (): void {
     this.$router.replace(`/detalhes/pedido${location.search}`)
   }
+
   goToDatailOrderForm (): void {
     this.$router.replace(`/detalhes/finalizar-compra${location.search}`)
+  }
+
+  goToDetailsAdmin (data: { permision:string, session:string }): void {
+    this.$router.replace(`/admin/detalhes/${data.permision}/${data.session}`)
   }
 }

@@ -5,7 +5,7 @@
       class="pa-0"
     >
       <toolbar-component />
-    
+
       <router-view
         name="viewProducts"
       />
@@ -23,8 +23,8 @@
 </template>
 
 <script lang="ts">
-  import { Component } from "vue-property-decorator"
-  import { mixins } from "vue-class-component"
+  import { Component, Vue } from "vue-property-decorator"
+  import { propertysCacheDetele } from "@/helpers/propertysCacheDetele"
 
   @Component({
     components: {
@@ -51,5 +51,9 @@
     }
   })
 
-  export default class routeProducts extends mixins() {}
+  export default class routeProducts extends Vue {
+    created (): void {
+      propertysCacheDetele()
+    }
+  }
 </script>
