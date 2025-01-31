@@ -6,27 +6,30 @@
       no-gutters
       align="center"
       justify="center"
-      style="max-width:414px;margin:0 auto"
+      justify-md="space-between"
+      :style="`max-width:${$vuetify.breakpoint.smAndDown ? 414 : 1100}px;margin:0 auto`"
     >
       <v-col
         cols="12"
+        md="5"
       >
         <v-img
           src="/favicon.png"
           alt="Bangalô Sushi Lounge - O melhor sushi de Santa Luzia de Paruá"
-          width="100%"
-          height="300"
+          :width="$vuetify.breakpoint.smAndDown ? '100%' : 594"
+          :height="$vuetify.breakpoint.smAndDown ? 230 : 420"
           contain
         />
       </v-col>
 
       <v-col
         cols="12"
-        class="py-2"
+        class="py-2 hidden-md-and-up"
       />
 
       <v-col
         cols="12"
+        md="5"
       >
         <v-form>
           <v-row

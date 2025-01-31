@@ -140,13 +140,16 @@
           name: "Loja",
           icon: "storefront",
           path:"/admin",
-          routeName: "admin-view"
+          routeName: "admin-login-view"
         }
-      ].filter((item) => {
+      ]
+      .filter((item) => {
         if (/products-view/i.test(String(this.$route.name))) {
-          const NAME_SPLITED = String(item.name).split(" ")
+            const NAME_SPLITED = String(item.name).split(" ")
           if (String(NAME_SPLITED[1]).toLowerCase() !== String(this.$route.params.type)) return item
-        } else if (String(item.routeName) !== String(this.$route.name)) return item
+        } else if (String(item.routeName) !== String(this.$route.name)) {
+          return item
+        }
       })
     }
   }
