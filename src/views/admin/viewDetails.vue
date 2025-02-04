@@ -10,7 +10,7 @@
       <v-col
         cols="12"
       >
-        teste
+        <order-content />
       </v-col>
     </v-row>
   </v-container>
@@ -20,6 +20,14 @@
   import { Component } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
 
-  @Component({})
+  @Component({
+    components: {
+      OrderContent: () => import(
+        /* webpackChuckName: "order-content-component" */
+        /* webpackMode: "eager" */
+        "@/components/layout/content/OrderContent.vue"
+      )
+    }
+  })
   export default class ViewDetails extends mixins() {}
 </script>
