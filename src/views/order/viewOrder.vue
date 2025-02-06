@@ -310,7 +310,7 @@
 
     searchOrder (): void {
       const PHONE_FORMATED = String(this.numberPhone.value).replace(/\D/g, "")
-      this.getCostumerOrder(PHONE_FORMATED)
+      this.getCostumerOrderByPhone(PHONE_FORMATED)
         .then((responseService) => {
           if (!responseService) {
             this.numberPhone.valid = "Pedido(s) não encontrado(s)."

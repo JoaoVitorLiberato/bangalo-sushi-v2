@@ -9,7 +9,7 @@ const CONNECT_API = Axios.create({
 })
 
 CONNECT_API.interceptors.request.use((request) => {
-  const TOKEN_CACHE = localStorage.getItem("token-user")
+  const TOKEN_CACHE = sessionStorage.getItem("token-user")
 
   if (TOKEN_CACHE) request.headers.Authorization = `Bearer ${TOKEN_CACHE}` || ""
 

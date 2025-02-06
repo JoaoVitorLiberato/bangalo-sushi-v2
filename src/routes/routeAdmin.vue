@@ -18,7 +18,9 @@
         />
       </dialog-functions-helper-system>
 
-      <loading-overlay-component />
+      <loading-overlay-component
+        v-if="!/^(admin-details-view)$/i.test(String($route.name || ''))"
+      />
     </v-container>
   </v-main>
 </template>

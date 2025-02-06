@@ -5,7 +5,55 @@
   >
     <v-row
       no-gutters
+      style="max-width:1920px;"
+      class="mx-auto my-4"
     >
+      <v-col
+        cols="12"
+        class="hidden-sm-and-down"
+      >
+        <v-row
+          no-gutters
+        >
+          <v-col
+            cols="12"
+          >
+            <v-progress-linear
+              color="secondary"
+              striped
+              :value="valueUpdateOrders"
+              height="10"
+            />
+          </v-col>
+
+          <v-col
+            cols="12"
+            class="py-2"
+          />
+
+          <v-col
+            cols="12"
+            class="text-center"
+          >
+            <span
+              v-if="valueUpdateOrders < 100"
+            >
+              Buscando todos os pedidos...
+            </span>
+            <span
+              v-else
+            >
+              Os pedidos estão atualizados.
+            </span>
+          </v-col>
+        </v-row>
+      </v-col>
+
+      <v-col
+        cols="12"
+        class="py-4"
+      />
+
       <v-col
         cols="12"
         class="hidden-sm-and-down"
@@ -19,12 +67,14 @@
           mandatory
         >
           <v-slide-item
-            v-for="item in 5"
-            :key="`slide-card-dishes-selected-${item}`"
+            v-for="item in getCacheRastreamentoUsuarioOrders()"
+            :key="`slide-card-dishes-selected-${item.pedido}`"
             class="mr-5"
           >
             <div>
-              <CardOrderAdmin />
+              <card-order-admin
+                :item="item"
+              />
             </div>
           </v-slide-item>
         </v-slide-group>
@@ -39,7 +89,36 @@
           elevation="0"
           class="pa-4"
         >
-          MObile sem tela
+          <v-row
+            no-gutters
+          >
+            <v-col
+              cols="12"
+              class="text-center"
+            >
+              <h2
+                class="font-weight-bold error--text text-uppercase"
+              >
+                Atenção
+              </h2>
+            </v-col>
+
+            <v-col
+              cols="12"
+              class="py-2"
+            />
+
+            <v-col
+              cols="12"
+              class="text-center"
+            >
+              <p
+                class="font-weight-regular"
+              >
+                Essa tela só pode ser acessada por dispositiveis desktop.
+              </p>
+            </v-col>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>
@@ -47,7 +126,13 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from "vue-property-decorator"
+  import { Component } from "vue-property-decorator"
+  import { mixins } from "vue-class-component"
+  import { MixinServiceOrder } from "@/mixins/services/mixinServiceOrder"
+  import { namespace } from "vuex-class"
+  import "@/styles/views/orders/viewOrder.styl"
+
+  const cacheStore = namespace("cacheStoreModule")
 
   @Component({
     components: {
@@ -58,5 +143,41 @@
       )
     }
   })
-  export default class OrderContent extends Vue {}
+  export default class OrderContent extends mixins(
+    MixinServiceOrder,
+  ) {
+    @cacheStore.Getter("CacheRastreamentoUsuarioOrders") getCacheRastreamentoUsuarioOrders
+    @cacheStore.Action("actionRastreamentoUsuarioOrders") setRastreamentoUsuarioOrders
+
+    valueUpdateOrders = 0
+    intervalGetUpdateOrders = 0
+
+    getOrdersToday (): void {
+      this.valueUpdateOrders = 18
+      setTimeout(() => {
+        this.valueUpdateOrders = 56
+        this.getCostumeOrdersAdmin()
+          .then((responseService) => {
+            if (/^(error)$/i.test(String(responseService || ""))) {
+              window.clearInterval(this.intervalGetUpdateOrders)
+              return
+            }
+
+            this.setRastreamentoUsuarioOrders(responseService ?? [])
+          }).finally(() => {
+            this.valueUpdateOrders = 100
+          })
+      }, 5000)
+    }
+
+    created (): void {
+      this.getOrdersToday()
+    }
+
+    mounted (): void {
+      this.intervalGetUpdateOrders =  window.setInterval(() => {
+        this.getOrdersToday()
+      }, 40000)
+    }
+  }
 </script>

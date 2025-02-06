@@ -53,7 +53,7 @@ export class MixinServiceOrder extends Vue {
     })
   }
 
-  getCostumerOrder (numberOrder: string|number): Promise<IOrderData[]> {
+  getCostumerOrderByPhone (numberOrder: string|number): Promise<IOrderData[]> {
     this.cacheFrameLoading.status = true
 
     return new Promise((resolve, reject) => {
@@ -71,6 +71,32 @@ export class MixinServiceOrder extends Vue {
           `
 
           this.setDialogErrorTryAgain(true)
+        })
+        .finally(() => {
+          this.cacheFrameLoading.status = false
+        })
+    })
+  }
+
+  getCostumeOrdersAdmin (): Promise<IOrderData[]|string> {
+    this.cacheFrameLoading.status = true
+
+    return new Promise((resolve, reject) => {
+      return MiddlewareServiceAPI
+        .get(`/orders`)
+        .then((responseMiddleware) => {
+          if (!("data" in responseMiddleware)) reject(Error("error_not_data"))
+          resolve(responseMiddleware.data)
+        })
+        .catch((error) => {
+          window.log(`ERROR GETORDERCOSTUMER MIXIN - getCostumeOrdersAdmin`, error)
+
+          this.cacheFrameLoading.message = `
+            Houve um erro ao tentar achar seu pedido. Por favor, tente novamente.
+          `
+
+          this.setDialogErrorTryAgain(true)
+          resolve("error")
         })
         .finally(() => {
           this.cacheFrameLoading.status = false
