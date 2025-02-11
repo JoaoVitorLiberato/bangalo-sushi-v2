@@ -12,52 +12,6 @@
         cols="12"
         class="hidden-sm-and-down"
       >
-        <v-row
-          no-gutters
-        >
-          <v-col
-            cols="12"
-          >
-            <v-progress-linear
-              color="secondary"
-              striped
-              :value="valueUpdateOrders"
-              height="10"
-            />
-          </v-col>
-
-          <v-col
-            cols="12"
-            class="py-2"
-          />
-
-          <v-col
-            cols="12"
-            class="text-center"
-          >
-            <span
-              v-if="valueUpdateOrders < 100"
-            >
-              Buscando todos os pedidos...
-            </span>
-            <span
-              v-else
-            >
-              Os pedidos estão atualizados.
-            </span>
-          </v-col>
-        </v-row>
-      </v-col>
-
-      <v-col
-        cols="12"
-        class="py-4"
-      />
-
-      <v-col
-        cols="12"
-        class="hidden-sm-and-down"
-      >
         <v-slide-group
           show-arrows
           prev-icon="arrow_back"
@@ -74,6 +28,7 @@
             <div>
               <card-order-admin
                 :item="item"
+                :disableButton="!/(pendente)/i.test(item.pagamento.statusPagamento) || cacheFrameLoading.status"
               />
             </div>
           </v-slide-item>
@@ -128,8 +83,8 @@
 <script lang="ts">
   import { Component } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
-  import { MixinServiceOrder } from "@/mixins/services/mixinServiceOrder"
   import { namespace } from "vuex-class"
+  import { MixinServiceOrder } from "@/mixins/services/mixinServiceOrder"
   import "@/styles/views/orders/viewOrder.styl"
 
   const cacheStore = namespace("cacheStoreModule")
@@ -143,31 +98,25 @@
       )
     }
   })
+
   export default class OrderContent extends mixins(
     MixinServiceOrder,
   ) {
     @cacheStore.Getter("CacheRastreamentoUsuarioOrders") getCacheRastreamentoUsuarioOrders
     @cacheStore.Action("actionRastreamentoUsuarioOrders") setRastreamentoUsuarioOrders
 
-    valueUpdateOrders = 0
     intervalGetUpdateOrders = 0
 
     getOrdersToday (): void {
-      this.valueUpdateOrders = 18
-      setTimeout(() => {
-        this.valueUpdateOrders = 56
-        this.getCostumeOrdersAdmin()
-          .then((responseService) => {
-            if (/^(error)$/i.test(String(responseService || ""))) {
-              window.clearInterval(this.intervalGetUpdateOrders)
-              return
-            }
+      this.getCostumeOrdersAdmin()
+        .then((responseService) => {
+          if (/^(error)$/i.test(String(responseService || ""))) {
+            window.clearInterval(this.intervalGetUpdateOrders)
+            return
+          }
 
-            this.setRastreamentoUsuarioOrders(responseService ?? [])
-          }).finally(() => {
-            this.valueUpdateOrders = 100
-          })
-      }, 5000)
+          this.setRastreamentoUsuarioOrders(responseService ?? [])
+        })
     }
 
     created (): void {
