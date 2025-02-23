@@ -190,7 +190,7 @@
         localStorage.setItem("user-connected", String(this.admin_data_form.email.value))
         sessionStorage.setItem("permission", RESPONSE_MIXIN.role)
 
-        location.replace("https://sushi-project-alpha.vercel.app/admin/conectado")
+        location.replace(`https://sushi-project-alpha.vercel.app/admin/conectado?token=${RESPONSE_MIXIN.token}`)
       } catch (error) {
         const ERROR_SPLITED = String(error).split(": ")
 
