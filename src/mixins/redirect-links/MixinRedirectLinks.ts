@@ -30,4 +30,8 @@ export class MixinRedirectLinks extends Vue {
   goToDetailsAdmin (data: { permision:string, session:string }): void {
     this.$router.replace(`/admin/detalhes/${data.permision}/${data.session}`)
   }
+
+  gotoAdminExternal () {
+    location.replace("https://sushi-project-alpha.vercel.app/admin")
+  }
 }

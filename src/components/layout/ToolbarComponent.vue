@@ -77,7 +77,7 @@
           :key="`drawer-list-${name}`"
           link
           color="secondary"
-          @click="/delivery|local/i.test(String(name)) ? returnProductRoute(path) : $router.replace(path)"
+          @click="/delivery|local/i.test(String(name)) ? returnProductRoute(path) : /Loja/i.test(String(name)) ? gotoAdminExternal() : $router.replace(path)"
         >
           <v-list-item-icon>
             <v-icon>
