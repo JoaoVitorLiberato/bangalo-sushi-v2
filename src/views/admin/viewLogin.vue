@@ -193,7 +193,8 @@
         //   permision: RESPONSE_MIXIN.role,
         //   session: "pedidos"
         // })
-        location.replace("https://sushi-project-blue.vercel.app/admin/conectado")
+
+        location.replace("https://sushi-project-alpha.vercel.app/admin/conectado")
       } catch (error) {
         const ERROR_SPLITED = String(error).split(": ")
 
