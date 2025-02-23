@@ -189,10 +189,6 @@
         localStorage.setItem("token-user", String(RESPONSE_MIXIN.token))
         localStorage.setItem("user-connected", String(this.admin_data_form.email.value))
         sessionStorage.setItem("permission", RESPONSE_MIXIN.role)
-        // this.goToDetailsAdmin({
-        //   permision: RESPONSE_MIXIN.role,
-        //   session: "pedidos"
-        // })
 
         location.replace("https://sushi-project-alpha.vercel.app/admin/conectado")
       } catch (error) {
