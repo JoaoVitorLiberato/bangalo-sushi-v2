@@ -186,11 +186,8 @@
 
         if ("error" in RESPONSE_MIXIN) throw Error(RESPONSE_MIXIN.error)
 
-        localStorage.setItem("token-user", String(RESPONSE_MIXIN.token))
-        localStorage.setItem("user-connected", String(this.admin_data_form.email.value))
-        sessionStorage.setItem("permission", RESPONSE_MIXIN.role)
 
-        location.replace(`https://sushi-project-alpha.vercel.app/admin/conectado?token=${RESPONSE_MIXIN.token}`)
+        location.replace(`https://sushi-project-alpha.vercel.app/admin?token=${RESPONSE_MIXIN.token}&role=${RESPONSE_MIXIN.role}&user=${this.admin_data_form.email.value}`)
       } catch (error) {
         const ERROR_SPLITED = String(error).split(": ")
 
