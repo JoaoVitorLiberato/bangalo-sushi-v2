@@ -44,7 +44,7 @@
                 v-font-size="17"
                 class="font-weight-thin font-italic"
               >
-                Av. Prof. João Morais de Sousa, Localizado na praça de<br class="hidden-sm-and-down"> alimentação do Águia, Santa Luzia de Paruá - MA
+                Av. Prof. João Morais de Sousa, Localizado em<br class="hidden-sm-and-down"> Santa Luzia de Paruá - MA
               </span>
             </v-col>
 

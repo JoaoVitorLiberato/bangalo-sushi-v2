@@ -32,6 +32,12 @@ router.beforeEach((to, from, next) => {
       if (to.params.session === undefined) to.params.session = "pedidos"
     }
 
+    if (/^(products-view)$/i.test(String(to.name))) {
+      if (!/^delivery$/i.test(String(to.params.type))) {
+        router.push({ name: "products-view", params: { type: "delivery" } })
+      }
+    }
+
     titleUpdate(to)
   } catch {/* EMPTY */}
   next()

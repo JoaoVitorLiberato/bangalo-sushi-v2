@@ -16,11 +16,10 @@
         <v-row
           v-border="'1px solid var(--v-secondary-base)'"
           no-gutters
-          class="pa-4"
         >
           <v-col
             cols="12"
-            class="text-end"
+            class="text-end pa-2"
           >
             <v-btn
               icon
@@ -34,11 +33,7 @@
 
           <v-col
             cols="12"
-            class="py-2"
-          />
-
-          <v-col
-            cols="12"
+            class="px-4 pb-4"
           >
             <span
               class="font-weight-regular d-block pb-2"

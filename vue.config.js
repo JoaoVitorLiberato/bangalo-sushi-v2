@@ -24,7 +24,7 @@ module.exports = {
       title: "Bangalô Sushi Lounge - Qualidade, Sabor e Tradição",
       description: "Venha conhecer o melhor sushi de Santa Luzia de Paruá. Onde você vai encontrar uma variedades de pratos da comida japonesa, com um sabor que ultrapassa os limites da barreiras continentais. Bangalô Sushi Lounge.",
       subject: "Comida Japonesa, Colinária Japonesa, Bangalo Sushi, Bangalô Sushi, O melhor sushi, Restaurante, Restaurante de comida Japonesa, lounge",
-      color: "#000",
+      color: "#fff",
       url: "https://bangalosushi.app.br/",
       image: "/favicon.png",
       entry: "./src/main",

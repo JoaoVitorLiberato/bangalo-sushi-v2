@@ -48,7 +48,7 @@
                         justify="center"
                       >
                         <v-col
-                          v-for="servico in ['delivery', 'local']"
+                          v-for="servico in ['delivery']"
                           :key="`input-radio-${servico}`"
                           cols="12"
                           class="pb-2"
