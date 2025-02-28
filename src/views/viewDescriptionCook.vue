@@ -49,7 +49,7 @@
               >
                 <v-img
                   v-border.radius="'10px 0 0 10px'"
-                  src="/img/project/ceo-sushi.webp"
+                  src="/img/project/ceo-sushi.jpg"
                   alt="Imagem do CEO e Sushiman do Yumi shusi"
                   contain
                   width="400"

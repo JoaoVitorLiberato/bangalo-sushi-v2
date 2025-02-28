@@ -88,7 +88,7 @@
                     <span
                       class="font-weight-medium text-uppercase"
                     >
-                      {{ Number(item.qtd) !== 0 ? getReadingValue(Number(item.price) * Number(item.qtd)) :  getReadingValue(0)}}
+                      {{ Number(item.qtd) !== 2 ? getReadingValue((Number(item.price) * Number(item.qtd - 2))) :  getReadingValue(0)}}
                     </span>
                   </v-col>
 
@@ -106,7 +106,7 @@
                       :disabled="item.qtd === 0"
                       @click="() => (
                         item.qtd -= 1,
-                        item.priceTotal = Number(item.price) * Number(item.qtd),
+                        item.priceTotal = item.qtd <= 2 ?  0 : Number(item.price) * Number(item.qtd - 2),
                         setCartComplement(item)
                       )"
                     >
@@ -132,7 +132,7 @@
                       class="pa-0 ma-0"
                       @click="() => (
                         item.qtd += 1,
-                        item.priceTotal = Number(item.price) * Number(item.qtd),
+                        item.priceTotal = item.qtd >= 3 ? Number(item.price) * Number(item.qtd - 2) : 0,
                         setCartComplement(item)
                       )"
                     >
@@ -500,7 +500,7 @@
 
     totalAmountComplements (complements: IComplements[]): number {
       let totalAmount = 0
-      
+
       complements.forEach((item) => {
         if ("priceTotal" in item) totalAmount += item.priceTotal as number
       })
