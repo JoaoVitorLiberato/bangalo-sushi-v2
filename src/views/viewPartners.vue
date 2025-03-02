@@ -19,7 +19,7 @@
           v-font-size="$vuetify.breakpoint.smAndDown ? 19 : 27"
           class="font-weight-bold text-uppercase"
         >
-          Conheça nossos parceiros
+          Conheça nosso{{imagesPartners.length > 1 ? 's' : ''}} parceiro{{imagesPartners.length > 1 ? 's' : ''}}
         </h2>
       </v-col>
 

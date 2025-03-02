@@ -5,7 +5,7 @@
       class="pa-0"
     >
       <toolbar-component
-        :disableButton="/^(form-view)$/i.test(String($route.name))"
+        :disableButton="/^(form-view|order-pending-view)$/i.test(String($route.name))"
       />
 
       <router-view
@@ -13,10 +13,17 @@
       />
 
       <router-view
+        name="viewOrderPending"
+      />
+
+      <router-view
         name="viewOrder"
       />
 
       <dialog-functions-helper-system>
+        <template
+          #errorPayment
+        />
         <template
           #tryAgain
         />

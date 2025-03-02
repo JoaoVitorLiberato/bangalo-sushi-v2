@@ -88,7 +88,7 @@
                     <span
                       class="font-weight-medium text-uppercase"
                     >
-                      {{ Number(item.qtd) !== 2 ? getReadingValue((Number(item.price) * Number(item.qtd - 2))) :  getReadingValue(0)}}
+                      {{ Number(item.qtd) > 2 ? getReadingValue((Number(item.price) * Number(item.qtd - 2))) :  getReadingValue(0)}}
                     </span>
                   </v-col>
 

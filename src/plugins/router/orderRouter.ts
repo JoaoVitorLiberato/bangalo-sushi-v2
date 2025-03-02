@@ -23,6 +23,17 @@ export default [
         },
       },
       {
+        path: "pendente",
+        name: "order-pending-view",
+        components: {
+          viewOrderPending: (): Promise<typeof import("*.vue")> => import(
+            /* webpackChunkName: "order-pending-route-view" */
+            /* webpackPrefetch: 1 */
+            "@/views/order/viewOrderPaymentPending.vue"
+          )
+        }
+      },
+      {
         path: "pedido",
         name: "order-view",
         components: {

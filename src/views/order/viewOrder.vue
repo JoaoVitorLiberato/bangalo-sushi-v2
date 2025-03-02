@@ -224,6 +224,7 @@
   import { Component, Watch } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
   import { namespace } from "vuex-class"
+  import { MixinServicePayment } from "@/mixins/services/mixinServicePayment"
   import { MixinServiceOrder } from "@/mixins/services/mixinServiceOrder"
   import { $refs } from "@/implements/types"
   import { IOrderData } from "@/types/type-order"
@@ -244,6 +245,7 @@
 
   export default class viewOrder extends mixins(
     MixinServiceOrder,
+    MixinServicePayment
   ) implements $refs {
     @cacheStore.Getter("CacheRastreamentoUsuarioOrders") getCacheRastreamentoUsuarioOrders
     @cacheStore.Action("actionRastreamentoUsuarioOrders") setRastreamentoUsuarioOrders
@@ -300,6 +302,23 @@
           this.searchOrder()
         }, 30000)
       }
+
+    created (): void {
+      if (
+        [
+          this.$route.query.slug,
+          this.$route.query.order_nsu,
+          this.$route.query.transaction_id,
+        ].every(o => !!o)
+      ) {
+        this.updateStatusPayment()
+          .then(responseService => {
+            if (responseService) {
+              this.$router.push("/detalhes/pedido")
+            }
+          })
+      }
+    }
 
     closeDialogGetOrders (): void {
       window.clearInterval(this.updateOrder)
