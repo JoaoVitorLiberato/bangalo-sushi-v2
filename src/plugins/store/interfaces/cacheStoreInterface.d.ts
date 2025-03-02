@@ -7,6 +7,8 @@ interface cacheStoreInterface {
     orders: IOrderData[]
     cart: IproductData[];
     productSelected: IproductData | null;
+    order_id: string;
+    checkoutExternal: string;
   };
   products: IproductData[];
   complements: IComplements[];

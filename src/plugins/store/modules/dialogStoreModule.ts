@@ -8,6 +8,7 @@ const moduleCache = (): dialogStoreInterface => {
   return {
     dialogFunctionHelperSystem: false,
     dialogErrorTryAgain: false,
+    dialogErrorPayment: false
   }
 }
 
@@ -20,6 +21,9 @@ const getters: GetterTree<dialogStoreInterface, rootStateInterface> = {
   getDialogErrorTryAgain: ({ dialogErrorTryAgain }) => () => {
     return dialogErrorTryAgain
   },
+  getDialogErrorPayment: ({ dialogErrorPayment }) => () => {
+    return dialogErrorPayment
+  },
 }
 
 const mutations: MutationTree<dialogStoreInterface> = {
@@ -29,6 +33,9 @@ const mutations: MutationTree<dialogStoreInterface> = {
   mutationDialogErrorAgain: (state, data) => {
     state.dialogErrorTryAgain = data
   },
+  mutationDialogErrorPayment: (state, data) => {
+    state.dialogErrorPayment = data
+  },
 }
 
 const actions: ActionTree<dialogStoreInterface, rootStateInterface> = {
@@ -37,6 +44,9 @@ const actions: ActionTree<dialogStoreInterface, rootStateInterface> = {
   },
   setDialogErrorTryAgain: ({ commit }, data) => {
     commit("mutationDialogErrorAgain", data)
+  },
+  setDialogErrorPayment: ({ commit }, data) => {
+    commit("mutationDialogErrorPayment", data)
   },
 }
 

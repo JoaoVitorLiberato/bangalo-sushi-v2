@@ -330,6 +330,7 @@
   import { MixinServiceVouchers } from "@/mixins/services/mixinServiceVouchers"
   import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
   import { MixinServiceOrder } from "@/mixins/services/mixinServiceOrder"
+  import { MixinServicePayment } from "@/mixins/services/mixinServicePayment"
   import PAYLOAD_DATA from "@/data/payload/payloadDefault.json"
   import { $refs } from "@/implements/types"
   import "@/styles/views/form/viewForm.styl"
@@ -361,6 +362,7 @@
     MixinFunctionsSystem,
     MixinServiceVouchers,
     MixinServiceOrder,
+    MixinServicePayment,
   ) implements $refs {
     beforeRouteEnter(
       to: {
@@ -406,6 +408,7 @@
 
     @cacheStore.Getter("CacheRastreamentoUsuarioProductsCart") getCacheRastreamentoUsuarioProductsCart
     @cacheStore.Action("actionRastreamentoUsuarioProductCart") setRastreamentoUsuarioProductCart
+    @cacheStore.Action("actionRastreamentoUsuarioOrderID") setRastreamentoUsuarioOrderID
     @payloadStore.Getter("PayloadOrder") declare getPayloadOrder
 
     required = required
@@ -711,16 +714,22 @@
             }
           })
 
-        const RESPONSE_MIXIN = await this.createOrder()
+        const RESPONSE_MIXIN_ORDER = await this.createOrder()
 
-        if (!RESPONSE_MIXIN) throw Error()
+        if (!RESPONSE_MIXIN_ORDER) throw Error()
 
         event("purchase", {
           ...this.getPayloadOrder(),
-          order_id: RESPONSE_MIXIN
+          order_id: RESPONSE_MIXIN_ORDER
         })
 
-        location.replace("/detalhes/pedido")
+        this.setRastreamentoUsuarioOrderID(RESPONSE_MIXIN_ORDER)
+        const RESPONSE_MIXIN_PAYMENT = await this.startPayment()
+
+        if (RESPONSE_MIXIN_PAYMENT.success) {
+          sessionStorage.setItem("phone-costumer", this.getPayloadOrder("consumidor").telefone.contato)
+          this.$router.replace("/detalhes/pendente")
+        }
       } catch {
         window.log(`ERROR SIGNUP-ORDER-CART`)
       }
