@@ -129,12 +129,12 @@
           path:"delivery",
           routeName: "products-view"
         },
-        {
-          name: "Pedido Local",
-          icon: "room_service",
-          path:"local",
-          routeName: "products-view"
-        },
+        // {
+        //   name: "Pedido Local",
+        //   icon: "room_service",
+        //   path:"local",
+        //   routeName: "products-view"
+        // },
         {
           name: "Meus Pedidos",
           icon: "list_alt",

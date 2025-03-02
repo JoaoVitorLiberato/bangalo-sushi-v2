@@ -47,9 +47,6 @@ export class MixinServiceOrder extends Vue {
 
           this.setDialogErrorTryAgain(true)
         })
-        .finally(() => {
-          this.cacheFrameLoading.status = false
-        })
     })
   }
 

@@ -192,6 +192,7 @@
                       rounded
                       depressed
                       class="mb-5 mb-md-0"
+                      :disabled="cacheFrameLoading.status"
                       :width="$vuetify.breakpoint.smAndDown ? '100%' : 250"
                       @click="!validateForm ? validateCart() : signupOrderCart()"
                     >
