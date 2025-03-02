@@ -206,6 +206,92 @@
         </v-dialog>
       </v-overlay>
     </slot>
+
+    <slot
+      name="errorPayment"
+    >
+      <v-overlay
+        :value="dialogErrorPayment"
+        opacity="1"
+      >
+        <v-dialog
+          v-model="dialogErrorPayment"
+          persistent
+          width="400"
+        >
+          <v-card>
+            <v-row
+              no-gutters
+            >
+              <v-col
+                cols="12"
+                class="text-end"
+              >
+                <v-btn
+                  icon
+                  @click.stop="dialogErrorPayment = false, goToHome()"
+                >
+                  <v-icon>
+                    close
+                  </v-icon>
+                </v-btn>
+              </v-col>
+
+              <v-col
+                cols="12"
+                class="py-2"
+              />
+
+              <v-col
+                cols="12"
+              >
+                <v-row
+                  no-gutters
+                  class="px-4 pb-4"
+                >
+                  <v-col
+                    cols="12"
+                    class="text-center"
+                  >
+                    <span
+                      v-font-size="16"
+                      class="font-weight-regular"
+                    >
+                      {{ getCacheFrameLoading().message }}
+                    </span>
+                  </v-col>
+
+                  <v-col
+                    cols="12"
+                    class="py-3"
+                  />
+
+                  <v-col
+                    cols="12"
+                  >
+                    <v-btn
+                      color="secondary"
+                      depressed
+                      block
+                      rounded
+                      class="text-none"
+                      :disabled="cacheFrameLoading.status"
+                      @click.stop="tryAgainPaymentStart()"
+                    >
+                      <span
+                        class="black--text font-weight-medium"
+                      >
+                        {{ cacheFrameLoading.status ? "Aguarde..." : "Tentar novamente" }}
+                      </span>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-dialog>
+      </v-overlay>
+    </slot>
   </div>
 </template>
 
@@ -213,6 +299,7 @@
   import { Component } from "vue-property-decorator"
   import { mixins } from "vue-class-component"
   import { namespace } from "vuex-class"
+  import { MixinServicePayment } from "@/mixins/services/mixinServicePayment"
   import { MixinRedirectLinks } from "@/mixins/redirect-links/MixinRedirectLinks"
   import { event } from "@/plugins/firebase"
 
@@ -222,12 +309,15 @@
   @Component({})
   export default class DialogFunctionsHelperSystem extends mixins(
     MixinRedirectLinks,
+    MixinServicePayment,
   ) {
+    @dialogStore.Getter("getDialogErrorPayment") getDialogErrorPayment
+    @dialogStore.Action("setDialogErrorPayment") declare setDialogErrorPayment
     @dialogStore.Getter("getDialogFunctionHelperSystem") getDialogFunctionHelperSystem
     @dialogStore.Action("setDialogFunctionHelperSystem") setDialogFunctionHelperSystem
     @dialogStore.Getter("getDialogErrorTryAgain") getDialogErrorTryAgain
     @dialogStore.Action("setDialogErrorTryAgain") setDialogErrorTryAgain
-    @cacheStore.Getter("CacheFrameLoading") getCacheFrameLoading
+    @cacheStore.Getter("CacheFrameLoading") declare getCacheFrameLoading
 
     event = event
 
@@ -247,6 +337,24 @@
 
     set dialogErrorTryAgain (value:boolean) {
       this.setDialogErrorTryAgain(value)
+    }
+
+    get dialogErrorPayment (): boolean {
+      return this.getDialogErrorPayment()
+    }
+
+    set dialogErrorPayment (value:boolean) {
+      this.setDialogErrorPayment(value)
+    }
+
+    tryAgainPaymentStart (): void {
+      this.startPayment()
+        .then(responseService => {
+          if (responseService.success) {
+            this.dialogErrorPayment = false
+            this.$router.replace("/detalhes/pendente")
+          }
+        })
     }
   }
 </script>
