@@ -60,7 +60,7 @@ export class MixinServicePayment extends Vue {
     })
   }
 
-  updateStatusPayment () : Promise<void|boolean> {
+  updateStatusPayment () : Promise<void|boolean|{error:boolean}> {
     const PHONE_COSTUMER = sessionStorage.getItem("phone-costumer")
 
     this.cacheFrameLoading.status = true
@@ -74,6 +74,7 @@ export class MixinServicePayment extends Vue {
           resolve(responseMiddleware.data.success)
         }).catch(err => {
           window.log("ERROR updateStatusPayment", err)
+          resolve({ error: true })
         }).finally(() => {
           this.cacheFrameLoading.status = false
         })
