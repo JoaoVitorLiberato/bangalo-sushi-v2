@@ -228,6 +228,7 @@
   import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
 
   const cacheStore = namespace("cacheStoreModule")
+  const payloadStore = namespace("payloadStoreModule")
 
   @Component({})
   export default class CardCart extends mixins(
@@ -240,6 +241,7 @@
     @Prop({ default: {} }) differences?: IDifferences
     @Prop({ default: {} }) product!:IproductData
 
+    @payloadStore.Getter("PayloadOrder") declare getPayloadOrder
     @cacheStore.Action("actionRastreamentoUsuarioRemoveProductCart") setRastreamentoUsuarioRemoveProductCart
     @cacheStore.Getter("CacheRastreamentoUsuarioProductsCart") getCacheRastreamentoUsuarioProductsCart
 
@@ -261,6 +263,11 @@
       }
 
       this.setRastreamentoUsuarioRemoveProductCart(PRODUCTS_NOT_REMOVED)
+
+      if (PRODUCTS_NOT_REMOVED.length === 0) {
+        sessionStorage.removeItem("order")
+        location.replace(`/produtos/${this.getPayloadOrder("segmento")}/vamoscomecar`)
+      }
     }
   }
 </script>
