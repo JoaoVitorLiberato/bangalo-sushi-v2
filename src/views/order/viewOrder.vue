@@ -318,6 +318,11 @@
             }
           })
       }
+
+      const PHONE_COSTUMER = sessionStorage.getItem("phone-costumer")
+      if (PHONE_COSTUMER) {
+        this.numberPhone.value = PHONE_COSTUMER as string
+      }
     }
 
     closeDialogGetOrders (): void {
