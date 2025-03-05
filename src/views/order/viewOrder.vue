@@ -216,6 +216,113 @@
           </v-row>
         </v-card>
       </v-dialog>
+
+      <v-dialog
+        ref="dialogErrorUpdateStatusPayment"
+        width="350"
+        persistent
+      >
+        <v-card
+          class="pa-4"
+        >
+          <v-row
+            no-gutters
+          >
+            <v-col
+              cols="12"
+              class="text-center"
+            >
+              <v-icon
+                color="error"
+                :size="$vuetify.breakpoint.smAndDown ? 86 : 96"
+              >
+                error
+              </v-icon>
+            </v-col>
+
+            <v-col
+              cols="12"
+              class="text-center"
+            >
+              <h2
+                class="font-weight-bold text-uppercase"
+              >
+                Atenção
+              </h2>
+
+              <div
+                style="line-height:19px"
+              >
+                <span
+                  v-font-size="15"
+                >
+                  Houve um erro ao atualizar o status de pagamento de "<strong>pendente</strong>" para "<strong>pago</strong>".
+                  Por favor, tente novamente. Caso o problema persista, entre em contato com nossa equipe enviando o <strong>comprovante de pagamento</strong>.
+                </span>
+              </div>
+
+            </v-col>
+
+            <v-col
+              cols="12"
+              class="py-2"
+            />
+
+            <v-col
+              cols="12"
+            >
+              <v-btn
+                color="secondary"
+                depressed
+                block
+                @click.stop="$refs.dialogErrorUpdateStatusPayment.save(), updateStatusPaymentOrder()"
+              >
+                <span
+                  class="font-weight-medium black--text"
+                >
+                  Tentar novamente
+                </span>
+              </v-btn>
+            </v-col>
+
+            <v-col
+              cols="12"
+              class="py-2"
+            />
+
+            <v-col
+              cols="12"
+            >
+              <v-btn
+                color="green draken-3"
+                depressed
+                block
+                class="text-center"
+                :href="`https://wa.me/5598985094324?text=${message}`"
+                target="_blank"
+                title="Entre em contato com o Bangalô Sushi Lounge através do WhatsApp"
+              >
+                <span
+                  class="font-weight-medium black--text mr-2"
+                >
+                  Fale com a equipe
+                </span>
+
+                <div>
+                  <v-img
+                    src="/img/project/rede-sociais/whatsapp.png"
+                    alt="Entre em contato através do WhatsApp com o Bangalô Sushi Lounge"
+                    title="Entre em contato através do WhatsApp com o Bangalô Sushi Lounge"
+                    contain
+                    height="25"
+                    width="25"
+                  />
+                </div>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-dialog>
     </div>
   </div>
 </template>
@@ -262,6 +369,8 @@
       valid: ""
     }
 
+    message = encodeURIComponent("Olá, Estou com problemas com o pagamento. Pode me ajudar, por favor?")
+
     get validateForm (): boolean {
       return [
         this.formValidate
@@ -294,30 +403,12 @@
         if (value === false) return
 
         this.updateOrder = window.setInterval(() => {
-          // if (/concluido/i.test(String(this.detailOrder.status))) {
-          //   window.clearInterval(this.updateOrder)
-          //   return
-          // }
-
           this.searchOrder()
         }, 30000)
       }
 
     created (): void {
-      if (
-        [
-          this.$route.query.slug,
-          this.$route.query.order_nsu,
-          this.$route.query.transaction_id,
-        ].every(o => !!o)
-      ) {
-        this.updateStatusPayment()
-          .then(responseService => {
-            if (responseService) {
-              this.$router.push("/detalhes/pedido")
-            }
-          })
-      }
+      this.updateStatusPaymentOrder()
 
       const PHONE_COSTUMER = sessionStorage.getItem("phone-costumer")
       if (PHONE_COSTUMER) {
@@ -345,6 +436,33 @@
           this.$refs.dialogGetOrders.isActive = true
           this.verifyUpdate = true
         })
+    }
+
+    updateStatusPaymentOrder (): void {
+      if (
+        [
+          this.$route.query.slug,
+          this.$route.query.order_nsu,
+          this.$route.query.transaction_id,
+        ].every(o => !!o)
+      ) {
+        this.updateStatusPayment()
+          .then(responseService => {
+            if (
+              [
+                typeof responseService === "object",
+                "error" in Object(responseService)
+              ].every(o => !!o)
+            ) {
+              this.$refs.dialogErrorUpdateStatusPayment.isActive = true
+              return
+            }
+
+            if (responseService) {
+              this.$router.push("/detalhes/pedido")
+            }
+          })
+      }
     }
   }
 </script>
