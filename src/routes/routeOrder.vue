@@ -28,6 +28,7 @@
           #tryAgain
         />
       </dialog-functions-helper-system>
+      <button-whats-app />
 
       <loading-overlay-component />
     </v-container>
@@ -54,6 +55,11 @@
         /* webpackChuckName: "loading-overlay-component" */
         /* webpackMode: "eager" */
         "@/components/overlay/LoadingOverlay.vue"
+      ),
+      ButtonWhatsApp: () => import(
+        /* webpackChuckName: "button-whats-chat-component" */
+        /* webpackMode: "eager" */
+        "@/components/buttons/buttonWhatsApp.vue"
       ),
     }
   })

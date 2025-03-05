@@ -15,7 +15,7 @@
           #tryAgain
         />
       </dialog-functions-helper-system>
-
+      <button-whats-app />
       <loading-overlay-component />
       <button-cart-products />
     </v-container>
@@ -47,6 +47,11 @@
         /* webpackChuckName: "button-cart-products-component" */
         /* webpackMode: "eager" */
         "@/components/buttons/ButtonCartProducts.vue"
+      ),
+      ButtonWhatsApp: () => import(
+        /* webpackChuckName: "button-whats-chat-component" */
+        /* webpackMode: "eager" */
+        "@/components/buttons/buttonWhatsApp.vue"
       ),
     }
   })
