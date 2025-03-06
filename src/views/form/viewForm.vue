@@ -518,6 +518,7 @@
     created (): void {
       setTimeout(() => {
         this.$vuetify.goTo("#inicio-form")
+        this.itemsFirstFields.cep.value = String(65272000 || "")
       }, 600)
     }
 
