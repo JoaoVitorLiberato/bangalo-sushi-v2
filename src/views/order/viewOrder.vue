@@ -323,6 +323,66 @@
           </v-row>
         </v-card>
       </v-dialog>
+
+      <v-dialog
+        ref="dialogConfirmPayment"
+        width="300"
+      >
+        <v-card>
+          <v-row
+            no-gutters
+            class="px-4 pt-2 pb-1"
+          >
+            <v-col
+              cols="12"
+              class="text-center"
+            >
+              <v-icon
+                color="green"
+                size="85"
+              >
+                check_circle
+              </v-icon>
+            </v-col>
+
+            <v-col
+              cols="12"
+              class="py-2"
+            />
+
+            <v-col
+              cols="12"
+              class="text-center"
+            >
+              <span
+                class="font-weight-medium"
+              >
+                Pagamento realizado com sucesso
+              </span>
+            </v-col>
+
+            <v-col
+              cols="12"
+              class="py-2"
+            />
+
+            <v-col
+              cols="12"
+              class="text-center"
+            >
+              <v-btn
+                text
+                color="success"
+                @click.stop="$refs.dialogConfirmPayment.save()"
+              >
+                <span>
+                  Fechar
+                </span>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-dialog>
     </div>
   </div>
 </template>
@@ -460,6 +520,7 @@
 
             if (responseService) {
               this.$router.push("/detalhes/pedido")
+              this.$refs.dialogConfirmPayment.isActive = true
             }
           })
       }
