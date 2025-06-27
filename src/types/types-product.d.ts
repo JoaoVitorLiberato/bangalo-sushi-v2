@@ -1,7 +1,10 @@
 export interface IproductData {
   id?: string,
   url_image: string,
-  category: string,
+  category: {
+    id: string,
+    name: string
+  },
   name: string,
   description: string,
   price: {
