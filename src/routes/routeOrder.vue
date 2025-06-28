@@ -4,23 +4,27 @@
       fluid
       class="pa-0"
     >
-      <toolbar-component
-        :disableButton="/^(form-view|order-pending-view)$/i.test(String($route.name))"
-      />
+      <header>
+        <toolbar-component
+          :disableButton="/^(form-view|order-pending-view)$/i.test(String($route.name))"
+        />
+      </header>
+      <main id="main-content" role="main">
+        <router-view
+          name="viewForm"
+        />
 
-      <router-view
-        name="viewForm"
-      />
+        <router-view
+          name="viewOrderPending"
+        />
 
-      <router-view
-        name="viewOrderPending"
-      />
-
-      <router-view
-        name="viewOrder"
-      />
-
-      <footer-component />
+        <router-view
+          name="viewOrder"
+        />
+      </main>
+      <footer>
+        <footer-component />
+      </footer>
 
       <dialog-functions-helper-system>
         <template

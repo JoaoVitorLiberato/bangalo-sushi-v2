@@ -4,20 +4,24 @@
       fluid
       class="pa-0"
     >
-      <toolbar-component
-        :disableButton="/^(admin-details-view)$/i.test(String($route.name))"
-      />
-
-      <router-view
-        name="viewAuthLogin"
-      />
-
+      <header>
+        <toolbar-component
+          :disableButton="/^(admin-details-view)$/i.test(String($route.name))"
+        />
+      </header>
+      <main id="main-content" role="main">
+        <router-view
+          name="viewAuthLogin"
+        />
+      </main>
+      <footer>
+        <!-- Adicione um footer acessível se necessário -->
+      </footer>
       <dialog-functions-helper-system>
         <template
           #tryAgain
         />
       </dialog-functions-helper-system>
-
       <loading-overlay-component
         v-if="!/^(admin-details-view)$/i.test(String($route.name || ''))"
       />

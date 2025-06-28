@@ -4,13 +4,17 @@
       fluid
       class="pa-0"
     >
-      <toolbar-component />
-
-      <router-view
-        name="viewProducts"
-      />
-
-      <footer-component />
+      <header>
+        <toolbar-component />
+      </header>
+      <main id="main-content" role="main">
+        <router-view
+          name="viewProducts"
+        />
+      </main>
+      <footer>
+        <footer-component />
+      </footer>
 
       <dialog-functions-helper-system>
         <template
