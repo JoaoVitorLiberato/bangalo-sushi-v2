@@ -42,15 +42,6 @@
                       >
                         <span class="material-icons">photo_camera</span>
                       </v-btn>
-                      <v-btn
-                        icon
-                        small
-                        color="secondary"
-                        class="mr-3"
-                        aria-label="Facebook"
-                      >
-                        <span class="material-icons">facebook</span>
-                      </v-btn>
                     </div>
                   </div>
                 </div>
