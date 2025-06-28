@@ -116,7 +116,7 @@
               >
                 <div class="product-image-container">
                   <v-img
-                    :src="product.url_image"
+                    :src="product.tumbnail.url"
                     :alt="product.name"
                     :title="product.name"
                     height="200"
@@ -138,6 +138,29 @@
                   >
                     {{ product.category.name }}
                   </v-chip>
+
+                  <!-- Discount Badge -->
+                  <v-chip
+                    v-if="product.price.discount && product.price.discount.status"
+                    color="error"
+                    text-color="white"
+                    small
+                    class="discount-badge"
+                  >
+                    -{{ product.price.discount.percentage }}%
+                  </v-chip>
+
+                  <!-- Special Badge -->
+                  <v-chip
+                    v-if="product.differences && product.differences.especial && product.differences.especial.status"
+                    color="warning"
+                    text-color="white"
+                    small
+                    class="special-badge"
+                  >
+                    <v-icon left x-small>star</v-icon>
+                    Especial
+                  </v-chip>
                 </div>
 
                 <v-card-text class="pa-4">
@@ -149,11 +172,26 @@
                   </p>
 
                   <div class="price-section">
-                    <div class="d-flex align-center justify-space-between">
+                    <div class="price-layout">
                       <div class="price-info">
+                        <!-- Original Price (if discount) -->
+                        <div v-if="product.price.discount && product.price.discount.status" class="original-price">
+                          <span class="text-body-2 text-decoration-line-through text-medium-emphasis">
+                            R$ {{ getReadingValue(Number(product.price.default), ".") }}
+                          </span>
+                        </div>
+
+                        <!-- Final Price -->
                         <span class="text-h6 font-weight-bold secondary--text">
-                          R$ {{ getReadingValue(Number(product.price), ".") }}
+                          R$ {{ getReadingValue(getFinalPrice(product), ".") }}
                         </span>
+
+                        <!-- Special Price -->
+                        <div v-if="product.differences && product.differences.especial && product.differences.especial.status" class="special-price">
+                          <span class="text-caption text-warning--text">
+                            +R$ {{ getReadingValue(Number(product.differences.especial.value), ".") }} especial
+                          </span>
+                        </div>
                       </div>
 
                       <v-btn
@@ -162,6 +200,7 @@
                         small
                         depressed
                         @click.stop="viewProductDetails(product)"
+                        class="view-btn"
                       >
                         <v-icon left small>visibility</v-icon>
                         Ver
@@ -250,32 +289,128 @@
         >
           <v-icon>close</v-icon>
         </v-btn>
+
         <v-img
-          :src="selectedProductData.url_image"
+          :src="selectedProductData.tumbnail.url"
           :alt="selectedProductData.name"
           height="220"
-          contain
           class="dialog-product-img"
         />
-        <v-card-title class="dialog-product-title">
+
+        <v-card-title
+          class="dialog-product-title"
+        >
           {{ selectedProductData.name }}
         </v-card-title>
-        <v-card-text class="dialog-product-desc">
-          <p>{{ selectedProductData.description }}</p>
-          <div class="price-details mb-4">
-            <span class="dialog-product-price">
-              R$ {{ getReadingValue(Number(selectedProductData.price), ".") }}
-            </span>
+
+        <v-card-text
+          class="dialog-product-desc"
+        >
+          <p class="mb-4">
+            {{ selectedProductData.description }}
+          </p>
+
+          <!-- Category and Badges -->
+          <div class="badges-section mb-4">
+            <v-chip
+              color="grey"
+              text-color="white"
+              class="mr-2 mb-2"
+            >
+              {{ selectedProductData.category.name }}
+            </v-chip>
+
+            <!-- Discount Badge -->
+            <v-chip
+              v-if="selectedProductData.price.discount && selectedProductData.price.discount.status"
+              color="error"
+              text-color="white"
+              class="mr-2 mb-2"
+            >
+              <v-icon left x-small>local_offer</v-icon>
+              -{{ selectedProductData.price.discount.percentage }}% OFF
+            </v-chip>
+
+            <!-- Special Badge -->
+            <v-chip
+              v-if="selectedProductData.differences && selectedProductData.differences.especial && selectedProductData.differences.especial.status"
+              color="warning"
+              text-color="white"
+              class="mr-2 mb-2"
+            >
+              <v-icon left x-small>star</v-icon>
+              Versão Especial
+            </v-chip>
           </div>
-          <v-chip
-            color="grey"
-            text-color="white"
-            class="mb-4"
-          >
-            {{ selectedProductData.category.name }}
-          </v-chip>
+
+          <!-- Price Details -->
+          <div class="price-details mb-4">
+            <!-- Original Price (if discount) -->
+            <div v-if="selectedProductData.price.discount && selectedProductData.price.discount.status" class="original-price mb-2">
+              <span class="text-body-1 text-decoration-line-through text-medium-emphasis">
+                De: R$ {{ getReadingValue(Number(selectedProductData.price.default), ".") }}
+              </span>
+            </div>
+
+            <!-- Final Price -->
+            <div class="final-price mb-2">
+              <span class="dialog-product-price">
+                Por: R$ {{ getReadingValue(getFinalPrice(selectedProductData), ".") }}
+              </span>
+            </div>
+
+            <!-- Special Price -->
+            <div v-if="selectedProductData.differences && selectedProductData.differences.especial && selectedProductData.differences.especial.status" class="special-price mb-2">
+              <v-alert
+                type="warning"
+                dense
+                outlined
+                class="mb-0"
+              >
+                <div class="d-flex align-center">
+                  <v-icon left small>star</v-icon>
+                  <span class="text-caption">
+                    Versão especial: +R$ {{ getReadingValue(Number(selectedProductData.differences.especial.value), ".") }}
+                  </span>
+                </div>
+              </v-alert>
+            </div>
+
+            <!-- Savings Info -->
+            <div v-if="selectedProductData.price.discount && selectedProductData.price.discount.status" class="savings-info">
+              <v-alert
+                type="success"
+                dense
+                outlined
+                class="mb-0"
+              >
+                <div class="d-flex align-center">
+                  <v-icon left small>savings</v-icon>
+                  <span class="text-caption">
+                    Você economiza R$ {{ getReadingValue(Number(selectedProductData.price.default) - getFinalPrice(selectedProductData), ".") }}
+                  </span>
+                </div>
+              </v-alert>
+            </div>
+          </div>
+
+          <!-- Additional Info -->
+          <div class="additional-info">
+            <v-divider class="mb-3"></v-divider>
+            <div class="d-flex align-center justify-space-between">
+              <span class="text-caption text-medium-emphasis">ID do Produto:</span>
+              <span class="text-caption font-weight-medium">{{ selectedProductData.id }}</span>
+            </div>
+            <div v-if="selectedProductData.note_client !== undefined" class="d-flex align-center justify-space-between mt-2">
+              <span class="text-caption text-medium-emphasis">Observações do Cliente:</span>
+              <span class="text-caption font-weight-medium">{{ selectedProductData.note_client }}</span>
+            </div>
+          </div>
         </v-card-text>
-        <v-card-actions class="dialog-product-actions">
+
+        <v-card-actions
+          class="dialog-product-actions"
+        >
           <v-btn
             color="secondary"
             large
@@ -376,7 +511,15 @@
     }
 
     getFinalPrice(product: IproductData): number {
-      return product.price.default
+      let finalPrice = product.price.default
+
+      // Apply discount if available
+      if (product.price.discount && product.price.discount.status) {
+        const discountPercentage = product.price.discount.percentage / 100
+        finalPrice = finalPrice * (1 - discountPercentage)
+      }
+
+      return Math.round(finalPrice)
     }
 
     created(): void {
@@ -414,11 +557,11 @@
     }
 
     @Watch('showProductDialog')
-    onDialogClose(val: boolean) {
-      if (!val) {
-        this.selectedProductData = null;
+      onDialogClose(val: boolean) {
+        if (!val) {
+          this.selectedProductData = null;
+        }
       }
-    }
   }
 </script>
 
@@ -528,6 +671,16 @@
     right 12px
     z-index 2
 
+  .special-badge
+    position absolute
+    top 12px
+    right 12px
+    z-index 2
+    background-color $secondary-color !important
+    color white !important
+    @media (min-width: 600px)
+      right 80px
+
   .product-name
     color $primary-color
     line-height 1.3
@@ -548,10 +701,39 @@
     border-top 1px solid $grey-border
     padding-top 12px
 
+  .price-layout
+    display flex
+    align-items center
+    justify-content space-between
+
   .price-info
     display flex
     align-items center
     flex-wrap wrap
+    flex-direction column
+    align-items flex-start
+    width 100%
+
+  .view-btn
+    flex-shrink 0
+    margin-left 12px
+
+  .price-info .original-price
+    font-size 0.875rem
+    color #6b7280
+    text-decoration line-through
+    margin-bottom 2px
+
+  .price-info .final-price
+    font-size 1.25rem
+    font-weight 700
+    color $secondary-color
+    margin-bottom 4px
+
+  .price-info .special-price
+    font-size 0.75rem
+    color #f59e0b
+    font-weight 500
 
   .max-width-600
     max-width 600px
@@ -756,4 +938,40 @@
         min-height 48px
         border-radius 12px
         margin 0
+
+  // New dialog styles
+  .badges-section
+    display flex
+    flex-wrap wrap
+    justify-content center
+    gap 8px
+
+  .original-price
+    text-align center
+    opacity 0.7
+
+  .final-price
+    text-align center
+
+  .special-price
+    margin-top 8px
+
+  .savings-info
+    margin-top 8px
+
+  .additional-info
+    margin-top 16px
+    padding 12px
+    background-color #f8f9fa
+    border-radius 8px
+    border 1px solid #e9ecef
+
+  // Price info styles for cards
+  .original-price
+    display block
+    margin-bottom 4px
+
+  .special-price
+    display block
+    margin-top 4px
 </style>

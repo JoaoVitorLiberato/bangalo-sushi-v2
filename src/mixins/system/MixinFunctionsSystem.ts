@@ -1,6 +1,6 @@
 import { Component, Vue } from "vue-property-decorator"
 import { namespace } from "vuex-class"
-import { IDifferences, IproductData } from "@/types/types-product"
+import { IproductData } from "@/types/types-product"
 import PAYLOAD_DATA from "@/data/payload/payloadDefault.json"
 
 const payloadStore = namespace("payloadStoreModule")
@@ -9,7 +9,7 @@ const payloadStore = namespace("payloadStoreModule")
 export class MixinFunctionsSystem extends Vue {
   @payloadStore.Getter("PayloadOrder") declare getPayloadOrder
 
-  setTypeDifferences (differences: IDifferences): string {
+  setTypeDifferences (differences): string {
     let textReturn = ""
     Object.keys(differences).forEach((type) => {
       if (/actived/i.test(String(differences[type].input || ""))) {
@@ -58,22 +58,11 @@ export class MixinFunctionsSystem extends Vue {
     }
   }
 
-  setPriceProductCard (product: IproductData, quantity:number, typePrice?: string) {
-    let priceAditionalDifference = 0
-
-    Object.keys(product.differences).forEach((type) => {
-      if (/actived/i.test(String(product.differences[type].input || ""))) {
-        if (product.differences[type].active) {
-          priceAditionalDifference = product.differences[type].additional
-        }
-      }
-    })
-
-    const PRODUCT_PRICE = (Number(product.price.default) + Number(priceAditionalDifference)) * quantity
-
+  setPriceProductCard (product?: IproductData, quantity?:number, typePrice?: string) {
+    console.log(product, quantity, typePrice)
     return {
-      priceFormated: this.getReadingValue(PRODUCT_PRICE, (typePrice || ".")),
-      priceCalculed: PRODUCT_PRICE
+      priceFormated: 0,
+      priceCalculed: 0
     }
   }
 

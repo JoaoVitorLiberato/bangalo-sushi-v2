@@ -110,14 +110,14 @@
           routeName: "home"
         },
         {
-          name: "Pedido Delivery",
+          name: "Pedir Delivery",
           icon: "receipt",
           path:"delivery",
           routeName: "products-view"
         },
         // {
         //   name: "Pedido Local",
-        //   icon: "mdi-room-service",
+        //   icon: "room-service",
         //   path:"local",
         //   routeName: "products-view"
         // },
