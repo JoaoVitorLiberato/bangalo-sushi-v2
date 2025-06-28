@@ -1,7 +1,12 @@
 export interface IproductData {
   id?: string,
-  url_image: string,
-  category: string,
+  tumbnail: {
+    url: string
+  },
+  category: {
+    id: string,
+    name: string
+  },
   name: string,
   description: string,
   price: {
@@ -10,15 +15,19 @@ export interface IproductData {
     total?: number,
     total_price_complements?: number
     discount: {
-      active: boolean,
-      value: number
-    },
+      percentage: number,
+      status: boolean
+    }
   },
   complements?: IComplements[],
-  differences: IDifferences,
+  differences: {
+    [key:string]: {
+      readonly: boolean,
+      status: boolean,
+      value: number
+    }
+  },
   note_client: number,
-  apper_start: boolean,
-  hero_product: boolean
 }
 
 

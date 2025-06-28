@@ -7,7 +7,7 @@ export function filterDataProduct (category?:string): Array<IproductData>|string
   if (!category) return STORAGE_PRODUCT_DATA as IproductData[]
 
   const PRODUCT_DATA_FILTERED = STORAGE_PRODUCT_DATA.filter((product) => {
-    if (String(product.category || "") === String(category || "")) return product
+    if (String(product.category.id || "") === String(category || "")) return product
   })
 
   if (!PRODUCT_DATA_FILTERED) return "error-category"

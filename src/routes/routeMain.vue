@@ -22,6 +22,8 @@
         name="viewEstabelishLocation"
       />
 
+      <footer-component />
+
       <dialog-functions-helper-system>
         <template
           #redirectSegment
@@ -46,6 +48,11 @@
         /* webpackChuckName: "layout-toolbar-component" */
         /* webpackMode: "eager" */
         "@/components/layout/ToolbarComponent.vue"
+      ),
+      FooterComponent: () => import(
+        /* webpackChuckName: "layout-footer-component" */
+        /* webpackMode: "eager" */
+        "@/components/layout/FooterComponent.vue"
       ),
       DialogFunctionsHelperSystem: () => import(
         /* webpackChuckName: "dialog-function-helper-system-component" */

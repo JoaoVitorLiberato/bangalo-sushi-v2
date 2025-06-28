@@ -3,7 +3,6 @@ import Axios from "axios"
 const CONNECT_API = Axios.create({
   baseURL: process.env.VUE_APP_BANGALO_SUPPORT_API_URL,
   headers: {
-    responseType: "json",
     "x-api-key": process.env.VUE_APP_BANGALO_SUPPORT_API_KEY
   }
 })
