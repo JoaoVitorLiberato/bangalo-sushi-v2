@@ -8,17 +8,17 @@ const moduleCache = (): cacheStoreInterface => {
       source: "",
       cart: [],
       orders: [],
-      productSelected: null,
       order_id: "",
       checkoutExternal: "",
     },
     products: [],
     complements: [],
+    catagories: [],
     frameLoading: {
       status: false,
       message: "",
     },
-    drawerCartProducts: false,
+    drawerCart: false,
   }
 }
 
@@ -30,9 +30,6 @@ const getters: GetterTree<cacheStoreInterface, rootStateInterface> = {
   },
   CacheRastreamentoUsuarioProductsCart: ({ rastreamentoUsuario }) => () => {
     return rastreamentoUsuario.cart
-  },
-  CacheRastreamentoUsuarioProductSelected: ({ rastreamentoUsuario }) => () => {
-    return rastreamentoUsuario.productSelected
   },
   CacheRastreamentoUsuarioOrders: ({ rastreamentoUsuario }) => () => {
     return rastreamentoUsuario.orders
@@ -52,8 +49,11 @@ const getters: GetterTree<cacheStoreInterface, rootStateInterface> = {
   CacheComplements: ({ complements }) => () => {
     return complements
   },
-  CacheDrawerCartProducts: ({ drawerCartProducts }) => () => {
-    return drawerCartProducts
+  CacheCategories: ({ catagories }) => () => {
+    return catagories
+  },
+  CacheDrawerCartProducts: ({ drawerCart }) => () => {
+    return drawerCart
   },
 }
 
@@ -74,9 +74,6 @@ const mutations: MutationTree<cacheStoreInterface> = {
       state.rastreamentoUsuario.cart = data
     }
   },
-  mutationRastreamentoUsuarioProductSelected: (state, data) => {
-    state.rastreamentoUsuario.productSelected = data
-  },
   mutationRastreamentoUsuarioOrders: (state, data) => {
     state.rastreamentoUsuario.orders = data
   },
@@ -89,8 +86,11 @@ const mutations: MutationTree<cacheStoreInterface> = {
   mutationCacheComplements: (state, data) => {
     state.complements = data
   },
-  mutationCacheDrawerCartProducts (state, data) {
-    state.drawerCartProducts = data
+  mutationCacheCategories: (state, data) => {
+    state.catagories = data
+  },
+  mutationCacheDrawerCart (state, data) {
+    state.drawerCart = data
   },
 }
 
@@ -120,14 +120,14 @@ const actions: ActionTree<cacheStoreInterface, rootStateInterface> = {
   actionRastreamentoUsuarioCheckoutExternal: ({ commit }, data) => {
     commit("mutationRastreamentoUsuarioCheckoutExternal", data)
   },
-  actionRastreamentoUsuarioProductSelected: ({ commit }, data) => {
-    commit("mutationRastreamentoUsuarioProductSelected", data)
-  },
   actionCacheComplements: ({ commit }, data) => {
     commit("mutationCacheComplements", data)
   },
+  actionsCacheCategories: ({ commit }, data) => {
+    commit("mutationCacheCategories", data)
+  },
   ActionCacheDrawerCartProducts ({ commit }, data) {
-    commit("mutationCacheDrawerCartProducts", data)
+    commit("mutationCacheDrawerCart", data)
   },
 }
 

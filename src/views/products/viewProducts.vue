@@ -52,17 +52,17 @@
               aria-label="Buscar produtos"
             />
 
-            <div class="categories-section">
+            <div v-if="categories.length > 0" class="categories-section">
               <h2 class="categories-title">Categorias</h2>
               <nav class="categories-list" aria-label="Lista de categorias">
                 <v-btn
-                  v-for="cat in categoriesWithCount"
+                  v-for="cat in categories"
                   :key="cat.id || ''"
                   :class="['category-btn', { 'category-btn--active': selectedCategory === cat.id }]"
                   block
                   rounded
                   depressed
-                  @click="selectCategory(cat.id)"
+                  @click="selectCategory(String(cat.id))"
                   :aria-pressed="selectedCategory === cat.id"
                   :aria-label="'Selecionar categoria ' + cat.name"
                 >
@@ -160,17 +160,55 @@
                         -{{ product.price.discount.percentage }}%
                       </v-chip>
 
-                      <v-chip
-                        v-if="product.differences && product.differences.especial && product.differences.especial.status"
-                        color="warning"
-                        text-color="white"
-                        small
-                        class="special-badge"
-                        aria-label="Produto especial"
-                      >
-                        <v-icon left x-small aria-hidden="true">star</v-icon>
-                        Especial
-                      </v-chip>
+                      <div>
+                        <v-chip
+                          v-if="product.differences && product.differences.especial && product.differences.especial.status"
+                          color="warning"
+                          text-color="white"
+                          small
+                          class="special-badge"
+                          aria-label="Produto especial"
+                        >
+                          <v-icon left x-small aria-hidden="true">star</v-icon>
+                          Especial
+                        </v-chip>
+
+                        <v-chip
+                          v-else-if="product.differences && product.differences.breaded && product.differences.breaded.status"
+                          color="warning"
+                          text-color="white"
+                          small
+                          class="special-badge"
+                          aria-label="Produto empanado"
+                        >
+                          <v-icon left x-small aria-hidden="true">star</v-icon>
+                          Empanado
+                        </v-chip>
+
+                        <v-chip
+                          v-else-if="product.differences && product.differences.flambed && product.differences.flambed.status"
+                          color="warning"
+                          text-color="white"
+                          small
+                          class="special-badge"
+                          aria-label="Produto flambado"
+                        >
+                          <v-icon left x-small aria-hidden="true">star</v-icon>
+                          Flambado
+                        </v-chip>
+
+                        <v-chip
+                          v-else
+                          color="warning"
+                          text-color="white"
+                          small
+                          class="special-badge"
+                          aria-label="Produto Natural"
+                        >
+                          <v-icon left x-small aria-hidden="true">star</v-icon>
+                          Natural
+                        </v-chip>
+                      </div>
                     </div>
                   </div>
 
@@ -179,11 +217,6 @@
                       {{ product.name }}
                     </h3>
 
-                    <p class="product-description">
-                      {{ product.description }}
-                    </p>
-
-                    <!-- Rating -->
                     <div class="product-rating" v-if="product.note_client !== undefined" aria-label="Nota do cliente">
                       <div class="stars">
                         <v-icon
@@ -198,6 +231,55 @@
                       </div>
                       <span class="rating-value">{{ product.note_client.toFixed(1) }}</span>
                     </div>
+                    <p class="product-description">
+                      {{ product.description }}
+                    </p>
+
+                    <v-switch
+                      v-if="product.differences && Object.keys(product.differences).length > 0"
+                      v-model="productDifferenceSwitch[product.id]"
+                      color="success"
+                      class="mt-2 mb-2"
+                      :disabled="product.differences.readonly"
+                      dense
+                      hide-details
+                      @change="toggleProductDifference(product, Object.keys(product.differences)[0])"
+                    >
+                      <template v-slot:label>
+                        <span
+                          v-if="product.differences.especial"
+                          style="font-size:16px; font-weight:600;"
+                        >
+                          Especial?
+                          <span :style="`color:${product.differences.especial.status ? 'green' : 'red'}`">{{ product.differences.especial.status ? 'sim' : 'não' }}</span>
+                        </span>
+
+                        <span
+                          v-else-if="product.differences.breaded"
+                          style="font-size:16px; font-weight:600;"
+                        >
+                          Empanado?
+                          <span :style="`color:${product.differences.breaded.status ? 'green' : 'red'}`">{{ product.differences.breaded.status ? 'sim' : 'não' }}</span>
+                        </span>
+
+                        <span
+                          v-else-if="product.differences.flambed"
+                          style="font-size:16px; font-weight:600;"
+                        >
+                          Flambado?
+                          <span :style="`color:${product.differences.flambed.status ? 'green' : 'red'}`">
+                            {{ product.differences.flambed.status ? 'sim' : 'não' }}
+                          </span>
+                        </span>
+
+                        <span
+                          v-else
+                          style="font-size:16px; font-weight:600;"
+                        >
+                          Natural
+                        </span>
+                      </template>
+                    </v-switch>
 
                     <!-- Price Section -->
                     <div class="price-section">
@@ -206,11 +288,11 @@
                         class="original-price"
                         aria-label="Preço original"
                       >
-                        R$ {{ formatCurrency(Number(product.price.default), ".") }}
+                        R$ {{ getReadingPrice(Number(product.price.default), ".") }}
                       </span>
 
                       <span class="final-price" aria-label="Preço final">
-                        R$ {{ formatCurrency(getFinalProductPrice(product), ".") }}
+                        R$ {{ getReadingPrice(getFinalProductPrice(product), ".") }}
                       </span>
 
                       <span
@@ -218,14 +300,29 @@
                         class="special-price"
                         aria-label="Preço especial"
                       >
-                        +R$ {{ formatCurrency(Number(product.differences.especial.value), ".") }} especial
+                        +R$ {{ getReadingPrice(Number(product.differences.especial.value), ".") }} especial
+                      </span>
+
+                      <span
+                        v-if="product.differences && product.differences.breaded && product.differences.breaded.status"
+                        class="special-price"
+                        aria-label="Preço empanado"
+                      >
+                        +R$ {{ getReadingPrice(Number(product.differences.breaded.value), ".") }} empanado
+                      </span>
+
+                      <span
+                        v-if="product.differences && product.differences.flambed && product.differences.flambed.status"
+                        class="special-price"
+                        aria-label="Preço flambado"
+                      >
+                        +R$ {{ getReadingPrice(Number(product.differences.flambed.value), ".") }} flambado
                       </span>
                     </div>
 
                     <v-btn
                       color="secondary"
                       block
-                      large
                       rounded
                       class="select-btn"
                       @click="openComplementDialog(product)"
@@ -338,7 +435,7 @@
                   style="margin-right:0;"
                 />
                 <span class="complement-price" style="font-weight:700; color:#232b3e; font-size:1rem;">
-                  R$ {{ formatCurrency(complement.price, ".") }}
+                  R$ {{ getReadingPrice(complement.price, ".") }}
                 </span>
               </v-list-item-action>
             </v-list-item>
@@ -361,8 +458,9 @@
         <v-card-actions class="complement-actions">
           <v-btn text color="grey" @click="closeComplementDialog" aria-label="Cancelar seleção de complementos">Cancelar</v-btn>
           <v-spacer />
-          <v-btn color="secondary" large rounded @click="confirmComplements" aria-label="Adicionar ao pedido">
-            Adicionar ao pedido
+          <v-btn color="secondary" depressed large rounded @click="confirmComplements" aria-label="Adicionar ao pedido">
+            <v-icon left aria-hidden="true">save</v-icon>
+            Salvar
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -449,28 +547,62 @@
                         </v-btn>
                       </div>
                     </div>
-                    <v-btn
-                      icon
-                      small
-                      color="error"
-                      class="cart-delete-btn"
-                      @click="removeFromCart(item)"
-                      aria-label="Remover do carrinho"
-                    >
-                      <v-icon aria-hidden="true">delete</v-icon>
-                    </v-btn>
                   </div>
-                  <div class="cart-item-value">R$ {{ formatCurrency(getItemTotalPrice(item), ".") }}</div>
-                  <v-list-item-subtitle class="cart-item-desc">
-                    {{ item.product.description }}
-                  </v-list-item-subtitle>
+                  <div>
+                    <span
+                        v-if="item.difference && item.difference.especial && item.difference.especial.status"
+                        class="special-price"
+                        aria-label="Preço especial"
+                      >
+                        especial
+                      </span>
+
+                      <span
+                        v-else-if="item.difference && item.difference.breaded && item.difference.breaded.status"
+                        class="special-price"
+                        aria-label="Preço empanado"
+                      >
+                        empanado
+                      </span>
+
+                      <span
+                        v-else-if="item.difference && item.difference.flambed && item.difference.flambed.status"
+                        class="special-price"
+                        aria-label="Preço flambado"
+                      >
+                        flambado
+                      </span>
+
+                      <span
+                        v-else
+                        class="special-price"
+                        aria-label="Preço natural"
+                      >
+                        natural
+                      </span>
+                  </div>
+                  <div class="cart-item-value">R$ {{ getReadingPrice(getItemTotalPrice(item), ".") }}</div>
+
+                  <v-btn
+                    small
+                    text
+                    block
+                    color="error"
+                    class="cart-delete-btn"
+                    @click="removeFromCart(item)"
+                    aria-label="Remover do carrinho"
+                  >
+                    <v-icon aria-hidden="true">delete</v-icon>
+                    Remover
+                  </v-btn>
+
                   <v-expand-transition>
                     <div v-if="expandedItems[item.id] && item.complements && item.complements.length > 0" class="cart-complements-summary">
                       <div class="complement-summary-title">Complementos</div>
                       <ul class="complement-summary-list">
                         <li v-for="complement in item.complements" :key="complement.id" class="complement-summary-item">
                           <span class="complement-summary-name">{{ complement.name }}</span>
-                          <span class="complement-summary-price">+ R$ {{ formatCurrency(complement.price, ".") }}</span>
+                          <span class="complement-summary-price">+ R$ {{ getReadingPrice(complement.price, ".") }}</span>
                         </li>
                       </ul>
                     </div>
@@ -487,7 +619,7 @@
           <div class="cart-total">
             <div class="total-row">
               <span class="total-label">Subtotal:</span>
-              <span class="total-value">R$ {{ formatCurrency(getCartSubtotal(), ".") }}</span>
+              <span class="total-value">R$ {{ getReadingPrice(getCartSubtotal(), ".") }}</span>
             </div>
             <div class="total-row">
               <span class="total-label">Total de itens:</span>
@@ -525,280 +657,287 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator"
-import { filterDataProduct } from "@/helpers/filterProducts"
-import "@/styles/views/products/viewProducts.styl"
+  import { Component } from "vue-property-decorator"
+  import { mixins } from "vue-class-component"
+  import { namespace } from "vuex-class"
 
-// Tipos de dados
-interface Product {
-  id: string | number
-  name: string
-  description: string
-  price: {
-    default: number
-    discount?: {
-      percentage: number
-      status: boolean
-    }
-  }
-  tumbnail?: { url: string, location?: string }
-  category?: { id: string, name: string }
-  note_client?: number
-  differences?: {
-    especial?: {
-      readonly: boolean
-      status: boolean
-      value: number
-    }
-  }
-}
+  import { MixinServiceProducts } from "@/mixins/services/mixinServiceProducts"
+  import { MixinServiceCategories } from "@/mixins/services/mixinServiceCategories"
+  import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
 
-interface Complement {
-  id: number
-  name: string
-  description: string
-  price: number
-}
+  import { IProduct } from "@/types/types-product"
 
-interface CartItem {
-  id: string
-  product: Product
-  quantity: number
-  complements: Complement[]
-}
+  import "@/styles/views/products/viewProducts.styl"
 
-@Component({})
-export default class ViewProducts extends Vue {
-  // --- Estado ---
-  filterDataProduct = filterDataProduct
-  search = ''
-  selectedCategory: string = 'all'
-  products: Product[] = [
-    {
-      id: 1,
-      name: 'Sushi Especial',
-      description: 'Sushi de salmão com cream cheese',
-      price: {
-        default: 3799,
-        discount: {
-          percentage: 27,
-          status: true
-        }
-      },
-      tumbnail: {
-        url: 'https://th.bing.com/th/id/R.b5c8425f3ca5728ce7d1fc2ce0821103?rik=Yj9OLeKPjcqxDg&pid=ImgRaw&r=0'
-      },
-      category: { id: 'sushis', name: 'Entrada' }
-    },
-    {
-      id: 2,
-      name: 'Hot Roll',
-      description: 'Hot roll crocante de salmão',
-      price: { default: 2500 },
-      tumbnail: {
-        url: 'https://th.bing.com/th/id/OIP.8QwQwQwQwQwQwQwQwQwHaE8?pid=ImgDet&rs=1'
-      },
-      category: { id: 'hotrolls', name: 'Hot Rolls' }
-    }
-  ]
-  complements: Complement[] = [
-    {
-      id: 1,
-      name: 'Molho Tarê',
-      description: '100 ml',
-      price: 400
-    },
-    {
-      id: 2,
-      name: 'Molho Pepino',
-      description: '100 ml',
-      price: 469
-    }
-  ]
-  showComplementDialog = false
-  selectedProduct: Product | null = null
-  selectedComplementsIds: number[] = []
-  showCartDialog = false
-  cartItems: CartItem[] = []
-  categories: Array<{ id: string, name: string }> = []
-  loading: boolean = false
-  currentPage = 1
-  pageSize = this.$vuetify.breakpoint.mobile ? 1 : 8
-  expandedItems: Record<string, boolean> = {}
+  const cacheStore = namespace("cacheStoreModule")
 
-  // --- Computed ---
-  get categoriesWithCount() {
-    const counts: Record<string, number> = {}
-    this.products.forEach(product => {
-      const catId = product.category?.id || 'outros'
-      counts[catId] = (counts[catId] || 0) + 1
-    })
-    return [
-      { id: 'all', name: 'Todos', count: this.products.length },
-      ...Array.from(new Set(this.products.map(p => p.category?.id))).filter(Boolean).map(id => {
-        const name = this.products.find(p => p.category?.id === id)?.category?.name || id
-        return { id, name, count: counts[id!] }
-      })
-    ]
+  interface Complement {
+    id: number
+    name: string
+    description: string
+    price: number
   }
 
-  get filteredProducts(): Product[] {
-    let filtered = this.products
-    if (this.selectedCategory !== 'all') {
-      filtered = filtered.filter(p => p.category?.id === this.selectedCategory)
-    }
-    if (this.search) {
-      const searchLower = this.search.toLowerCase()
-      filtered = filtered.filter(p =>
-        p.name.toLowerCase().includes(searchLower) ||
-        p.description.toLowerCase().includes(searchLower)
-      )
-    }
-    return filtered
-  }
-
-  get paginatedProducts(): Product[] {
-    const start = (this.currentPage - 1) * this.pageSize
-    return this.filteredProducts.slice(start, start + this.pageSize)
-  }
-
-  get totalPages(): number {
-    return Math.ceil(this.filteredProducts.length / this.pageSize) || 1
-  }
-
-  get cartCount(): number {
-    return this.cartItems.reduce((total, item) => total + item.quantity, 0)
-  }
-
-  // --- Paginação ---
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) this.currentPage++
-  }
-  prevPage(): void {
-    if (this.currentPage > 1) this.currentPage--
-  }
-
-  // --- Utilitários de valor ---
-  formatCurrency(value: number, separator = "."): string {
-    return (value / 100).toFixed(2).replace('.', separator)
-  }
-
-  getFinalProductPrice(product: Product): number {
-    if (product.price.discount?.status) {
-      const discount = product.price.discount.percentage / 100
-      return product.price.default * (1 - discount)
-    }
-    return product.price.default
-  }
-
-  // --- Categoria ---
-  selectCategory(categoryId?: string) {
-    if (categoryId) {
-      this.selectedCategory = categoryId
-      this.currentPage = 1
-    }
-  }
-
-  // --- Complementos ---
-  openComplementDialog(product: Product) {
-    this.selectedProduct = product
-    this.showComplementDialog = true
-    this.selectedComplementsIds = []
-  }
-  closeComplementDialog() {
-    this.showComplementDialog = false
-    this.selectedProduct = null
-    this.selectedComplementsIds = []
-  }
-  toggleComplement(complement: Complement) {
-    const idx = this.selectedComplementsIds.indexOf(complement.id)
-    if (idx === -1) {
-      this.selectedComplementsIds.push(complement.id)
-    } else {
-      this.selectedComplementsIds.splice(idx, 1)
-    }
-  }
-  isComplementSelected(complement: Complement) {
-    return this.selectedComplementsIds.includes(complement.id)
-  }
-  confirmComplements() {
-    if (!this.selectedProduct) return
-    const selectedComplements = this.complements.filter(c =>
-      this.selectedComplementsIds.includes(c.id)
-    )
-    const cartItem: CartItem = {
-      id: `${this.selectedProduct.id}-${Date.now()}`,
-      product: this.selectedProduct,
-      quantity: 1,
-      complements: selectedComplements
-    }
-    this.cartItems.push(cartItem)
-    this.closeComplementDialog()
-  }
-
-  // --- Carrinho ---
-  closeCartDialog() {
-    this.showCartDialog = false
-  }
-  getItemTotalPrice(item: CartItem): number {
-    // Preço do produto vezes a quantidade + complementos (não multiplicar complementos pela quantidade)
-    const productTotal = this.getFinalProductPrice(item.product) * item.quantity
-    const complementsTotal = item.complements.reduce((sum, c) => sum + c.price, 0)
-    return productTotal + complementsTotal
-  }
-  increaseQuantity(item: CartItem) {
-    item.quantity++
-  }
-  decreaseQuantity(item: CartItem) {
-    if (item.quantity > 1) item.quantity--
-  }
-  removeFromCart(item: CartItem) {
-    const index = this.cartItems.findIndex(cartItem => cartItem.id === item.id)
-    if (index > -1) this.cartItems.splice(index, 1)
-  }
-  getCartSubtotal(): number {
-    return this.cartItems.reduce((total, item) => total + this.getItemTotalPrice(item), 0)
-  }
-  getCartTotalItems(): number {
-    return this.cartItems.reduce((total, item) => total + item.quantity, 0)
-  }
-  proceedToCheckout() {
-    this.$router.push('/checkout')
-    this.closeCartDialog()
-  }
-
-  // --- Carregamento de dados (mock) ---
-  async loadCategories() {
-    this.categories = [
-      { id: 'all', name: 'Todos' },
-      { id: 'sushis', name: 'Sushis' },
-      { id: 'hotrolls', name: 'Hot Rolls' }
-    ]
-    this.selectedCategory = this.categories[0].id
-  }
-  async loadProducts() {
-    // Implementar chamada à API
-  }
-  onCategoryChange(value: string) {
-    this.selectCategory(value)
-  }
-
-  // --- Utilitários de UI ---
-  getStars(note: number): Array<'full' | 'half' | 'empty'> {
-    const stars: Array<'full' | 'half' | 'empty'> = []
-    for (let i = 1; i <= 5; i++) {
-      if (i <= Math.floor(note)) {
-        stars.push('full')
-      } else if (i - note > 0 && i - note < 1) {
-        stars.push('half')
-      } else {
-        stars.push('empty')
+  interface CartItem {
+    id: string
+    product: IProduct
+    quantity: number
+    difference: {
+      [key: string]: {
+        status: boolean,
+        value: number
       }
     }
-    return stars
+    complements: Complement[]
   }
-  toggleDetails(itemId: string) {
-    this.$set(this.expandedItems, itemId, !this.expandedItems[itemId])
+
+  @Component({})
+  export default class ViewProducts extends mixins(
+    MixinServiceProducts,
+    MixinServiceCategories,
+    MixinFunctionsSystem,
+  ) {
+    @cacheStore.Action("actionCacheProducts") declare setCacheProducts
+    @cacheStore.Getter("CacheProducts") getCacheProducts
+    @cacheStore.Action("actionsCacheCategories") declare setCacheCategories
+    @cacheStore.Getter("CacheCategories") getCacheCategories
+
+    loading: boolean = false
+    search = ""
+    selectedCategory: string = ""
+    pageSize = this.$vuetify.breakpoint.mobile ? 1 : 8
+
+    get categories () {
+      const counts: Record<string, number> = {}
+      this.getCacheProducts()
+        .forEach((product: IProduct) => {
+          const catId = product.category.id || 'outros'
+          counts[catId] = (counts[catId] || 0) + 1
+        })
+
+      const CATEGORIES = [
+        ...Array.from(
+            new Set(this.getCacheProducts().map((p) => p.category?.id)))
+              .filter(Boolean).map((id) => {
+                const name = this.getCacheProducts().find(p => p.category?.id === id)?.category?.name || id
+                return { id, name, count: counts[String(id)] }
+              })
+      ]
+
+      return CATEGORIES
+    }
+
+    get filteredProducts() {
+      let products = this.getCacheProducts()
+      if (this.selectedCategory !== "") {
+        products = products.filter((p) => p.category?.id === this.selectedCategory)
+      }
+
+      if (this.search) {
+        const searchLower = this.search.toLowerCase()
+        products = products.filter(p =>
+          p.name.toLowerCase().includes(searchLower) ||
+          p.description.toLowerCase().includes(searchLower)
+        )
+      }
+
+      return products
+    }
+
+    get paginatedProducts() {
+      const start = (this.currentPage - 1) * this.pageSize
+      return this.filteredProducts.slice(start, start + this.pageSize)
+    }
+
+    get totalPages(): number {
+      return Math.ceil(this.filteredProducts.length / this.pageSize) || 1
+    }
+
+    get cartCount(): number {
+      return this.cartItems.reduce((total, item) => total + item.quantity, 0)
+    }
+
+    mounted (): void {
+      this.loadingConfigsView()
+    }
+
+    async loadingConfigsView (): Promise<void> {
+      try {
+        this.loading = true
+
+        const [
+          categories,
+          products
+        ] = await Promise.all([
+          this.getAllCategories(),
+          this.getAllProducts()
+        ])
+
+        this.setCacheCategories(categories)
+        this.setCacheProducts(products)
+      } catch (error) {
+        window.log(`[ERROR loadingConfigsView] ${error}`)
+      } finally {
+        this.selectCategory(this.getCacheProducts()[0].category.id)
+        this.loading = false
+      }
+    }
+
+    nextPage(): void {
+      if (this.currentPage < this.totalPages) this.currentPage++
+    }
+
+    prevPage(): void {
+      if (this.currentPage > 1) this.currentPage--
+    }
+
+    toggleProductDifference(product: IProduct, type: string) {
+      if (!product.differences[type]) return
+      product.differences[type].status = this.productDifferenceSwitch[String(product.id)]
+    }
+
+    complements: Complement[] = [
+      {
+        id: 1,
+        name: 'Molho Tarê',
+        description: '100 ml',
+        price: 400
+      },
+      {
+        id: 2,
+        name: 'Molho Pepino',
+        description: '100 ml',
+        price: 469
+      }
+    ]
+
+    showComplementDialog = false
+    selectedProduct: IProduct | null = null
+    selectedComplementsIds: number[] = []
+    showCartDialog = false
+    cartItems: CartItem[] = []
+    currentPage = 1
+    expandedItems: Record<string, boolean> = {}
+    productDifferenceSwitch: Record<string, boolean> = {}
+
+    getFinalProductPrice(product: IProduct): number {
+      if (product.price.discount?.status) {
+        const discount = product.price.discount.percentage / 100
+        return Math.round(product.price.default * (1 - discount))
+      }
+      return product.price.default
+    }
+
+    // --- Categoria ---
+    selectCategory(id?: string) {
+      if (id) {
+        this.selectedCategory = id
+        this.currentPage = 1
+      }
+    }
+
+    // --- Complementos ---
+    openComplementDialog(product: IProduct) {
+      this.selectedProduct = product
+      this.showComplementDialog = true
+      this.selectedComplementsIds = []
+    }
+    closeComplementDialog() {
+      this.showComplementDialog = false
+      this.selectedProduct = null
+      this.selectedComplementsIds = []
+    }
+    toggleComplement(complement: Complement) {
+      const idx = this.selectedComplementsIds.indexOf(complement.id)
+      if (idx === -1) {
+        this.selectedComplementsIds.push(complement.id)
+      } else {
+        this.selectedComplementsIds.splice(idx, 1)
+      }
+    }
+    isComplementSelected(complement: Complement) {
+      return this.selectedComplementsIds.includes(complement.id)
+    }
+    confirmComplements() {
+      if (!this.selectedProduct) return
+
+      const selectedComplements = this.complements.filter(c => this.selectedComplementsIds.includes(c.id))
+
+      const type_difference = Object.keys(this.selectedProduct.differences)[0]
+      const cartItem: CartItem = {
+        id: `${this.selectedProduct.id}-${Date.now()}`,
+        product: this.selectedProduct,
+        quantity: 1,
+        difference: {
+          [type_difference]: {
+            status:  Boolean(this.selectedProduct.differences[type_difference].status),
+            value: Number(this.selectedProduct.differences[type_difference].value)
+          }
+        },
+        complements: selectedComplements
+      }
+
+      this.cartItems.push(cartItem)
+      this.closeComplementDialog()
+    }
+
+    // --- Carrinho ---
+    closeCartDialog() {
+      this.showCartDialog = false
+    }
+    getItemTotalPrice(item: CartItem): number {
+      // Soma o valor de todas as diferenças ativas
+      let additionalDifference = 0;
+      if (item.difference) {
+        for (const key in item.difference) {
+          if (item.difference[key] && item.difference[key].status) {
+            additionalDifference += Number(item.difference[key].value) || 0;
+          }
+        }
+      }
+      const productTotal = (this.getFinalProductPrice(item.product) + additionalDifference) * item.quantity;
+      const complementsTotal = item.complements.reduce((sum, c) => sum + c.price, 0);
+      return productTotal + complementsTotal;
+    }
+    increaseQuantity(item: CartItem) {
+      item.quantity++
+    }
+    decreaseQuantity(item: CartItem) {
+      if (item.quantity > 1) item.quantity--
+    }
+    removeFromCart(item: CartItem) {
+      const index = this.cartItems.findIndex(cartItem => cartItem.id === item.id)
+      if (index > -1) this.cartItems.splice(index, 1)
+    }
+    getCartSubtotal(): number {
+      return this.cartItems.reduce((total, item) => total + this.getItemTotalPrice(item), 0)
+    }
+    getCartTotalItems(): number {
+      return this.cartItems.reduce((total, item) => {
+        return total + item.quantity
+      }, 0)
+    }
+    proceedToCheckout() {
+      this.$router.push('/checkout')
+      this.closeCartDialog()
+    }
+
+    // --- Utilitários de UI ---
+    getStars(note: number): Array<'full' | 'half' | 'empty'> {
+      const stars: Array<'full' | 'half' | 'empty'> = []
+      for (let i = 1; i <= 5; i++) {
+        if (i <= Math.floor(note)) {
+          stars.push('full')
+        } else if (i - note > 0 && i - note < 1) {
+          stars.push('half')
+        } else {
+          stars.push('empty')
+        }
+      }
+      return stars
+    }
+    toggleDetails(itemId: string) {
+      this.$set(this.expandedItems, itemId, !this.expandedItems[itemId])
+    }
   }
-}
 </script>

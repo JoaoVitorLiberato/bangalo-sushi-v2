@@ -56,7 +56,7 @@
                       v-font-size="14"
                       class="font-weight-bold text-uppercase green--text"
                     >
-                      {{ getReadingValue(item.price) }}
+                      {{ getReadingPrice(item.price) }}
                     </span>
                   </v-col>
 
@@ -88,7 +88,7 @@
                     <span
                       class="font-weight-medium text-uppercase"
                     >
-                      {{ Number(item.qtd) > 2 ? getReadingValue((Number(item.price) * Number(item.qtd - 2))) :  getReadingValue(0)}}
+                      {{ Number(item.qtd) > 2 ? getReadingPrice((Number(item.price) * Number(item.qtd - 2))) :  getReadingPrice(0)}}
                     </span>
                   </v-col>
 
@@ -233,7 +233,7 @@
                           class="d-flex justify-space-between align-center"
                         >
                           <span
-                            v-text="getReadingValue(complement.priceTotal)"
+                            v-text="getReadingPrice(complement.priceTotal)"
                           />
 
                           <span
@@ -376,7 +376,7 @@
                           class="d-flex justify-space-between align-center"
                         >
                           <span
-                            v-text="getReadingValue(complement.priceTotal)"
+                            v-text="getReadingPrice(complement.priceTotal)"
                           />
 
                           <span

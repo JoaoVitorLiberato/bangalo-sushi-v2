@@ -12,6 +12,7 @@
     >
       <v-badge
         color="error"
+        :aria-label="'Itens no carrinho: ' + cartCount"
         :content="getCacheRastreamentoUsuarioProductsCart().length || 0"
       >
         <v-icon
@@ -43,6 +44,10 @@
 
     set drawerCartProducts (value: boolean) {
       this.setDrawerCartProducts(value)
+    }
+
+    get cartCount (): number {
+      return this.getCacheRastreamentoUsuarioProductsCart().reduce((total, item) => total + item.quantity, 0)
     }
   }
 </script>

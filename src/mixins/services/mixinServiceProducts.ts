@@ -1,5 +1,5 @@
 import { Component, Vue } from "vue-property-decorator"
-import { IproductData } from "@/types/types-product"
+import { IProduct } from "@/types/types-product"
 import { namespace } from "vuex-class"
 import { MiddlewareServiceAPI } from "@/middlewares/middlewareServiceAPI"
 import { event } from "@/plugins/firebase"
@@ -28,7 +28,7 @@ export class MixinServiceProducts extends Vue {
     this.setCacheFrameLoading(value)
   }
 
-  getAllProducts (): Promise<IproductData[]> {
+  getAllProducts (): Promise<IProduct[]> {
     this.setCacheFrameLoading({
       status: true,
       message: ""
@@ -56,7 +56,7 @@ export class MixinServiceProducts extends Vue {
     })
   }
 
-  createPorduct (product:IproductData): Promise<string> {
+  createPorduct (product:IProduct): Promise<string> {
     this.setCacheFrameLoading({
       status: true,
       message: "Criando novo produto..."
