@@ -1,10 +1,10 @@
 import store from "@/plugins/store"
-import { IproductData } from "@/types/types-product"
+import { IProduct } from "@/types/types-product"
 
-export function filterDataProduct (category?:string): Array<IproductData>|string {
+export function filterDataProduct (category?:string): Array<IProduct>|string {
   const STORAGE_PRODUCT_DATA = store.getters["cacheStoreModule/CacheProducts"]()
 
-  if (!category) return STORAGE_PRODUCT_DATA as IproductData[]
+  if (!category) return STORAGE_PRODUCT_DATA as IProduct[]
 
   const PRODUCT_DATA_FILTERED = STORAGE_PRODUCT_DATA.filter((product) => {
     if (String(product.category.id || "") === String(category || "")) return product

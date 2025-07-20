@@ -1,10 +1,10 @@
-import { IproductData } from "@/types/types-product"
+import { IProduct } from "@/types/types-product"
 
 export interface IOrderData {
   nome: string,
   pedido: string,
   segmento: string,
-  produtos: IproductData[],
+  produtos: IProduct[],
   pagamento: {
     formaPagamento: string,
     statusPagamento: string,

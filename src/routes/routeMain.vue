@@ -4,25 +4,29 @@
       fluid
       class="pa-0"
     >
-      <toolbar-component />
-
-      <router-view
-        name="viewHero"
-      />
-      <router-view
-        name="viewDishes"
-      />
-      <router-view
-        name="viewDescriptionCook"
-      />
-      <router-view
-        name="viewPartners"
-      />
-      <router-view
-        name="viewEstabelishLocation"
-      />
-
-      <footer-component />
+      <header>
+        <toolbar-component />
+      </header>
+      <main id="main-content" role="main">
+        <router-view
+          name="viewHero"
+        />
+        <router-view
+          name="viewDishes"
+        />
+        <router-view
+          name="viewDescriptionCook"
+        />
+        <router-view
+          name="viewPartners"
+        />
+        <router-view
+          name="viewEstabelishLocation"
+        />
+      </main>
+      <footer>
+        <footer-component />
+      </footer>
 
       <dialog-functions-helper-system>
         <template

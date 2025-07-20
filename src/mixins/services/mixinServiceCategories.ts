@@ -2,6 +2,7 @@ import { Component, Vue } from "vue-property-decorator"
 import { namespace } from "vuex-class"
 import { MiddlewareServiceAPI } from "@/middlewares/middlewareServiceAPI"
 import { event } from "@/plugins/firebase"
+import { ICategory } from "@/types/type-category"
 
 const cacheStore = namespace("cacheStoreModule")
 const dialogStore = namespace("dialogStoreModule")
@@ -26,7 +27,7 @@ export class MixinServiceCategories extends Vue {
     this.setCacheFrameLoading(value)
   }
 
-  getAllCategories (): Promise<{ id: string, name: string }[]> {
+  getAllCategories (): Promise<ICategory[]> {
     this.setCacheFrameLoading({
       status: true,
       message: ""

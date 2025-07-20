@@ -1,7 +1,6 @@
 import { Component, Vue } from "vue-property-decorator"
 import { namespace } from "vuex-class"
-import { IproductData } from "@/types/types-product"
-import PAYLOAD_DATA from "@/data/payload/payloadDefault.json"
+import { IProduct } from "@/types/types-product"
 
 const payloadStore = namespace("payloadStoreModule")
 
@@ -31,7 +30,7 @@ export class MixinFunctionsSystem extends Vue {
     }
   }
 
-  getReadingValue (price: number|string|string[], type?: string): string|string[] {
+  getReadingPrice (price: number|string|string[], type?: string): string|string[] {
     if (price === undefined || null) return ""
     let valorFinal = ""
     if (price === 0) {
@@ -58,39 +57,11 @@ export class MixinFunctionsSystem extends Vue {
     }
   }
 
-  setPriceProductCard (product?: IproductData, quantity?:number, typePrice?: string) {
+  setPriceProductCard (product?: IProduct, quantity?:number, typePrice?: string) {
     console.log(product, quantity, typePrice)
     return {
       priceFormated: 0,
       priceCalculed: 0
-    }
-  }
-
-  setTotalAmountProductsCart (cart: IproductData[]) {
-    const DISCOUNT_PAYMENT = this.getPayloadOrder("pagamento").desconto
-    const FREIGHT = /delivery/i.test(String(this.getPayloadOrder("segmento"))) ? 500 : 0
-    let totalAmountProductCart = 0
-    let dicountTotalAmount = 0
-
-    cart.forEach((item) => {
-      if (item.price && "total" in item.price) totalAmountProductCart += item.price.total as number
-    })
-
-    if (DISCOUNT_PAYMENT.ativado) {
-      dicountTotalAmount = Number(totalAmountProductCart) - Number((DISCOUNT_PAYMENT.porcentagem / 100) * totalAmountProductCart)
-      Vue.set(PAYLOAD_DATA.pagamento.desconto, "PrecoTotalComDesconto", Number(dicountTotalAmount) + Number(FREIGHT))
-    }
-
-    Vue.set(PAYLOAD_DATA.pagamento, "valorFrete", FREIGHT)
-    Vue.set(PAYLOAD_DATA.pagamento, "valorProdutos", totalAmountProductCart)
-    Vue.set(PAYLOAD_DATA.pagamento, "valorTotal", totalAmountProductCart + Number(FREIGHT))
-
-    return {
-      freight: this.getReadingValue(FREIGHT),
-      dicountTotalAmount: this.getReadingValue(totalAmountProductCart - dicountTotalAmount),
-      totalCart: this.getReadingValue(totalAmountProductCart) || 0,
-      total: this.getReadingValue(totalAmountProductCart + FREIGHT) || 0,
-      totalWithDicount:  this.getReadingValue(DISCOUNT_PAYMENT.PrecoTotalComDesconto) || 0
     }
   }
 }

@@ -152,7 +152,7 @@
 
                   <!-- Special Badge -->
                   <v-chip
-                    v-if="product.differences && product.differences.especial && product.differences.especial.status"
+                    v-if="product.differences && product.differences.especial"
                     color="warning"
                     text-color="white"
                     small
@@ -160,6 +160,28 @@
                   >
                     <v-icon left x-small>star</v-icon>
                     Especial
+                  </v-chip>
+
+                  <v-chip
+                    v-if="product.differences && product.differences.breaded"
+                    color="warning"
+                    text-color="white"
+                    small
+                    class="special-badge"
+                  >
+                    <v-icon left x-small>star</v-icon>
+                    Empanado
+                  </v-chip>
+
+                  <v-chip
+                    v-if="product.differences && product.differences.flambed"
+                    color="warning"
+                    text-color="white"
+                    small
+                    class="special-badge"
+                  >
+                    <v-icon left x-small>star</v-icon>
+                    Flambado
                   </v-chip>
                 </div>
 
@@ -177,19 +199,31 @@
                         <!-- Original Price (if discount) -->
                         <div v-if="product.price.discount && product.price.discount.status" class="original-price">
                           <span class="text-body-2 text-decoration-line-through text-medium-emphasis">
-                            R$ {{ getReadingValue(Number(product.price.default), ".") }}
+                            R$ {{ getReadingPrice(Number(product.price.default), ".") }}
                           </span>
                         </div>
 
                         <!-- Final Price -->
                         <span class="text-h6 font-weight-bold secondary--text">
-                          R$ {{ getReadingValue(getFinalPrice(product), ".") }}
+                          R$ {{ getReadingPrice(getFinalPrice(product), ".") }}
                         </span>
 
                         <!-- Special Price -->
-                        <div v-if="product.differences && product.differences.especial && product.differences.especial.status" class="special-price">
+                        <div v-if="product.differences && product.differences.especial" class="special-price">
                           <span class="text-caption text-warning--text">
-                            +R$ {{ getReadingValue(Number(product.differences.especial.value), ".") }} especial
+                            +R$ {{ getReadingPrice(Number(product.differences.especial.value), ".") }} especial
+                          </span>
+                        </div>
+
+                        <div v-if="product.differences && product.differences.breaded" class="special-price">
+                          <span class="text-caption text-warning--text">
+                            +R$ {{ getReadingPrice(Number(product.differences.breaded.value), ".") }} empanado
+                          </span>
+                        </div>
+
+                        <div v-if="product.differences && product.differences.flambed" class="special-price">
+                          <span class="text-caption text-warning--text">
+                            +R$ {{ getReadingPrice(Number(product.differences.flambed.value), ".") }} flambado
                           </span>
                         </div>
                       </div>
@@ -348,19 +382,19 @@
             <!-- Original Price (if discount) -->
             <div v-if="selectedProductData.price.discount && selectedProductData.price.discount.status" class="original-price mb-2">
               <span class="text-body-1 text-decoration-line-through text-medium-emphasis">
-                De: R$ {{ getReadingValue(Number(selectedProductData.price.default), ".") }}
+                De: R$ {{ getReadingPrice(Number(selectedProductData.price.default), ".") }}
               </span>
             </div>
 
             <!-- Final Price -->
             <div class="final-price mb-2">
               <span class="dialog-product-price">
-                Por: R$ {{ getReadingValue(getFinalPrice(selectedProductData), ".") }}
+                Por: R$ {{ getReadingPrice(getFinalPrice(selectedProductData), ".") }}
               </span>
             </div>
 
             <!-- Special Price -->
-            <div v-if="selectedProductData.differences && selectedProductData.differences.especial && selectedProductData.differences.especial.status" class="special-price mb-2">
+            <div v-if="selectedProductData.differences && selectedProductData.differences.especial" class="special-price mb-2">
               <v-alert
                 type="warning"
                 dense
@@ -370,7 +404,39 @@
                 <div class="d-flex align-center">
                   <v-icon left small>star</v-icon>
                   <span class="text-caption">
-                    Versão especial: +R$ {{ getReadingValue(Number(selectedProductData.differences.especial.value), ".") }}
+                    Versão especial: +R$ {{ getReadingPrice(Number(selectedProductData.differences.especial.value), ".") }}
+                  </span>
+                </div>
+              </v-alert>
+            </div>
+
+            <div v-if="selectedProductData.differences && selectedProductData.differences.breaded" class="special-price mb-2">
+              <v-alert
+                type="warning"
+                dense
+                outlined
+                class="mb-0"
+              >
+                <div class="d-flex align-center">
+                  <v-icon left small>star</v-icon>
+                  <span class="text-caption">
+                    Versão empanada: +R$ {{ getReadingPrice(Number(selectedProductData.differences.breaded.value), ".") }}
+                  </span>
+                </div>
+              </v-alert>
+            </div>
+
+            <div v-if="selectedProductData.differences && selectedProductData.differences.flambed" class="special-price mb-2">
+              <v-alert
+                type="warning"
+                dense
+                outlined
+                class="mb-0"
+              >
+                <div class="d-flex align-center">
+                  <v-icon left small>star</v-icon>
+                  <span class="text-caption">
+                    Versão flambada: +R$ {{ getReadingPrice(Number(selectedProductData.differences.flambed.value), ".") }}
                   </span>
                 </div>
               </v-alert>
@@ -387,7 +453,7 @@
                 <div class="d-flex align-center">
                   <v-icon left small>savings</v-icon>
                   <span class="text-caption">
-                    Você economiza R$ {{ getReadingValue(Number(selectedProductData.price.default) - getFinalPrice(selectedProductData), ".") }}
+                    Você economiza R$ {{ getReadingPrice(Number(selectedProductData.price.default) - getFinalPrice(selectedProductData), ".") }}
                   </span>
                 </div>
               </v-alert>
@@ -437,7 +503,7 @@
   import { mixins } from "vue-class-component"
   import { namespace } from "vuex-class"
   import { filterDataProduct } from "@/helpers/filterProducts"
-  import { IproductData } from "@/types/types-product"
+  import { IProduct } from "@/types/types-product"
   import { MixinServiceProducts } from "@/mixins/services/mixinServiceProducts"
   import { MixinServiceCategories } from "@/mixins/services/mixinServiceCategories"
   import { MixinFunctionsSystem } from "@/mixins/system/MixinFunctionsSystem"
@@ -460,17 +526,17 @@
     selectedCategory = ""
     categories = [] as Array<{ id: string, name: string }>
     showProductDialog = false
-    selectedProductData: IproductData | null = null
+    selectedProductData: IProduct | null = null
 
     // Paginação
     currentPage = 1
     pageSize = this.$vuetify.breakpoint.mobile ? 1 : 8
 
-    get filteredProducts(): IproductData[] {
-      return filterDataProduct(this.selectedCategory) as IproductData[]
+    get filteredProducts(): IProduct[] {
+      return filterDataProduct(this.selectedCategory) as IProduct[]
     }
 
-    get paginatedProducts(): IproductData[] {
+    get paginatedProducts(): IProduct[] {
       const products = Array.isArray(this.filteredProducts) ? this.filteredProducts : [];
       const start = (this.currentPage - 1) * this.pageSize;
       return products.slice(start, start + this.pageSize);
@@ -496,12 +562,12 @@
       this.currentPage = 1 // Resetar página ao trocar categoria
     }
 
-    selectProduct(product: IproductData): void {
+    selectProduct(product: IProduct): void {
       this.selectedProductData = product
       this.showProductDialog = !this.showProductDialog
     }
 
-    viewProductDetails(product: IproductData): void {
+    viewProductDetails(product: IProduct): void {
       this.selectProduct(product)
     }
 
@@ -510,7 +576,7 @@
       this.showProductDialog = false
     }
 
-    getFinalPrice(product: IproductData): number {
+    getFinalPrice(product: IProduct): number {
       let finalPrice = product.price.default
 
       // Apply discount if available
